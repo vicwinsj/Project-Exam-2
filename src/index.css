@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .bg-orange {
+    background-color: var(--color-orange);
+  }
+
+  .bg-lightBlue {
+    background-color: var(--color-lightBlue);
+  }
+
+  .font-turquoise {
+    color: var(--color-turquoise);
+  }
+}
+
+:root {
+  --color-primary: #0074a7;
+  --color-orange: #ff8052;
+  --color-turquoise: #ccfffb;
+  --color-lightBlue: #f7fffe;
+}
