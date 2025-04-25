@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  --font-rubik: "Rubik", sans-serif;
+  --font-inter: "Inter", sans-serif;
+
   --color-ocean-700: #0074a7;
   --color-sunset-800: #ff8052;
   --color-turquoise-500: #ccfffb;
@@ -8,6 +11,16 @@
 }
 
 @layer base {
+  body {
+    @apply font-inter;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-rubik font-semibold text-white;
+  }
+
   a {
     @apply font-semibold;
   }
