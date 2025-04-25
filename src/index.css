@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @layer utilities {
-  .bg-primary {
+  .bg-primaryBlue {
     background-color: var(--color-primary);
   }
 
@@ -13,8 +13,30 @@
     background-color: var(--color-lightBlue);
   }
 
-  .font-turquoise {
+  .bg-turquoise {
+    background-color: var(--color-turquoise);
+  }
+
+  .hover\:bg-turquoise:hover {
+    background-color: var(--color-turquoise);
+  }
+
+  .text-primaryBlue {
+    color: var(--color-primary);
+  }
+
+  .text-turquoise {
     color: var(--color-turquoise);
+  }
+
+  .hover\:text-turquoise:hover {
+    color: var(--color-turquoise);
+  }
+}
+
+@layer base {
+  a {
+    @apply font-semibold;
   }
 }
 
