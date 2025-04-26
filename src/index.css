@@ -6,6 +6,7 @@
 
   --color-ocean-700: #0074a7;
   --color-sunset-800: #ff8052;
+  --color-sunset-900: #d66942;
   --color-turquoise-500: #ccfffb;
   --color-air-100: #f7fffe;
 }
@@ -23,5 +24,9 @@
 
   a {
     @apply font-semibold;
+  }
+
+  button {
+    @apply cursor-pointer;
   }
 }

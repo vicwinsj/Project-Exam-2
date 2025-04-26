@@ -1,12 +1,11 @@
-import React from 'react'
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import './App.css';
+import "./App.css";
 import Layout from "./components/Layout";
 import HomeView from "./views/HomeView";
 // import Register from "./views/Register";
 // import Venue from "./views/Venue";
 // import Profile from "./views/Profile";
-
 
 const App = () => {
   return (
@@ -20,7 +19,7 @@ const App = () => {
         </Routes>
       </Layout>
     </Router>
-  )
+  );
 };
 
 export default App;
