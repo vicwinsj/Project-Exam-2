@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/holidaze_main.svg";
-import { Button } from "./Button/Button.tsx";
+import { Button } from "./Button.tsx";
+import Search from "./Search.tsx";
+import { useVenues } from "../context/VenueContext";
 
 const Header = () => {
+  const { handleSearch, searchResults, searchQuery } = useVenues();
+
   return (
-    <header className="h-80 flex flex-col gap-30 p-10 bg-ocean-700 shadow-2xl drop-shadow-ocean-700 rounded-b-[20px]">
+    <header className="h-80 flex flex-col gap-30 p-10 bg-ocean-700 drop-shadow-md drop-shadow-neutral-700 rounded-b-[20px]">
       <div className="flex justify-between">
         <Link to="/">
           <img src={logo} className="w-30 h-full" />
@@ -19,13 +23,7 @@ const Header = () => {
           <Button variant="secondary">Login</Button>
         </nav>
       </div>
-      <div className="w-full flex justify-center">
-        <input
-          className="transition-colors duration-300 w-1/2 px-6 py-3 rounded-lg border-2 outline-none border-transparent focus:border-sunset-800 bg-white"
-          type="text"
-          placeholder="Where are your dreams taking you?"
-        />
-      </div>
+      <Search onSearch={handleSearch} />
     </header>
   );
 };
