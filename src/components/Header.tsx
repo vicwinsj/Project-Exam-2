@@ -5,7 +5,7 @@ import Search from "./Search.tsx";
 import { useVenues } from "../context/VenueContext";
 
 const Header = () => {
-  const { handleSearch, searchResults, searchQuery } = useVenues();
+  const { handleSearch } = useVenues();
 
   return (
     <header className="h-80 flex flex-col gap-30 p-10 bg-ocean-700 drop-shadow-md drop-shadow-neutral-700 rounded-b-[20px]">
