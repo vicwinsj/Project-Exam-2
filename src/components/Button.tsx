@@ -8,7 +8,7 @@ const variantClasses = {
   primary: "bg-sunset-800 text-white hover:bg-sunset-900",
   secondary: "bg-white hover:bg-turquoise-500 text-ocean-700",
   outline:
-    "border-2 border-ocean-700 text-ocean-700 hover:border-black hover:text-black",
+    "border-2 border-neutral-500 text-neutral-500 hover:border-neutral-700 hover:text-neutral-700 hover:bg-air-100",
 };
 
 const sizeClasses = {

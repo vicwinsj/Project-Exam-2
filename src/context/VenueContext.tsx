@@ -24,6 +24,7 @@ type Venue = {
 type VenueContextType = {
   venues: Venue[];
   searchResults: Venue[];
+  searchQuery: string;
   handleSearch: (query: string) => void;
   error: string | null;
   loading: boolean;
@@ -36,6 +37,7 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
   const [searchResults, setSearchResults] = useState<Venue[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -64,6 +66,8 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const handleSearch = (query: string) => {
+    setSearchQuery(query);
+
     if (!query) {
       setSearchResults(venues);
       return;
@@ -84,7 +88,14 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <VenueContext.Provider
-      value={{ venues, searchResults, handleSearch, error, loading }}
+      value={{
+        venues,
+        searchResults,
+        searchQuery,
+        handleSearch,
+        error,
+        loading,
+      }}
     >
       {children}
     </VenueContext.Provider>

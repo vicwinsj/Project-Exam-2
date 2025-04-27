@@ -4,7 +4,7 @@ import { Button } from "../components/Button";
 import placeholderImage from "../assets/placeholder_venue.png";
 
 const HomeView = () => {
-  const { searchResults, error, loading } = useVenues();
+  const { searchResults, searchQuery, error, loading } = useVenues();
 
   if (error) return <p>Error: {error}</p>;
   if (loading) return <p>Loading venues...</p>;
@@ -17,7 +17,9 @@ const HomeView = () => {
           <h2 className="text-black text-[32px]">
             Check out our wide assortment of stays
           </h2>
-          <Button variant="outline">Filter</Button>
+          <Button variant="outline" size="sm">
+            Filter
+          </Button>
         </div>
       </div>
       <div className="w-full grid grid-cols-4 gap-10">
@@ -50,6 +52,11 @@ const HomeView = () => {
           <p>No venues found.</p>
         )}
       </div>
+      <p>
+        <span className="font-semibold">{searchResults.length}</span> results
+        for{" "}
+        <span className="font-semibold text-ocean-700">"{searchQuery}"</span>.
+      </p>
     </section>
   );
 };
