@@ -22,10 +22,6 @@
     @apply font-rubik font-semibold text-ocean-700;
   }
 
-  a {
-    @apply font-semibold;
-  }
-
   button {
     @apply cursor-pointer;
   }
