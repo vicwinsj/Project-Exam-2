@@ -1,4 +1,4 @@
-import { useVenues } from "../context/VenueContext";
+import { useVenues } from "../contexts/VenueContext";
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import placeholderImage from "../assets/placeholder_venue.png";

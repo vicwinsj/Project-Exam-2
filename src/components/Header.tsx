@@ -3,7 +3,7 @@ import { useState } from "react";
 import logo from "../assets/holidaze_main.svg";
 import { Button } from "./Button.tsx";
 import Search from "./Search.tsx";
-import { useVenues } from "../context/VenueContext";
+import { useVenues } from "../contexts/VenueContext.tsx";
 import Login from "./Login.tsx";
 
 const Header = () => {

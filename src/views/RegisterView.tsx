@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../components/Button";
+import { loginUser } from "../components/Login";
 
 const RegisterView = () => {
   const registerUser = async (userData: {
@@ -93,8 +94,8 @@ const RegisterView = () => {
       try {
         const result = await registerUser(userData);
         console.log(result);
-        // alert("Account created successfully!");
-        // maybe navigate to login page?
+        // Success message pops up
+        loginUser({ email, password });
       } catch (error) {
         if (error instanceof Error) {
           setServerError(error.message);
