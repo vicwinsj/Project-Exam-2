@@ -8,7 +8,7 @@ const Header = () => {
   const { handleSearch } = useVenues();
 
   return (
-    <header className="h-80 flex flex-col gap-30 p-10 bg-ocean-700 drop-shadow-md drop-shadow-neutral-700 rounded-b-[20px]">
+    <header className="h-80 flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
       <div className="flex justify-between">
         <Link to="/">
           <img src={logo} className="w-30 h-full" />
@@ -16,7 +16,7 @@ const Header = () => {
         <nav className="text-white flex items-center gap-3">
           <Link
             to="/register"
-            className="transition-colors duration-300 hover:text-turquoise-500"
+            className="font-semibold transition-colors duration-300 hover:text-turquoise-500"
           >
             Register
           </Link>
