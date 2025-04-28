@@ -24,7 +24,7 @@ const Search = ({ onSearch }: SearchProps) => {
     <form onSubmit={handleSubmit} className="w-full flex justify-center gap-3">
       <div className="w-1/2 relative">
         <input
-          className="transition-colors duration-300 w-full px-10 py-3 rounded-lg border-2 outline-none border-transparent hover:bg-air-100 focus:border-sunset-800 bg-white placeholder:font-semibold placeholder-ocean-700 placeholder:font-rubik"
+          className=" w-full px-10 py-3 rounded-lg border-2 border-transparent hover:bg-air-100 outline-none focus:border-sunset-800 bg-white placeholder:font-semibold placeholder-ocean-700 placeholder:font-rubik"
           type="text"
           placeholder="Where are your dreams taking you?"
           value={query}

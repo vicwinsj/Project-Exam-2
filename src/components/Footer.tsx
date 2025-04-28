@@ -2,7 +2,7 @@ import logo from "../assets/holidaze_small.svg";
 
 const Footer = () => {
   return (
-    <footer className="h-80 flex flex-col gap-20 p-10 bg-turquoise-500 border-y-1 border-solid border-ocean-700 rounded-t-[20px]">
+    <footer className="h-80 flex flex-col gap-20 p-10 bg-turquoise-500 border-t-1 border-x-1 border-solid border-ocean-700 rounded-t-[20px]">
       <div className="flex justify-between">
         <ul className="flex flex-col gap-1 flex-[1]">
           <h3>Help</h3>
