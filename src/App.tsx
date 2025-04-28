@@ -3,7 +3,7 @@ import "./App.css";
 import Layout from "./components/Layout";
 import HomeView from "./views/HomeView";
 // import Register from "./views/Register";
-// import Venue from "./views/Venue";
+import VenueView from "./views/VenueView";
 // import Profile from "./views/Profile";
 
 const App = () => {
@@ -13,8 +13,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomeView />} />
           {/* <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/venue/:venueId" element={<Venue />} /> */}
+          <Route path="/profile" element={<Profile />} /> */}
+          <Route path="/venue/:venueId" element={<VenueView />} />
         </Routes>
       </Layout>
     </Router>
