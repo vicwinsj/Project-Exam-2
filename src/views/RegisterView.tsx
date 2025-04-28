@@ -107,7 +107,7 @@ const RegisterView = () => {
     <section className="flex flex-col items-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-3 w-1/2 p-10 border-1 border-sunset-800 rounded-xl"
+        className="flex flex-col gap-10 w-1/2 p-10 border-1 border-neutral-500 rounded-xl"
       >
         <h1 className="text-xl text-black w-full text-center">
           Create account
@@ -115,7 +115,7 @@ const RegisterView = () => {
         <div className="flex flex-col gap-10">
           <fieldset className="flex gap-3">
             <legend className="font-semibold">Select account type</legend>
-            <label>
+            <label className="cursor-pointer">
               <input
                 type="radio"
                 name="radio"
@@ -125,7 +125,7 @@ const RegisterView = () => {
               />{" "}
               Customer
             </label>
-            <label>
+            <label className="cursor-pointer">
               <input
                 type="radio"
                 name="radio"
@@ -140,7 +140,7 @@ const RegisterView = () => {
             <div className="flex flex-col gap-1 ">
               <label htmlFor="name">Name</label>
               <input
-                className={`px-3 py-1 border-1 rounded-lg outline-sunset-800 border-neutral-500 ${
+                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
                   errors.name && "border-red-500"
                 }`}
                 type="text"
@@ -152,7 +152,7 @@ const RegisterView = () => {
             <div className="flex flex-col gap-1 ">
               <label htmlFor="email">Email</label>
               <input
-                className={`px-3 py-1 border-1 rounded-lg outline-sunset-800 border-neutral-500 ${
+                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
                   errors.email && "border-red-500"
                 }`}
                 type="email"
@@ -164,7 +164,7 @@ const RegisterView = () => {
             <div className="flex flex-col gap-1 ">
               <label htmlFor="password">Password</label>
               <input
-                className={`px-3 py-1 border-1 rounded-lg outline-sunset-800 border-neutral-500 ${
+                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
                   errors.password && "border-red-500"
                 } ${errors.confirmPassword && "border-red-500"}`}
                 type="password"
@@ -178,7 +178,7 @@ const RegisterView = () => {
             <div className="flex flex-col gap-1 ">
               <label htmlFor="confirm-password">Confirm password</label>
               <input
-                className={`px-3 py-1 border-1 rounded-lg outline-sunset-800 border-neutral-500 ${
+                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
                   errors.confirmPassword && "border-red-500"
                 }`}
                 type="password"
