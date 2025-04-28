@@ -1,7 +1,7 @@
-import { useVenues } from "../context/VenueContext";
+// import { useVenues } from "../context/VenueContext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import placeholderImage from "../assets/placeholder_venue.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
