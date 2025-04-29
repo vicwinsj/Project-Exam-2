@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../components/Button";
+import { loginUser } from "../components/Login";
 
 const RegisterView = () => {
   const registerUser = async (userData: {
@@ -93,8 +94,8 @@ const RegisterView = () => {
       try {
         const result = await registerUser(userData);
         console.log(result);
-        // alert("Account created successfully!");
-        // maybe navigate to login page?
+        // Success message pops up
+        loginUser({ email, password });
       } catch (error) {
         if (error instanceof Error) {
           setServerError(error.message);
@@ -107,7 +108,7 @@ const RegisterView = () => {
     <section className="flex flex-col items-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-10 w-1/2 p-10 border-1 border-neutral-500 rounded-xl"
+        className="flex flex-col gap-10 w-1/3 p-10 border-1 border-neutral-500 rounded-xl"
       >
         <h1 className="text-xl text-black w-full text-center">
           Create account
@@ -196,9 +197,7 @@ const RegisterView = () => {
           {serverError && <p className="text-red-600">{serverError}!</p>}
           <div className="flex gap-1">
             <p>Already got an account?</p>
-            <p>
-              Sign in <span className="font-semibold">here</span>.
-            </p>
+            <p className="font-semibold">Sign in here.</p>
           </div>
         </div>
       </form>
