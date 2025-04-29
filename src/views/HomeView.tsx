@@ -44,7 +44,7 @@ const HomeView = () => {
         {searchResults.length > 0 ? (
           searchResults.map((venue) => (
             <Link to={`/venue/${venue.id}`} key={venue.id}>
-              <div className="flex flex-col gap-3">
+              <article className="flex flex-col gap-3">
                 <div className="rounded-2xl overflow-hidden w-full h-50">
                   <img
                     className="w-full h-full object-cover"
@@ -63,7 +63,7 @@ const HomeView = () => {
                     night
                   </p>
                 </div>
-              </div>
+              </article>
             </Link>
           ))
         ) : (

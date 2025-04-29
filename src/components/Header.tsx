@@ -34,17 +34,19 @@ const Header = () => {
           <nav className="text-white flex items-center gap-3">
             {accessToken ? (
               <>
-                <a
-                  className="rounded-full size-10 overflow-hidden"
-                  href="/profile"
+                <Link
+                  to={`/profile/${loggedInUser?.name}`}
+                  className="rounded-l-full size-10 overflow-hidden"
                 >
                   <img
                     src={loggedInUser?.avatar.url}
-                    alt={loggedInUser?.avatar.url}
+                    alt={loggedInUser?.avatar.alt}
                     className="size-full object-cover bg-black"
                   />
-                </a>
-                <Button onClick={logout}>Logout</Button>
+                </Link>
+                <Button variant="secondary" onClick={logout}>
+                  Logout
+                </Button>
               </>
             ) : (
               <>
