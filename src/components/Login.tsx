@@ -58,7 +58,7 @@ const Login = ({ onClose }: LoginProps) => {
       const result = await loginUser(userData);
       //   if (result) SUCCESS MESSAGE
       if (result && result.data && result.data.accessToken) {
-        login(result.data.accessToken);
+        login(result.data.accessToken, result.data.name, result.data.avatar);
         window.location.href = "/";
       }
     } catch (error) {
@@ -81,7 +81,7 @@ const Login = ({ onClose }: LoginProps) => {
     >
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-10 w-1/3 bg-white p-10 border-1 border-neutral-500 rounded-xl"
+        className="z-10 flex flex-col gap-10 w-1/3 bg-white p-10 border-1 border-neutral-500 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">

@@ -62,7 +62,6 @@ const VenueView = () => {
           throw new Error("Failed to fetch venue details");
         }
         const data = await response.json();
-        console.log(data.data);
         setVenue(data.data);
       } catch (error) {
         if (error instanceof Error) {
