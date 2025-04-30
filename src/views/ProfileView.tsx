@@ -19,7 +19,7 @@ type Profile = {
 };
 
 const ProfileView = () => {
-  const { accessToken } = useAuth();
+  const { accessToken, authLoading } = useAuth();
 
   const { name } = useParams();
 
@@ -34,6 +34,14 @@ const ProfileView = () => {
   }, [profile]);
 
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!accessToken) {
+      setError("Not authenticated");
+      setLoading(false);
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         const response = await fetch(
@@ -65,7 +73,7 @@ const ProfileView = () => {
       setError("Not authenticated");
       setLoading(false);
     }
-  }, [name, accessToken]);
+  }, [name, accessToken, authLoading]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
