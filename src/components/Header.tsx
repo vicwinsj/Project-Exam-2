@@ -5,7 +5,7 @@ import { Button } from "./Button.tsx";
 import Search from "./Search.tsx";
 import { useVenues } from "../contexts/VenueContext.tsx";
 import { useAuth } from "../contexts/AuthContext.tsx";
-import Login from "./Login.tsx";
+import LoginModal from "./LoginModal.tsx";
 
 const Header = () => {
   const { accessToken, loggedInUser, logout } = useAuth();
@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-auto flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
+      <header className="z-10 h-auto flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
         <div className="flex justify-between">
           <Link to="/">
             <img src={logo} className="w-30 h-full" />
@@ -70,7 +70,7 @@ const Header = () => {
             <Search onSearch={handleSearch} />
           )}
       </header>
-      {showLogin && <Login onClose={handleCloseLogin} />}
+      {showLogin && <LoginModal onClose={handleCloseLogin} />}
     </>
   );
 };

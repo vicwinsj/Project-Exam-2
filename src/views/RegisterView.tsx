@@ -1,37 +1,8 @@
 import { useState } from "react";
 import { Button } from "../components/Button";
-import { loginUser } from "../components/Login";
+import { registerUser, loginUser } from "../api/auth";
 
 const RegisterView = () => {
-  const registerUser = async (userData: {
-    name: string;
-    email: string;
-    password: string;
-    venueManager: boolean;
-  }) => {
-    try {
-      const response = await fetch("https://v2.api.noroff.dev/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.errors?.[0]?.message || "Failed to register");
-      }
-
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-    }
-  };
-
   const [accountType, setAccountType] = useState("customer");
 
   type ErrorState = {
