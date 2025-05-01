@@ -1,4 +1,4 @@
-import logo from "../assets/holidaze_small.svg";
+import logo from "../../assets/holidaze_small.svg";
 
 const Footer = () => {
   return (

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 // import { Link } from "react-router-dom";
-import { Button } from "../components/Button";
+import { Button } from "../components/form/Button";
 import placeholderImage from "../assets/placeholder_venue.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

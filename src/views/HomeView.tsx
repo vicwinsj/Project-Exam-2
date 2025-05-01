@@ -1,6 +1,6 @@
 import { useVenues } from "../contexts/VenueContext";
 import { Link } from "react-router-dom";
-import { Button } from "../components/Button";
+import { Button } from "../components/form/Button";
 import placeholderImage from "../assets/placeholder_venue.png";
 
 const HomeView = () => {
