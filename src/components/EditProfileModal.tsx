@@ -40,45 +40,71 @@ const EditProfileModal = ({
   const [bioText, setBioText] = useState(bio);
   const [venueManager, setVenueManager] = useState(manager);
 
+  type ErrorState = {
+    bannerUrl?: string;
+    avatarUrl?: string;
+    bioText?: string;
+  };
+
   const [serverError, setServerError] = useState("");
+  const [errors, setErrors] = useState<ErrorState>({});
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const avatar = {
-      url: avatarUrl,
-      alt: "",
-    };
+    const validateForm = () => {
+      const newErrors: ErrorState = {};
 
-    const banner = {
-      url: bannerUrl,
-      alt: "",
-    };
-
-    const userData = {
-      avatar: avatar,
-      banner: banner,
-      bio: bioText,
-      venueManager: venueManager,
-    };
-
-    if (!accessToken) {
-      setServerError("Access token is missing");
-      return;
-    }
-
-    try {
-      const result = await editProfile(name, userData, accessToken);
-      if (result) {
-        onClose();
-        location.reload();
+      if (!/^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w.-]*)*\/?$/.test(bannerUrl)) {
+        newErrors.bannerUrl = "Banner image need to have a valid URL";
       }
-      // SUCCESS MESSAGE
-    } catch (error) {
-      if (error instanceof Error) {
-        setServerError(error.message);
+
+      if (!/^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w.-]*)*\/?$/.test(bannerUrl)) {
+        newErrors.avatarUrl = "Avatar image need to have a valid URL";
       }
-      console.log(serverError);
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
+    if (validateForm()) {
+      setServerError("");
+
+      const avatar = {
+        url: avatarUrl,
+        alt: "",
+      };
+
+      const banner = {
+        url: bannerUrl,
+        alt: "",
+      };
+
+      const userData = {
+        avatar: avatar,
+        banner: banner,
+        bio: bioText,
+        venueManager: venueManager,
+      };
+
+      if (!accessToken) {
+        setServerError("Access token is missing");
+        return;
+      }
+
+      try {
+        const result = await editProfile(name, userData, accessToken);
+        if (result) {
+          onClose();
+          location.reload();
+        }
+        // SUCCESS MESSAGE
+      } catch (error) {
+        if (error instanceof Error) {
+          setServerError(error.message);
+        }
+        console.log(serverError);
+      }
     }
   };
 
@@ -86,7 +112,7 @@ const EditProfileModal = ({
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="z-20 flex flex-col gap-10 w-1/2 bg-white p-10 border-1 border-neutral-500 rounded-xl"
+        className="z-100 flex flex-col gap-10 w-1/2 bg-white p-10 border-1 border-neutral-500 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-xl flex items-center justify-between">
@@ -97,7 +123,7 @@ const EditProfileModal = ({
             onClick={onClose}
           ></FontAwesomeIcon>
         </div>
-        <div className="relative">
+        <div className="relative flex flex-col gap-1">
           <div className="w-full h-40 rounded-xl overflow-hidden">
             <img
               className="size-full object-cover"
@@ -118,33 +144,43 @@ const EditProfileModal = ({
               <fieldset className="">
                 <label htmlFor="banner">Banner</label>
                 <input
-                  className={serverError && "border-red-500"}
+                  className={errors.bannerUrl && "border-red-500"}
                   name="banner"
-                  value={banner.url}
+                  value={bannerUrl}
                   onChange={(e) => setBannerUrl(e.target.value)}
                 ></input>
               </fieldset>
               <fieldset className="">
                 <label htmlFor="avatar">Avatar</label>
                 <input
-                  className={serverError && "border-red-500"}
+                  className={errors.bannerUrl && "border-red-500"}
                   name="avatar"
-                  value={avatar.url}
+                  value={avatarUrl}
                   onChange={(e) => setAvatarUrl(e.target.value)}
                 ></input>
               </fieldset>
             </div>
           </div>
           <div>
-            <label htmlFor="bio">Bio</label>
+            <label htmlFor="bio">
+              Bio <span className="italic">(max. 160 characters)</span>
+            </label>
             <textarea
               className={`h-30 ${serverError && "border-red-500"}`}
               name="bio"
               value={bioText}
               onChange={(e) => setBioText(e.target.value)}
-              maxLength={200}
+              maxLength={160}
             />
           </div>
+          {Object.entries(errors).map(
+            ([key, message]) =>
+              message && (
+                <p key={key} className="text-red-500">
+                  {message}
+                </p>
+              )
+          )}
           <div className="flex justify-between">
             <div className="flex gap-1 items-center">
               <input
