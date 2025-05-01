@@ -1,41 +1,16 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext.tsx";
-import { Button } from "./Button";
+import { Button } from "./Button.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { loginUser } from "../api/auth.ts";
+import ModalWrapper from "./ModalWrapper.tsx";
 
 type LoginProps = {
   onClose: () => void;
 };
 
-export const loginUser = async (userData: {
-  email: string;
-  password: string;
-}) => {
-  try {
-    const response = await fetch("https://v2.api.noroff.dev/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.errors?.[0]?.message || "Failed to login");
-    }
-
-    return data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
-};
-
-const Login = ({ onClose }: LoginProps) => {
+const LoginModal = ({ onClose }: LoginProps) => {
   const { login } = useAuth();
 
   const [serverError, setServerError] = useState("");
@@ -68,17 +43,8 @@ const Login = ({ onClose }: LoginProps) => {
     }
   };
 
-  const handleBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 flex justify-center items-center bg-black/50"
-      onClick={handleBackgroundClick}
-    >
+    <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
         className="z-10 flex flex-col gap-10 w-1/3 bg-white p-10 border-1 border-neutral-500 rounded-xl"
@@ -86,7 +52,7 @@ const Login = ({ onClose }: LoginProps) => {
       >
         <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">
           <FontAwesomeIcon
-            className="cursor-pointer "
+            className="cursor-pointer"
             icon={faXmark}
             onClick={onClose}
           ></FontAwesomeIcon>
@@ -98,9 +64,7 @@ const Login = ({ onClose }: LoginProps) => {
           <div className="flex flex-col gap-1 ">
             <label htmlFor="email">Email</label>
             <input
-              className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                serverError && "border-red-500"
-              }`}
+              className={serverError && "border-red-500"}
               type="text"
               name="email"
               required
@@ -109,9 +73,7 @@ const Login = ({ onClose }: LoginProps) => {
           <div className="flex flex-col gap-1 ">
             <label htmlFor="password">Password</label>
             <input
-              className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                serverError && "border-red-500"
-              }`}
+              className={serverError && "border-red-500"}
               type="password"
               name="password"
               required
@@ -123,7 +85,7 @@ const Login = ({ onClose }: LoginProps) => {
             <input
               className="cursor-pointer"
               type="checkbox"
-              id="scales"
+              id="remember"
               name="remember"
             />
             <label htmlFor="remember">Remember me</label>
@@ -141,8 +103,8 @@ const Login = ({ onClose }: LoginProps) => {
           </a>
         </div>
       </form>
-    </div>
+    </ModalWrapper>
   );
 };
 
-export default Login;
+export default LoginModal;
