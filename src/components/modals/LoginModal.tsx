@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext.tsx";
-import { Button } from "./Button.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
+import { Button } from "../form/Button.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { loginUser } from "../api/auth.ts";
+import { loginUser } from "../../api/auth.ts";
 import ModalWrapper from "./ModalWrapper.tsx";
 
 type LoginProps = {
@@ -33,7 +33,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
       const result = await loginUser(userData);
       //   if (result) SUCCESS MESSAGE
       if (result && result.data && result.data.accessToken) {
-        login(result.data.accessToken, result.data.name, result.data.avatar);
+        login(result.data.accessToken, result.data.name);
         window.location.href = "/";
       }
     } catch (error) {

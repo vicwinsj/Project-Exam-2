@@ -1,9 +1,9 @@
-import { Button } from "../components/Button";
+import { Button } from "../components/form/Button";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { fetchProfile } from "../api/profile";
-import EditProfileModal from "../components/EditProfileModal";
+import EditProfileModal from "../components/modals/EditProfileModal";
 
 type Profile = {
   name: string;
@@ -73,16 +73,16 @@ const ProfileView = () => {
 
   return (
     <>
-      <div className="-mt-15 flex flex-col gap-10">
+      <div className="flex flex-col gap-10">
         <section className="relative flex flex-col">
-          <div className="w-full h-70 rounded-b-[20px] overflow-hidden">
+          <div className="w-full h-100 rounded-t-[20px] overflow-hidden">
             <img
               className="size-full object-cover"
               src={profile?.banner.url}
               alt={profile?.banner.alt}
             />
           </div>
-          <div className="absolute top-45 left-30 size-60 rounded-l-full rounded-r-xl overflow-hidden border-3 border-sunset-800">
+          <div className="absolute top-80 left-30 size-60 rounded-l-full rounded-r-xl overflow-hidden border-3 border-sunset-800">
             <img
               className="size-full object-cover"
               src={profile?.avatar.url}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "./Button";
+import { Button } from "./form/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 

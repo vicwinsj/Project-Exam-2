@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { editProfile } from "../api/profile";
-import { Button } from "./Button";
+import { useAuth } from "../../contexts/AuthContext";
+import { editProfile } from "../../api/profile";
+import { Button } from "../form/Button";
 import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -124,14 +124,14 @@ const EditProfileModal = ({
           ></FontAwesomeIcon>
         </div>
         <div className="relative flex flex-col gap-1">
-          <div className="w-full h-40 rounded-xl overflow-hidden">
+          <div className="w-full h-50 rounded-t-xl overflow-hidden">
             <img
               className="size-full object-cover"
               src={bannerUrl}
               alt={banner.alt}
             />
           </div>
-          <div className="absolute top-25 left-10 size-40 rounded-r-xl rounded-l-full overflow-hidden border-3 border-sunset-800">
+          <div className="absolute top-37 left-10 size-40 rounded-r-xl rounded-l-full overflow-hidden border-3 border-sunset-800">
             <img
               className="size-full object-cover"
               src={avatarUrl}
