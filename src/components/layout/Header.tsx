@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import logo from "../../assets/holidaze_main.svg";
 import { Button } from "../form/Button.tsx";
@@ -12,6 +12,7 @@ const Header = () => {
   const { accessToken, username, logout, authLoading } = useAuth();
   const { handleSearch } = useVenues();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [showLogin, setShowLogin] = useState(false);
 
@@ -58,7 +59,6 @@ const Header = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!profile) return <p>No profile found.</p>;
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -68,9 +68,16 @@ const Header = () => {
     setShowLogin(false);
   };
 
+  const handleLogout = () => {
+    logout();
+    if (location.pathname === "/profile") {
+      navigate("/");
+    }
+  };
+
   return (
     <>
-      <header className="z-10 h-auto flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
+      <header className="h-auto flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
         <div className="flex justify-between">
           <Link to="/">
             <img src={logo} className="w-30 h-full" />
@@ -83,8 +90,8 @@ const Header = () => {
             {accessToken ? (
               <>
                 <Link
-                  to={`/profile/${profile.name}`}
-                  className="rounded-l-full size-10 overflow-hidden"
+                  to={`/profile/${profile?.name}`}
+                  className="transition-colors duration-300 rounded-l-md border-2 border-white hover:border-turquoise-500 size-10 overflow-hidden"
                 >
                   <img
                     src={profile?.avatar.url}
@@ -92,7 +99,7 @@ const Header = () => {
                     className="size-full object-cover bg-black"
                   />
                 </Link>
-                <Button variant="secondary" onClick={logout}>
+                <Button variant="secondary" onClick={handleLogout}>
                   Logout
                 </Button>
               </>

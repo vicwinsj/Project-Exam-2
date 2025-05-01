@@ -79,15 +79,15 @@ const VenueView = () => {
   if (!venue) return <p>No venue found.</p>;
 
   return (
-    <section className="flex flex-col gap-10">
-      <div className="rounded-2xl overflow-hidden w-full h-full">
+    <article className="flex flex-col gap-10">
+      <div className="rounded-t-[20px] overflow-hidden w-full h-full">
         <img
           className="w-full h-130 object-cover"
           src={venue.media[0]?.url || placeholderImage}
           alt={venue.media[0]?.alt || "Picture of the venue"}
         />
       </div>
-      <article className="flex flex-col gap-10 w-full">
+      <div className="flex flex-col gap-10 w-full">
         <div className="w-full flex justify-between">
           <h1 className="text-5xl">{venue.name}</h1>
           <div className="flex items-center gap-1 text-ocean-700">
@@ -212,8 +212,8 @@ const VenueView = () => {
             </div>
           </div>
         </div>
-      </article>
-    </section>
+      </div>
+    </article>
   );
 };
 
