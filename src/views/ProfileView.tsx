@@ -1,8 +1,7 @@
 import { Button } from "../components/form/Button";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
-import { fetchProfile } from "../api/profile";
 import EditProfileModal from "../components/modals/EditProfileModal";
 
 type Profile = {
@@ -21,9 +20,13 @@ type Profile = {
 };
 
 const ProfileView = () => {
-  const { accessToken, authLoading } = useAuth();
+  const location = useLocation();
+  const routeProfile = location.state?.profile;
 
-  const { name } = useParams();
+  const { accessToken, username, profile: loggedInProfile } = useAuth();
+  const { name: routeName } = useParams();
+
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   const [showEditProfile, setShowEditProfile] = useState(false);
 
@@ -35,41 +38,26 @@ const ProfileView = () => {
     setShowEditProfile(false);
   };
 
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  //   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const isLoggedInProfile = routeName === username;
+    if (isLoggedInProfile) {
+      setProfile(loggedInProfile);
+      setLoading(false);
+    } else {
+      setProfile(routeProfile);
+    }
+
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
     }
-  }, [profile]);
-
-  useEffect(() => {
-    if (authLoading) return;
-
-    const loadProfile = async () => {
-      try {
-        const data = await fetchProfile(name!, accessToken!);
-        setProfile(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (accessToken) {
-      loadProfile();
-    } else {
-      setError("Not authenticated");
-      setLoading(false);
-    }
-  }, [name, accessToken, authLoading]);
+  }, [loggedInProfile, routeProfile, routeName, username, profile]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!profile) return <p>No profile found.</p>;
+  //   if (error) return <p>Error: {error}</p>;
+  if (!accessToken) return <p>No profile available.</p>;
 
   return (
     <>
@@ -82,7 +70,7 @@ const ProfileView = () => {
               alt={profile?.banner.alt}
             />
           </div>
-          <div className="absolute top-80 left-30 size-60 rounded-l-full rounded-r-xl overflow-hidden border-3 border-sunset-800">
+          <div className="absolute top-80 left-30 size-60 rounded-l-[20px] overflow-hidden border-7 border-white">
             <img
               className="size-full object-cover"
               src={profile?.avatar.url}
@@ -124,16 +112,7 @@ const ProfileView = () => {
           <div className="bg-white w-full rounded-xl h-50 border-sunset-800 border-1"></div>
         </section>
       </div>
-      {showEditProfile && (
-        <EditProfileModal
-          onClose={handleCloseEditProfile}
-          name={profile?.name}
-          avatar={profile?.avatar}
-          banner={profile?.banner}
-          bio={profile?.bio}
-          manager={profile?.venueManager}
-        ></EditProfileModal>
-      )}
+      {showEditProfile && <EditProfileModal onClose={handleCloseEditProfile} />}
     </>
   );
 };

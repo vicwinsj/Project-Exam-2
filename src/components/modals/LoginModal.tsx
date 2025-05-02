@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { loginUser } from "../../api/auth.ts";
 import ModalWrapper from "./ModalWrapper.tsx";
+import { useNavigate } from "react-router";
 
 type LoginProps = {
   onClose: () => void;
 };
 
 const LoginModal = ({ onClose }: LoginProps) => {
+  const navigate = useNavigate();
   const { login } = useAuth();
 
   const [serverError, setServerError] = useState("");
@@ -34,7 +36,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
       //   if (result) SUCCESS MESSAGE
       if (result && result.data && result.data.accessToken) {
         login(result.data.accessToken, result.data.name);
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (error) {
       if (error instanceof Error) {

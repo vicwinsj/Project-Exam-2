@@ -6,39 +6,17 @@ import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-type AvatarProps = {
-  url: string;
-  alt: string;
-};
-
-type BannerProps = {
-  url: string;
-  alt: string;
-};
-
-type EditProps = {
+interface EditProfileModalProps {
   onClose: () => void;
-  name: string;
-  avatar: AvatarProps;
-  banner: BannerProps;
-  bio: string;
-  manager: boolean;
-};
+}
 
-const EditProfileModal = ({
-  onClose,
-  name,
-  banner,
-  avatar,
-  bio,
-  manager,
-}: EditProps) => {
-  const { accessToken } = useAuth();
+const EditProfileModal = ({ onClose }: EditProfileModalProps) => {
+  const { accessToken, profile, refreshProfile } = useAuth();
 
-  const [avatarUrl, setAvatarUrl] = useState(avatar.url);
-  const [bannerUrl, setBannerUrl] = useState(banner.url);
-  const [bioText, setBioText] = useState(bio);
-  const [venueManager, setVenueManager] = useState(manager);
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar.url);
+  const [bannerUrl, setBannerUrl] = useState(profile?.banner.url);
+  const [bioText, setBioText] = useState(profile?.bio);
+  const [venueManager, setVenueManager] = useState(profile?.venueManager);
 
   type ErrorState = {
     bannerUrl?: string;
@@ -55,11 +33,11 @@ const EditProfileModal = ({
     const validateForm = () => {
       const newErrors: ErrorState = {};
 
-      if (!/^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w.-]*)*\/?$/.test(bannerUrl)) {
+      if (!/^https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+$/.test(bannerUrl!)) {
         newErrors.bannerUrl = "Banner image need to have a valid URL";
       }
 
-      if (!/^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w.-]*)*\/?$/.test(bannerUrl)) {
+      if (!/^https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+$/.test(bannerUrl!)) {
         newErrors.avatarUrl = "Avatar image need to have a valid URL";
       }
 
@@ -70,40 +48,51 @@ const EditProfileModal = ({
     if (validateForm()) {
       setServerError("");
 
-      const avatar = {
-        url: avatarUrl,
-        alt: "",
-      };
+      if (
+        avatarUrl &&
+        bannerUrl &&
+        bioText !== undefined &&
+        venueManager !== undefined
+      ) {
+        const avatar = {
+          url: avatarUrl,
+          alt: "",
+        };
 
-      const banner = {
-        url: bannerUrl,
-        alt: "",
-      };
+        const banner = {
+          url: bannerUrl,
+          alt: "",
+        };
 
-      const userData = {
-        avatar: avatar,
-        banner: banner,
-        bio: bioText,
-        venueManager: venueManager,
-      };
+        const userData = {
+          avatar: avatar,
+          banner: banner,
+          bio: bioText,
+          venueManager: venueManager,
+        };
 
-      if (!accessToken) {
-        setServerError("Access token is missing");
-        return;
-      }
-
-      try {
-        const result = await editProfile(name, userData, accessToken);
-        if (result) {
-          onClose();
-          location.reload();
+        if (!accessToken) {
+          setServerError("Access token is missing");
+          return;
         }
-        // SUCCESS MESSAGE
-      } catch (error) {
-        if (error instanceof Error) {
-          setServerError(error.message);
+
+        try {
+          const result = await editProfile(
+            profile!.name,
+            userData,
+            accessToken
+          );
+          if (result) {
+            await refreshProfile();
+            onClose();
+          }
+          // SUCCESS MESSAGE
+        } catch (error) {
+          if (error instanceof Error) {
+            setServerError(error.message);
+          }
+          console.log(serverError);
         }
-        console.log(serverError);
       }
     }
   };
@@ -128,14 +117,14 @@ const EditProfileModal = ({
             <img
               className="size-full object-cover"
               src={bannerUrl}
-              alt={banner.alt}
+              alt={profile?.banner.alt}
             />
           </div>
-          <div className="absolute top-37 left-10 size-40 rounded-r-xl rounded-l-full overflow-hidden border-3 border-sunset-800">
+          <div className="absolute top-37 left-10 size-40 rounded-l-xl overflow-hidden border-5 border-white">
             <img
               className="size-full object-cover"
               src={avatarUrl}
-              alt={avatar.alt}
+              alt={profile?.avatar.alt}
             />
           </div>
           <div className="pt-3 flex justify-between gap-3 w-full">

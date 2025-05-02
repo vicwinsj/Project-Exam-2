@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "../components/form/Button";
 import { registerUser, loginUser } from "../api/auth";
 
 const RegisterView = () => {
+  const navigate = useNavigate();
   const [accountType, setAccountType] = useState("customer");
 
   type ErrorState = {
@@ -67,6 +69,7 @@ const RegisterView = () => {
         console.log(result);
         // Success message pops up
         loginUser({ email, password });
+        navigate("/");
       } catch (error) {
         if (error instanceof Error) {
           setServerError(error.message);
