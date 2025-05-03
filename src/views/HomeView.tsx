@@ -52,6 +52,7 @@ const HomeView = () => {
                     alt={venue.media[0]?.alt || "Picture of the venue"}
                   />
                 </div>
+                <div></div>
                 <div>
                   <h2 className="truncate">{venue.name}</h2>
                   <p>

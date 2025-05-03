@@ -16,8 +16,9 @@ type Profile = {
     url: string;
     alt: string;
   };
-  venueManager: boolean;
+  venueManager?: boolean;
 };
+<div></div>;
 
 const ProfileView = () => {
   const location = useLocation();
@@ -25,9 +26,9 @@ const ProfileView = () => {
 
   const { accessToken, username, profile: loggedInProfile } = useAuth();
   const { name: routeName } = useParams();
+  const isLoggedInProfile = routeName === username;
 
   const [profile, setProfile] = useState<Profile | null>(null);
-
   const [showEditProfile, setShowEditProfile] = useState(false);
 
   const handleOpenEditProfile = () => {
@@ -42,18 +43,25 @@ const ProfileView = () => {
   //   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const isLoggedInProfile = routeName === username;
     if (isLoggedInProfile) {
       setProfile(loggedInProfile);
-      setLoading(false);
     } else {
       setProfile(routeProfile);
     }
 
+    setLoading(false);
+
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
     }
-  }, [loggedInProfile, routeProfile, routeName, username, profile]);
+  }, [
+    isLoggedInProfile,
+    loggedInProfile,
+    routeProfile,
+    routeName,
+    username,
+    profile,
+  ]);
 
   if (loading) return <p>Loading...</p>;
   //   if (error) return <p>Error: {error}</p>;
@@ -93,24 +101,28 @@ const ProfileView = () => {
               )}
             </div>
             <div className="flex items-end h-fit">
-              <Button
-                onClick={handleOpenEditProfile}
-                className="h-10"
-                variant="secondary"
-              >
-                Edit
-              </Button>
+              {isLoggedInProfile && (
+                <Button
+                  onClick={handleOpenEditProfile}
+                  className="h-10"
+                  variant="secondary"
+                >
+                  Edit
+                </Button>
+              )}
             </div>
           </div>
         </section>
-        <section className="flex flex-col">
-          <aside className="flex p-3 gap-3 w-full h-full">
-            <Button variant="outline">Venues</Button>
-            <Button variant="outline">Bookings</Button>
-            <Button variant="outline">Favorites</Button>
-          </aside>
-          <div className="bg-white w-full rounded-xl h-50 border-sunset-800 border-1"></div>
-        </section>
+        {isLoggedInProfile && (
+          <section className="flex flex-col">
+            <aside className="flex p-3 gap-3 w-full h-full">
+              <Button variant="outline">Venues</Button>
+              <Button variant="outline">Bookings</Button>
+              <Button variant="outline">Favorites</Button>
+            </aside>
+            <div className="bg-white w-full rounded-xl h-50 border-sunset-800 border-1"></div>
+          </section>
+        )}
       </div>
       {showEditProfile && <EditProfileModal onClose={handleCloseEditProfile} />}
     </>
