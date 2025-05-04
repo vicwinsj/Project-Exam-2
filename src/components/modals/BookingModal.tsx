@@ -49,7 +49,9 @@ export default function BookingModal({
       className="flex flex-col gap-3 p-10 bg-white rounded-xl w-125"
     >
       <h2 className="text-xl text-black text-center font-semibold">
-        {nights} nights
+        {nights !== undefined
+          ? `${nights} ${nights === 1 ? "night" : "nights"}`
+          : "0 nights"}
       </h2>
       <DayPicker
         mode="range"
@@ -84,7 +86,7 @@ export default function BookingModal({
         <Button variant="outline" onClick={handleReset}>
           Reset
         </Button>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={onClose}>Apply</Button>
       </div>
     </div>
   );
