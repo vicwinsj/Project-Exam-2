@@ -14,6 +14,8 @@ import {
   faCalendar,
   faPeopleRoof,
 } from "@fortawesome/free-solid-svg-icons";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
 import BookingModal from "../components/modals/BookingModal.tsx";
 
 type Venue = {
@@ -38,6 +40,7 @@ type Venue = {
     url: string;
     alt: string;
   }[];
+  bookings: [{ dateFrom: string; dateTo: string }];
 };
 
 const VenueView = () => {
@@ -83,6 +86,32 @@ const VenueView = () => {
   const handleCloseBookingCalendar = () => {
     setShowBookingCalendar(false);
   };
+
+  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+  const [nights, setNights] = useState(0);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  console.log(selectedRange);
+
+  const handleRangeSelect = (range: DateRange | undefined, nights: number) => {
+    if (!range) {
+      setSelectedRange(undefined);
+      setNights(0);
+      setStartDate(null);
+      setEndDate(null);
+      return;
+    }
+
+    setSelectedRange(range);
+    setNights(nights);
+    setStartDate(range.from ?? null);
+    setEndDate(range.to ?? null);
+  };
+
+  const disabledDates = venue?.bookings?.map((booking) => ({
+    from: new Date(booking.dateFrom),
+    to: new Date(booking.dateTo),
+  }));
 
   const noFacilities =
     !venue?.meta.wifi &&
@@ -194,7 +223,7 @@ const VenueView = () => {
                 <h2 className="text-black">Where you'll stay</h2>
                 <div className="w-full h-100 rounded-xl overflow-hidden">
                   <img
-                    className="object-cover "
+                    className="object-cover"
                     src={placeholderImage}
                     alt="Map"
                   ></img>
@@ -204,7 +233,8 @@ const VenueView = () => {
             <div className="flex-[1] ">
               <div className="flex flex-col gap-10 w-full h-auto border-1 border-solid border-sunset-800 rounded-xl p-10">
                 <p className="text-xl">
-                  <strong>{venue.price} NOK</strong> for 1 night
+                  <strong>{venue.price * nights || venue.price} NOK</strong> for{" "}
+                  {nights || 1} {nights > 1 ? "nights" : "night"}
                 </p>
                 <div className="flex flex-col gap-1">
                   <div className="relative flex items-center gap-1">
@@ -217,21 +247,24 @@ const VenueView = () => {
                       className="w-full flex items-center gap-1"
                     >
                       <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
-                      <p>Check in</p>
+                      {nights > 0 && startDate && endDate ? (
+                        <p>
+                          {format(startDate, "MMM d")} –{" "}
+                          {format(endDate, "MMM d")}
+                        </p>
+                      ) : (
+                        <p>Select dates</p>
+                      )}
                     </Button>
                     {showBookingCalendar && (
                       <div className="w-full drop-shadow-md absolute top-10 -left-45 z-10">
-                        <BookingModal onClose={handleCloseBookingCalendar} />
+                        <BookingModal
+                          disabledDates={disabledDates}
+                          onClose={handleCloseBookingCalendar}
+                          onRangeSelect={handleRangeSelect}
+                        />
                       </div>
                     )}
-                    <strong>-</strong>
-                    <Button
-                      variant="outline"
-                      className="w-full flex items-center gap-1"
-                    >
-                      <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
-                      <p>Check out</p>
-                    </Button>
                   </div>
                   <div>
                     <Button
