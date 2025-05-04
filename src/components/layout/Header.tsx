@@ -58,7 +58,9 @@ const Header = () => {
   }, [username, accessToken, authLoading]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) {
+    console.warn(error);
+  }
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -91,7 +93,7 @@ const Header = () => {
               <>
                 <Link
                   to={`/profile/${profile?.name}`}
-                  className="transition-colors duration-300 rounded-l-md border-2 border-white hover:border-turquoise-500 size-10 overflow-hidden"
+                  className="transition-colors duration-300 rounded-r-md border-2 border-white hover:border-turquoise-500 size-10 overflow-hidden"
                 >
                   <img
                     src={profile?.avatar.url}
