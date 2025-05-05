@@ -91,7 +91,6 @@ const EditProfileModal = ({ onClose }: EditProfileModalProps) => {
           if (error instanceof Error) {
             setServerError(error.message);
           }
-          console.log(serverError);
         }
       }
     }

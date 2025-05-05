@@ -16,7 +16,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
-import BookingModal from "../components/modals/BookingModal.tsx";
+import CalendarModal from "../components/modals/CalendarModal.tsx";
+import AddPeopleModal from "../components/modals/AddPeopleModal.tsx";
+import { createBooking } from "../api/venues.ts";
+import { useAuth } from "../contexts/AuthContext.tsx";
 
 type Venue = {
   id: string;
@@ -44,6 +47,8 @@ type Venue = {
 };
 
 const VenueView = () => {
+  const { accessToken } = useAuth();
+
   const { venueId } = useParams();
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,7 +64,7 @@ const VenueView = () => {
     const fetchVenue = async () => {
       try {
         const response = await fetch(
-          `https://v2.api.noroff.dev/holidaze/venues/${venueId}?_owner=true`
+          `https://v2.api.noroff.dev/holidaze/venues/${venueId}?_owner=true&_bookings=true`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch venue details");
@@ -77,21 +82,27 @@ const VenueView = () => {
     fetchVenue();
   }, [venueId]);
 
-  const [showBookingCalendar, setShowBookingCalendar] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
 
-  const handleOpenBookingCalendar = () => {
-    setShowBookingCalendar(true);
+  const handleOpenCalendarModal = () => {
+    setShowCalendarModal(true);
+  };
+  const handleCloseCalendarModal = () => {
+    setShowCalendarModal(false);
   };
 
-  const handleCloseBookingCalendar = () => {
-    setShowBookingCalendar(false);
+  const handleOpenAddPeopleModal = () => {
+    setShowAddPeopleModal(true);
+  };
+  const handleCloseAddPeopleModal = () => {
+    setShowAddPeopleModal(false);
   };
 
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
   const [nights, setNights] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  console.log(selectedRange);
 
   const handleRangeSelect = (range: DateRange | undefined, nights: number) => {
     if (!range) {
@@ -113,6 +124,35 @@ const VenueView = () => {
     to: new Date(booking.dateTo),
   }));
 
+  console.log(disabledDates);
+
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const totalGuests = adults + children;
+
+  const handleReservation = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (startDate && endDate && venueId && accessToken) {
+      try {
+        const result = await createBooking(
+          startDate,
+          endDate,
+          totalGuests,
+          venueId,
+          accessToken
+        );
+        if (result) {
+          console.log("Booked!");
+        }
+        // SUCCESS MESSAGE
+      } catch (error) {
+        if (error instanceof Error) {
+          // setServerError(error.message);
+        }
+      }
+    }
+  };
+
   const noFacilities =
     !venue?.meta.wifi &&
     !venue?.meta.parking &&
@@ -126,7 +166,10 @@ const VenueView = () => {
   return (
     <>
       <article
-        onClick={handleCloseBookingCalendar}
+        onClick={() => {
+          handleCloseCalendarModal();
+          handleCloseAddPeopleModal();
+        }}
         className="flex flex-col gap-10"
       >
         <div className="rounded-t-[20px] overflow-hidden w-full h-full">
@@ -230,23 +273,33 @@ const VenueView = () => {
                 </div>
               </div>
             </div>
-            <div className="flex-[1] ">
+            <form onSubmit={handleReservation} className="flex-[1] ">
               <div className="flex flex-col gap-10 w-full h-auto border-1 border-solid border-sunset-800 rounded-xl p-10">
                 <p className="text-xl">
                   <strong>{venue.price * nights || venue.price} NOK</strong> for{" "}
                   {nights || 1} {nights > 1 ? "nights" : "night"}
                 </p>
                 <div className="flex flex-col gap-1">
-                  <div className="relative flex items-center gap-1">
+                  <div className="relative">
                     <Button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleOpenBookingCalendar();
+                        handleOpenCalendarModal();
+                        if (showAddPeopleModal) {
+                          handleCloseAddPeopleModal();
+                        }
+                        if (showCalendarModal) {
+                          handleCloseCalendarModal();
+                        }
                       }}
                       variant="outline"
-                      className="w-full flex items-center gap-1"
+                      className="w-full flex items-center gap-3"
                     >
-                      <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
+                      <FontAwesomeIcon
+                        icon={faCalendar}
+                        className="w-1/12"
+                      ></FontAwesomeIcon>
                       {nights > 0 && startDate && endDate ? (
                         <p>
                           {format(startDate, "MMM d")} –{" "}
@@ -256,31 +309,59 @@ const VenueView = () => {
                         <p>Select dates</p>
                       )}
                     </Button>
-                    {showBookingCalendar && (
+                    {showCalendarModal && (
                       <div className="w-full drop-shadow-md absolute top-10 -left-45 z-10">
-                        <BookingModal
+                        <CalendarModal
                           disabledDates={disabledDates}
-                          onClose={handleCloseBookingCalendar}
+                          onClose={handleCloseCalendarModal}
                           onRangeSelect={handleRangeSelect}
+                          selectedRange={selectedRange}
+                          nights={nights}
                         />
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="relative">
                     <Button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenAddPeopleModal();
+                        if (showCalendarModal) {
+                          handleCloseCalendarModal();
+                        }
+                        if (showAddPeopleModal) {
+                          handleCloseAddPeopleModal();
+                        }
+                      }}
                       variant="outline"
-                      className="w-full flex items-center gap-1"
+                      className="w-full flex items-center gap-3"
                     >
-                      <FontAwesomeIcon icon={faPeopleRoof}></FontAwesomeIcon>Add
-                      guest(s)
+                      <FontAwesomeIcon
+                        icon={faPeopleRoof}
+                        className="w-1/12"
+                      ></FontAwesomeIcon>
+                      {totalGuests} {totalGuests === 1 ? "guest" : "guests"}
                     </Button>
+                    {showAddPeopleModal && (
+                      <div className="w-full drop-shadow-md absolute top-10 left-0 z-10">
+                        <AddPeopleModal
+                          guestLimit={venue.maxGuests}
+                          adults={adults}
+                          children={children}
+                          setAdults={setAdults}
+                          setChildren={setChildren}
+                          onClose={handleCloseAddPeopleModal}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
-                <Button variant="primary" size="lg">
+                <Button type="submit" variant="primary" size="lg">
                   Reserve
                 </Button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </article>
