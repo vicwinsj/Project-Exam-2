@@ -26,7 +26,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`h-full rounded-lg font-semibold transition-colors duration-300 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`h-full whitespace-nowrap rounded-lg font-semibold transition-colors duration-300 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {children}

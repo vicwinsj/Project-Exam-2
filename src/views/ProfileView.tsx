@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import EditProfileModal from "../components/modals/EditProfileModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import CreateVenue from "../components/modals/CreateVenueModal";
 
 type Profile = {
   name: string;
@@ -18,7 +21,6 @@ type Profile = {
   };
   venueManager?: boolean;
 };
-<div></div>;
 
 const ProfileView = () => {
   const location = useLocation();
@@ -30,6 +32,7 @@ const ProfileView = () => {
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showCreateVenue, setShowCreateVenue] = useState(false);
 
   const handleOpenEditProfile = () => {
     setShowEditProfile(true);
@@ -37,6 +40,14 @@ const ProfileView = () => {
 
   const handleCloseEditProfile = () => {
     setShowEditProfile(false);
+  };
+
+  const handleOpenCreateVenue = () => {
+    setShowCreateVenue(true);
+  };
+
+  const handleCloseCreateVenue = () => {
+    setShowCreateVenue(false);
   };
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -115,16 +126,25 @@ const ProfileView = () => {
         </section>
         {isLoggedInProfile && (
           <section className="flex flex-col">
-            <aside className="flex p-3 gap-3 w-full h-full">
+            <aside className="flex items-center p-3 gap-3 w-full h-full">
               <Button variant="outline">Venues</Button>
               <Button variant="outline">Bookings</Button>
               <Button variant="outline">Favorites</Button>
+              {profile?.venueManager && (
+                <Button
+                  onClick={handleOpenCreateVenue}
+                  className="flex items-center gap-1"
+                >
+                  <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>New Venue
+                </Button>
+              )}
             </aside>
             <div className="bg-white w-full rounded-xl h-50 border-sunset-800 border-1"></div>
           </section>
         )}
       </div>
       {showEditProfile && <EditProfileModal onClose={handleCloseEditProfile} />}
+      {showCreateVenue && <CreateVenue onClose={handleCloseCreateVenue} />}
     </>
   );
 };

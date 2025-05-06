@@ -72,7 +72,7 @@ const EditProfileModal = ({ onClose }: EditProfileModalProps) => {
         };
 
         if (!accessToken) {
-          setServerError("Access token is missing");
+          setServerError("You must be logged in");
           return;
         }
 
