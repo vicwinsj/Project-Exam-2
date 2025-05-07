@@ -45,7 +45,7 @@ const HomeView = () => {
           searchResults.map((venue) => (
             <Link to={`/venue/${venue.id}`} key={venue.id}>
               <article className="flex flex-col gap-3">
-                <div className="rounded-2xl overflow-hidden w-full h-50">
+                <div className="rounded-t-2xl overflow-hidden w-full h-50">
                   <img
                     className="w-full h-full object-cover"
                     src={venue.media[0]?.url || placeholderImage}
@@ -55,7 +55,7 @@ const HomeView = () => {
                 <div></div>
                 <div>
                   <h2 className="truncate">{venue.name}</h2>
-                  <p>
+                  <p className="truncate">
                     {venue.location?.city || "Unknown"},{" "}
                     {venue.location?.country || "Unknown"}
                   </p>
