@@ -6,6 +6,48 @@ import EditProfileModal from "../components/modals/EditProfileModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import CreateVenue from "../components/modals/CreateVenueModal";
+import { Tabs } from "../components/Tabs";
+import { VenueCard } from "../components/VenueCard";
+
+type Venue = {
+  id: string;
+  name: string;
+  location: {
+    country: string;
+    city: string;
+  };
+};
+
+type Bookings = {
+  id: string;
+  dateFrom: Date;
+  dateTo: Date;
+  guests: number;
+  venue: Venue;
+};
+
+type Venues = {
+  id: string;
+  name: string;
+  description: string;
+  media: {
+    url: string;
+    alt: string;
+  }[];
+  price: number;
+  _count: {
+    bookings: number;
+  };
+  location: {
+    country: string;
+    city: string;
+  };
+};
+
+type ProfileCount = {
+  venues: number;
+  bookings: number;
+};
 
 type Profile = {
   name: string;
@@ -20,6 +62,9 @@ type Profile = {
     alt: string;
   };
   venueManager?: boolean;
+  venues?: Venues[];
+  bookings?: Bookings[];
+  _count?: ProfileCount;
 };
 
 const ProfileView = () => {
@@ -33,6 +78,7 @@ const ProfileView = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showCreateVenue, setShowCreateVenue] = useState(false);
+  const [currentTab, setCurrentTab] = useState("Saved Venues");
 
   const handleOpenEditProfile = () => {
     setShowEditProfile(true);
@@ -80,7 +126,7 @@ const ProfileView = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-20">
         <section className="relative flex flex-col">
           <div className="w-full h-100 rounded-t-[20px] overflow-hidden">
             <img
@@ -100,7 +146,14 @@ const ProfileView = () => {
             <div className="w-1/4"></div>
             <div className="w-1/2 min-h-30 flex flex-col gap-3">
               <div className="">
-                <h1 className="text-black text-2xl">{profile?.name}</h1>
+                <h1 className="flex gap-3 text-black text-2xl">
+                  {profile?.name}
+                  {profile?.venueManager && (
+                    <span className="font-inter font-normal text-ocean-700">
+                      Manager
+                    </span>
+                  )}
+                </h1>
                 <p className="font-semibold">{profile?.email}</p>
               </div>
               {profile?.bio && (
@@ -111,25 +164,33 @@ const ProfileView = () => {
                 </>
               )}
             </div>
-            <div className="flex items-end h-fit">
+            <div className="flex h-fit items-end">
               {isLoggedInProfile && (
                 <Button
                   onClick={handleOpenEditProfile}
                   className="h-10"
                   variant="secondary"
                 >
-                  Edit
+                  Edit Profile
                 </Button>
               )}
             </div>
           </div>
         </section>
         {isLoggedInProfile && (
-          <section className="flex flex-col">
-            <aside className="flex items-center p-3 gap-3 w-full h-full">
-              <Button variant="outline">Venues</Button>
-              <Button variant="outline">Bookings</Button>
-              <Button variant="outline">Favorites</Button>
+          <section className="flex flex-col gap-3">
+            <aside className="flex items-center gap-3 w-full h-full">
+              {profile?.venueManager ? (
+                <Tabs
+                  tabs={["Saved Venues", "Your Bookings", "Your Venues"]}
+                  onTabChange={(tab) => setCurrentTab(tab)}
+                />
+              ) : (
+                <Tabs
+                  tabs={["Saved Venues", "Your Bookings"]}
+                  onTabChange={(tab) => setCurrentTab(tab)}
+                />
+              )}
               {profile?.venueManager && (
                 <Button
                   onClick={handleOpenCreateVenue}
@@ -139,7 +200,28 @@ const ProfileView = () => {
                 </Button>
               )}
             </aside>
-            <div className="bg-white w-full rounded-xl h-50 border-sunset-800 border-1"></div>
+            <div className="bg-white w-full grid grid-cols-4 gap-10 p-10 rounded-xl h-full border-ocean-700 border-1">
+              {currentTab === "Saved Venues" && <p>Here are your favs...</p>}
+              {currentTab === "Your Bookings" && (
+                <div>Here are your bookings...</div>
+              )}
+              {/* <div className="w-full grid grid-cols-4 gap-10"> */}
+              {currentTab === "Your Venues" &&
+              profile?.venues &&
+              profile?.venues.length > 0
+                ? profile.venues.map((venue) => (
+                    <VenueCard key={venue.id} {...venue} />
+                  ))
+                : currentTab === "Your Venues" &&
+                  profile?.venues &&
+                  profile?.venues.length === 0 && (
+                    <p>
+                      You don't have any venues yet! Upload your venues to see
+                      them here.
+                    </p>
+                  )}
+              {/* </div> */}
+            </div>
           </section>
         )}
       </div>
