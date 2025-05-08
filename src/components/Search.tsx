@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "./form/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
@@ -30,14 +29,13 @@ const Search = ({ onSearch }: SearchProps) => {
           value={query}
           onChange={handleChange}
         />
-        <FontAwesomeIcon
-          icon={faMagnifyingGlass}
-          className="absolute left-3 top-4 h-10 text-ocean-700 font-semibold"
-        ></FontAwesomeIcon>
+        <button className="absolute right-8 top-3.5" type="submit">
+          <FontAwesomeIcon
+            icon={faMagnifyingGlass}
+            className="transition-colors duration-300 text-2xl text-sunset-800 hover:text-sunset-900 font-semibold"
+          ></FontAwesomeIcon>
+        </button>
       </div>
-      <Button variant="primary" size="lg" type="submit">
-        Search
-      </Button>
     </form>
   );
 };

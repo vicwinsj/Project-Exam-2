@@ -32,16 +32,14 @@ const HomeView = () => {
               <h2 className="text-black text-[32px]">
                 Check out our wide assortment of stays
               </h2>
-              <Button variant="outline" size="sm">
-                Filter
-              </Button>
+              <Button variant="outline">Filter</Button>
             </div>
           </>
         )}
       </div>
       <div className="w-full grid grid-cols-4 gap-10">
         {searchResults.length > 0 ? (
-          searchResults.map((venue) => <VenueCard {...venue} />)
+          searchResults.map((venue) => <VenueCard key={venue.id} {...venue} />)
         ) : (
           <p>No venues found.</p>
         )}

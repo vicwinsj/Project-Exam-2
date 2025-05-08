@@ -8,10 +8,13 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import CreateVenue from "../components/modals/CreateVenueModal";
 import { Tabs } from "../components/Tabs";
 import { VenueCard } from "../components/VenueCard";
+import { format, differenceInCalendarDays } from "date-fns";
+import { Link } from "react-router";
 
 type Venue = {
   id: string;
   name: string;
+  price: number;
   location: {
     country: string;
     city: string;
@@ -20,6 +23,7 @@ type Venue = {
 
 type Bookings = {
   id: string;
+  name: string;
   dateFrom: Date;
   dateTo: Date;
   guests: number;
@@ -71,7 +75,12 @@ const ProfileView = () => {
   const location = useLocation();
   const routeProfile = location.state?.profile;
 
-  const { accessToken, username, profile: loggedInProfile } = useAuth();
+  const {
+    accessToken,
+    username,
+    profile: loggedInProfile,
+    refreshProfile,
+  } = useAuth();
   const { name: routeName } = useParams();
   const isLoggedInProfile = routeName === username;
 
@@ -100,25 +109,31 @@ const ProfileView = () => {
   //   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isLoggedInProfile) {
+    const loadProfile = async () => {
+      setLoading(true);
+      if (isLoggedInProfile) {
+        await refreshProfile();
+      } else {
+        setProfile(routeProfile);
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [isLoggedInProfile, routeProfile, refreshProfile]);
+
+  useEffect(() => {
+    if (isLoggedInProfile && loggedInProfile) {
       setProfile(loggedInProfile);
-    } else {
-      setProfile(routeProfile);
+      setLoading(false);
     }
+  }, [isLoggedInProfile, loggedInProfile]);
 
-    setLoading(false);
-
+  useEffect(() => {
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
     }
-  }, [
-    isLoggedInProfile,
-    loggedInProfile,
-    routeProfile,
-    routeName,
-    username,
-    profile,
-  ]);
+  }, [profile]);
 
   if (loading) return <p>Loading...</p>;
   //   if (error) return <p>Error: {error}</p>;
@@ -200,27 +215,75 @@ const ProfileView = () => {
                 </Button>
               )}
             </aside>
-            <div className="bg-white w-full grid grid-cols-4 gap-10 p-10 rounded-xl h-full border-ocean-700 border-1">
+            <div className="bg-white w-full rounded-xl h-full">
+              {/* Saved Venues */}
               {currentTab === "Saved Venues" && <p>Here are your favs...</p>}
-              {currentTab === "Your Bookings" && (
-                <div>Here are your bookings...</div>
+
+              {/* Your Bookings */}
+              {currentTab === "Your Bookings" &&
+              profile?.bookings &&
+              profile?.bookings.length > 0 ? (
+                <article className="drop-shadow-sm bg-white rounded-xl">
+                  <div className="font-semibold p-3 bg-air-100 border-b-[.1px] border-neutral-300 text-ocean-700 flex w-full justify-between rounded-t-xl">
+                    <p className="flex-1">Venue</p>
+                    <p className="flex-1">City</p>
+                    <p className="flex-1">Duration</p>
+                    <p className="flex-1">Guests</p>
+                    <p className="flex-1">Total Cost</p>
+                    <p className="flex-1">Manage</p>
+                  </div>
+                  {profile.bookings.map((booking) => (
+                    <div key={booking.id} className="p-3 flex justify-between">
+                      <Link
+                        className="flex-1"
+                        to={`/venue/${booking.venue.id}`}
+                      >
+                        <p className="truncate">{booking.venue.name}</p>
+                      </Link>
+                      <p className="flex-1 truncate">
+                        {booking.venue.location.city || "Unknown"}
+                      </p>
+                      <p className="flex-1">
+                        {format(booking.dateFrom, "MMM d")} –{" "}
+                        {format(booking.dateTo, "MMM d y")}
+                      </p>
+                      <p className="flex-1">{booking.guests}</p>
+                      <strong className="flex-1">
+                        {differenceInCalendarDays(
+                          booking.dateTo,
+                          booking.dateFrom
+                        ) * booking.venue.price}{" "}
+                        <span className="font-normal">NOK</span>
+                      </strong>
+                      <p className="flex-1">Delete</p>
+                    </div>
+                  ))}
+                </article>
+              ) : (
+                currentTab === "Your Bookings" &&
+                profile?.bookings &&
+                profile?.bookings.length === 0 && <p>No bookings yet!</p>
               )}
-              {/* <div className="w-full grid grid-cols-4 gap-10"> */}
+
+              {/* Your Venues */}
               {currentTab === "Your Venues" &&
               profile?.venues &&
-              profile?.venues.length > 0
-                ? profile.venues.map((venue) => (
+              profile?.venues.length > 0 ? (
+                <div className="w-full grid grid-cols-4 gap-10">
+                  {profile.venues.map((venue) => (
                     <VenueCard key={venue.id} {...venue} />
-                  ))
-                : currentTab === "Your Venues" &&
-                  profile?.venues &&
-                  profile?.venues.length === 0 && (
-                    <p>
-                      You don't have any venues yet! Upload your venues to see
-                      them here.
-                    </p>
-                  )}
-              {/* </div> */}
+                  ))}{" "}
+                </div>
+              ) : (
+                currentTab === "Your Venues" &&
+                profile?.venues &&
+                profile?.venues.length === 0 && (
+                  <p>
+                    You don't have any venues yet! Upload your venues to see
+                    them here.
+                  </p>
+                )
+              )}
             </div>
           </section>
         )}

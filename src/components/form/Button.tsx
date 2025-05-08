@@ -6,10 +6,11 @@ type ButtonProps = {
 
 const variantClasses = {
   primary:
-    "bg-sunset-800 text-white border-sunset-800 border-[.1px] hover:bg-sunset-900",
-  secondary: "bg-turquoise-500 hover:bg-air-100 text-ocean-700",
+    "border-sunset-800 border-1 bg-white text-sunset-800 hover:text-sunset-900 hover:border-sunset-900",
+  secondary:
+    "bg-ocean-700 border-white border-1 text-white hover:text-turquoise-500 hover:border-turquoise-500",
   outline:
-    "border-[.1px] font-normal! border-ocean-700 text-neutral-600 hover:border-black hover:bg-air-100 rounded-sm",
+    "border-1 font-normal! border-neutral-500 text-neutral-600 hover:border-black hover:bg-air-100 rounded-sm",
 };
 
 const sizeClasses = {
