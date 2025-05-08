@@ -1,7 +1,6 @@
 import { useVenues } from "../contexts/VenueContext";
-import { Link } from "react-router-dom";
 import { Button } from "../components/form/Button";
-import placeholderImage from "../assets/placeholder_venue.png";
+import { VenueCard } from "../components/VenueCard";
 
 const HomeView = () => {
   const { searchResults, searchQuery, error, loading } = useVenues();
@@ -33,40 +32,14 @@ const HomeView = () => {
               <h2 className="text-black text-[32px]">
                 Check out our wide assortment of stays
               </h2>
-              <Button variant="outline" size="sm">
-                Filter
-              </Button>
+              <Button variant="outline">Filter</Button>
             </div>
           </>
         )}
       </div>
       <div className="w-full grid grid-cols-4 gap-10">
         {searchResults.length > 0 ? (
-          searchResults.map((venue) => (
-            <Link to={`/venue/${venue.id}`} key={venue.id}>
-              <article className="flex flex-col gap-3">
-                <div className="rounded-t-2xl overflow-hidden w-full h-50">
-                  <img
-                    className="w-full h-full object-cover"
-                    src={venue.media[0]?.url || placeholderImage}
-                    alt={venue.media[0]?.alt || "Picture of the venue"}
-                  />
-                </div>
-                <div></div>
-                <div>
-                  <h2 className="truncate">{venue.name}</h2>
-                  <p className="truncate">
-                    {venue.location?.city || "Unknown"},{" "}
-                    {venue.location?.country || "Unknown"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{venue.price} kr</span> per
-                    night
-                  </p>
-                </div>
-              </article>
-            </Link>
-          ))
+          searchResults.map((venue) => <VenueCard key={venue.id} {...venue} />)
         ) : (
           <p>No venues found.</p>
         )}

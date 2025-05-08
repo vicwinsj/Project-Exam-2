@@ -61,7 +61,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
           Login to account
         </h1>
         <fieldset className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1 ">
+          <div className="flex flex-col gap-1">
             <label htmlFor="email">Email</label>
             <input
               className={serverError && "border-red-500"}
@@ -81,7 +81,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
           </div>
         </fieldset>
         <div className="flex justify-between">
-          <div className="flex gap-1">
+          <div className="flex gap-1 h-fit">
             <input
               className="cursor-pointer"
               type="checkbox"

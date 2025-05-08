@@ -274,7 +274,7 @@ const VenueView = () => {
               </div>
             </div>
             <form onSubmit={handleReservation} className="flex-[1] ">
-              <div className="flex flex-col gap-10 w-full h-auto border-1 border-solid border-neutral-100 rounded-xl p-10">
+              <div className="flex flex-col gap-10 w-full h-auto rounded-xl p-10">
                 <p className="text-xl">
                   <strong>{venue.price * nights || venue.price} NOK</strong> for{" "}
                   {nights || 1} {nights > 1 ? "nights" : "night"}

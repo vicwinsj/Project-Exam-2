@@ -6,6 +6,52 @@ import EditProfileModal from "../components/modals/EditProfileModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import CreateVenue from "../components/modals/CreateVenueModal";
+import { Tabs } from "../components/Tabs";
+import { VenueCard } from "../components/VenueCard";
+import { format, differenceInCalendarDays } from "date-fns";
+import { Link } from "react-router";
+
+type Venue = {
+  id: string;
+  name: string;
+  price: number;
+  location: {
+    country: string;
+    city: string;
+  };
+};
+
+type Bookings = {
+  id: string;
+  name: string;
+  dateFrom: Date;
+  dateTo: Date;
+  guests: number;
+  venue: Venue;
+};
+
+type Venues = {
+  id: string;
+  name: string;
+  description: string;
+  media: {
+    url: string;
+    alt: string;
+  }[];
+  price: number;
+  _count: {
+    bookings: number;
+  };
+  location: {
+    country: string;
+    city: string;
+  };
+};
+
+type ProfileCount = {
+  venues: number;
+  bookings: number;
+};
 
 type Profile = {
   name: string;
@@ -20,19 +66,28 @@ type Profile = {
     alt: string;
   };
   venueManager?: boolean;
+  venues?: Venues[];
+  bookings?: Bookings[];
+  _count?: ProfileCount;
 };
 
 const ProfileView = () => {
   const location = useLocation();
   const routeProfile = location.state?.profile;
 
-  const { accessToken, username, profile: loggedInProfile } = useAuth();
+  const {
+    accessToken,
+    username,
+    profile: loggedInProfile,
+    refreshProfile,
+  } = useAuth();
   const { name: routeName } = useParams();
   const isLoggedInProfile = routeName === username;
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showCreateVenue, setShowCreateVenue] = useState(false);
+  const [currentTab, setCurrentTab] = useState("Saved Venues");
 
   const handleOpenEditProfile = () => {
     setShowEditProfile(true);
@@ -54,25 +109,31 @@ const ProfileView = () => {
   //   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isLoggedInProfile) {
+    const loadProfile = async () => {
+      setLoading(true);
+      if (isLoggedInProfile) {
+        await refreshProfile();
+      } else {
+        setProfile(routeProfile);
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [isLoggedInProfile, routeProfile, refreshProfile]);
+
+  useEffect(() => {
+    if (isLoggedInProfile && loggedInProfile) {
       setProfile(loggedInProfile);
-    } else {
-      setProfile(routeProfile);
+      setLoading(false);
     }
+  }, [isLoggedInProfile, loggedInProfile]);
 
-    setLoading(false);
-
+  useEffect(() => {
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
     }
-  }, [
-    isLoggedInProfile,
-    loggedInProfile,
-    routeProfile,
-    routeName,
-    username,
-    profile,
-  ]);
+  }, [profile]);
 
   if (loading) return <p>Loading...</p>;
   //   if (error) return <p>Error: {error}</p>;
@@ -80,7 +141,7 @@ const ProfileView = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-20">
         <section className="relative flex flex-col">
           <div className="w-full h-100 rounded-t-[20px] overflow-hidden">
             <img
@@ -100,7 +161,14 @@ const ProfileView = () => {
             <div className="w-1/4"></div>
             <div className="w-1/2 min-h-30 flex flex-col gap-3">
               <div className="">
-                <h1 className="text-black text-2xl">{profile?.name}</h1>
+                <h1 className="flex gap-3 text-black text-2xl">
+                  {profile?.name}
+                  {profile?.venueManager && (
+                    <span className="font-inter font-normal text-ocean-700">
+                      Manager
+                    </span>
+                  )}
+                </h1>
                 <p className="font-semibold">{profile?.email}</p>
               </div>
               {profile?.bio && (
@@ -111,25 +179,33 @@ const ProfileView = () => {
                 </>
               )}
             </div>
-            <div className="flex items-end h-fit">
+            <div className="flex h-fit items-end">
               {isLoggedInProfile && (
                 <Button
                   onClick={handleOpenEditProfile}
                   className="h-10"
                   variant="secondary"
                 >
-                  Edit
+                  Edit Profile
                 </Button>
               )}
             </div>
           </div>
         </section>
         {isLoggedInProfile && (
-          <section className="flex flex-col">
-            <aside className="flex items-center p-3 gap-3 w-full h-full">
-              <Button variant="outline">Venues</Button>
-              <Button variant="outline">Bookings</Button>
-              <Button variant="outline">Favorites</Button>
+          <section className="flex flex-col gap-3">
+            <aside className="flex items-center gap-3 w-full h-full">
+              {profile?.venueManager ? (
+                <Tabs
+                  tabs={["Saved Venues", "Your Bookings", "Your Venues"]}
+                  onTabChange={(tab) => setCurrentTab(tab)}
+                />
+              ) : (
+                <Tabs
+                  tabs={["Saved Venues", "Your Bookings"]}
+                  onTabChange={(tab) => setCurrentTab(tab)}
+                />
+              )}
               {profile?.venueManager && (
                 <Button
                   onClick={handleOpenCreateVenue}
@@ -139,7 +215,76 @@ const ProfileView = () => {
                 </Button>
               )}
             </aside>
-            <div className="bg-white w-full rounded-xl h-50 border-sunset-800 border-1"></div>
+            <div className="bg-white w-full rounded-xl h-full">
+              {/* Saved Venues */}
+              {currentTab === "Saved Venues" && <p>Here are your favs...</p>}
+
+              {/* Your Bookings */}
+              {currentTab === "Your Bookings" &&
+              profile?.bookings &&
+              profile?.bookings.length > 0 ? (
+                <article className="drop-shadow-sm bg-white rounded-xl">
+                  <div className="font-semibold p-3 bg-air-100 border-b-[.1px] border-neutral-300 text-ocean-700 flex w-full justify-between rounded-t-xl">
+                    <p className="flex-1">Venue</p>
+                    <p className="flex-1">City</p>
+                    <p className="flex-1">Duration</p>
+                    <p className="flex-1">Guests</p>
+                    <p className="flex-1">Total Cost</p>
+                    <p className="flex-1">Manage</p>
+                  </div>
+                  {profile.bookings.map((booking) => (
+                    <div key={booking.id} className="p-3 flex justify-between">
+                      <Link
+                        className="flex-1"
+                        to={`/venue/${booking.venue.id}`}
+                      >
+                        <p className="truncate">{booking.venue.name}</p>
+                      </Link>
+                      <p className="flex-1 truncate">
+                        {booking.venue.location.city || "Unknown"}
+                      </p>
+                      <p className="flex-1">
+                        {format(booking.dateFrom, "MMM d")} –{" "}
+                        {format(booking.dateTo, "MMM d y")}
+                      </p>
+                      <p className="flex-1">{booking.guests}</p>
+                      <strong className="flex-1">
+                        {differenceInCalendarDays(
+                          booking.dateTo,
+                          booking.dateFrom
+                        ) * booking.venue.price}{" "}
+                        <span className="font-normal">NOK</span>
+                      </strong>
+                      <p className="flex-1">Delete</p>
+                    </div>
+                  ))}
+                </article>
+              ) : (
+                currentTab === "Your Bookings" &&
+                profile?.bookings &&
+                profile?.bookings.length === 0 && <p>No bookings yet!</p>
+              )}
+
+              {/* Your Venues */}
+              {currentTab === "Your Venues" &&
+              profile?.venues &&
+              profile?.venues.length > 0 ? (
+                <div className="w-full grid grid-cols-4 gap-10">
+                  {profile.venues.map((venue) => (
+                    <VenueCard key={venue.id} {...venue} />
+                  ))}{" "}
+                </div>
+              ) : (
+                currentTab === "Your Venues" &&
+                profile?.venues &&
+                profile?.venues.length === 0 && (
+                  <p>
+                    You don't have any venues yet! Upload your venues to see
+                    them here.
+                  </p>
+                )
+              )}
+            </div>
           </section>
         )}
       </div>

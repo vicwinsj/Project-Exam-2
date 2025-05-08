@@ -3,7 +3,7 @@ import { API_HOLIDAZE_PROFILES, API_KEY } from "../constants/api";
 export const fetchProfile = async (name: string, accessToken: string) => {
   try {
     const response = await fetch(
-      `${API_HOLIDAZE_PROFILES}/${name}?_bookings=true?_venues=true`,
+      `${API_HOLIDAZE_PROFILES}/${name}?_bookings=true&_venues=true`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

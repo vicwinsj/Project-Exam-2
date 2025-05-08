@@ -91,9 +91,12 @@ const Header = () => {
           <nav className="text-white flex items-center gap-3">
             {accessToken ? (
               <>
+                <Button variant="secondary" onClick={handleLogout}>
+                  Logout
+                </Button>
                 <Link
                   to={`/profile/${profile?.name}`}
-                  className="transition-colors duration-300 rounded-r-md border-2 border-white hover:border-turquoise-500 size-10 overflow-hidden"
+                  className="transition-colors duration-300 rounded-r-md border-1 border-white hover:border-turquoise-500 size-8.5 overflow-hidden"
                 >
                   <img
                     src={profile?.avatar.url}
@@ -101,9 +104,6 @@ const Header = () => {
                     className="size-full object-cover bg-black"
                   />
                 </Link>
-                <Button variant="secondary" onClick={handleLogout}>
-                  Logout
-                </Button>
               </>
             ) : (
               <>
