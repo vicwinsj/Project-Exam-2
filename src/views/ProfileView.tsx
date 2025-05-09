@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import EditProfileModal from "../components/modals/EditProfileModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import CreateVenue from "../components/modals/CreateVenueModal";
+import VenueModal from "../components/modals/VenueModal";
 import { Tabs } from "../components/Tabs";
 import { VenueCard } from "../components/VenueCard";
 import { format, differenceInCalendarDays } from "date-fns";
@@ -86,7 +86,7 @@ const ProfileView = () => {
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
-  const [showCreateVenue, setShowCreateVenue] = useState(false);
+  const [showVenueModal, setShowVenueModal] = useState(false);
   const [currentTab, setCurrentTab] = useState("Saved Venues");
 
   const handleOpenEditProfile = () => {
@@ -97,12 +97,12 @@ const ProfileView = () => {
     setShowEditProfile(false);
   };
 
-  const handleOpenCreateVenue = () => {
-    setShowCreateVenue(true);
+  const handleOpenVenueModal = () => {
+    setShowVenueModal(true);
   };
 
-  const handleCloseCreateVenue = () => {
-    setShowCreateVenue(false);
+  const handleCloseVenueModal = () => {
+    setShowVenueModal(false);
   };
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -208,7 +208,7 @@ const ProfileView = () => {
               )}
               {profile?.venueManager && (
                 <Button
-                  onClick={handleOpenCreateVenue}
+                  onClick={handleOpenVenueModal}
                   className="flex items-center gap-1"
                 >
                   <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>New Venue
@@ -289,7 +289,9 @@ const ProfileView = () => {
         )}
       </div>
       {showEditProfile && <EditProfileModal onClose={handleCloseEditProfile} />}
-      {showCreateVenue && <CreateVenue onClose={handleCloseCreateVenue} />}
+      {showVenueModal && (
+        <VenueModal title="Create venue" onClose={handleCloseVenueModal} />
+      )}
     </>
   );
 };

@@ -2,7 +2,7 @@ import { Button } from "../form/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-interface AddPeopleModalProps {
+interface GuestsModalProps {
   guestLimit: number | undefined;
   adults: number;
   children: number;
@@ -11,14 +11,14 @@ interface AddPeopleModalProps {
   onClose: () => void;
 }
 
-export default function AddPeopleModal({
+export default function GuestsModal({
   guestLimit = 1,
   onClose,
   adults,
   children,
   setAdults,
   setChildren,
-}: AddPeopleModalProps) {
+}: GuestsModalProps) {
   const totalGuests = adults + children;
 
   const increment = (type: "adult" | "child") => {

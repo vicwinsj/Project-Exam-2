@@ -10,6 +10,21 @@ import {
 // Update venue
 // Edit booking
 
+export const fetchVenue = async (venueId: string | undefined) => {
+  try {
+    const response = await fetch(
+      `${API_HOLIDAZE_VENUES}/${venueId}?_owner=true&_bookings=true`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch venue details");
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    throw error instanceof Error && error;
+  }
+};
+
 interface Media {
   url: string;
   alt: string;
@@ -72,6 +87,50 @@ export const createVenue = async (
     throw error instanceof Error
       ? error
       : new Error("Unknown error occurred while attempting to create venue");
+  }
+};
+
+export const updateVenue = async (
+  venueId: string,
+  name: string,
+  description: string,
+  media: Media[],
+  price: number,
+  maxGuests: number,
+  rating: number,
+  meta: Meta,
+  location: Location,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(`${API_HOLIDAZE_VENUES}/${venueId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "X-Noroff-API-Key": API_KEY,
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        media,
+        price,
+        maxGuests,
+        rating,
+        meta,
+        location,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update venue");
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    throw error instanceof Error
+      ? error
+      : new Error("Unknown error occurred while attempting to update venue");
   }
 };
 
