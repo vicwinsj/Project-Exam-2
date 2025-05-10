@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "./form/Button";
 
 type SearchProps = {
   onSearch: (query: string) => void;
@@ -29,12 +30,16 @@ const Search = ({ onSearch }: SearchProps) => {
           value={query}
           onChange={handleChange}
         />
-        <button className="absolute right-8 top-3.5" type="submit">
+        <Button
+          variant="primary"
+          className="flex items-center absolute right-8 top-2.5"
+          type="submit"
+        >
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
-            className="transition-colors duration-300 text-2xl text-sunset-800 hover:text-sunset-900 font-semibold"
+            className="transition-colors duration-300 text-2xl font-semibold"
           ></FontAwesomeIcon>
-        </button>
+        </Button>
       </div>
     </form>
   );

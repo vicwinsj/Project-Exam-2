@@ -65,6 +65,6 @@ export const editProfile = async (
   } catch (error) {
     throw error instanceof Error
       ? error
-      : new Error("Unknown error occurred while fetching profile");
+      : new Error("Unknown error occurred while updating profile");
   }
 };

@@ -19,9 +19,10 @@ import { format } from "date-fns";
 import CalendarModal from "../components/modals/CalendarModal.tsx";
 import GuestsModal from "../components/modals/GuestsModal.tsx";
 import VenueModal from "../components/modals/VenueModal.tsx";
-import { createBooking } from "../api/venues.ts";
+import { createBooking } from "../api/bookings.ts";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { fetchVenue } from "../api/venues.ts";
+import { DeleteModal } from "../components/modals/DeleteModal.tsx";
 
 type Venue = {
   id: string;
@@ -93,6 +94,7 @@ const VenueView = () => {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [showVenueModal, setShowVenueModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleOpenCalendarModal = () => {
     setShowCalendarModal(true);
@@ -114,6 +116,14 @@ const VenueView = () => {
 
   const handleCloseVenueModal = () => {
     setShowVenueModal(false);
+  };
+
+  const handleOpenDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
   };
 
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
@@ -201,7 +211,11 @@ const VenueView = () => {
             <h1 className="text-5xl">{venue.name}</h1>
             {isOwnVenue && (
               <div className="flex items-center gap-3">
-                <Button className="" variant="delete">
+                <Button
+                  onClick={handleOpenDeleteModal}
+                  className=""
+                  variant="delete"
+                >
                   Delete Venue
                 </Button>
                 <Button onClick={handleOpenVenueModal} variant="secondary">
@@ -404,6 +418,13 @@ const VenueView = () => {
           title="Edit venue"
           onClose={handleCloseVenueModal}
           onVenueUpdated={updateVenue}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteModal
+          venueId={venue.id}
+          venueName={venue.name}
+          onClose={handleCloseDeleteModal}
         />
       )}
     </>

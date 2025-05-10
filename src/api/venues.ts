@@ -1,14 +1,6 @@
-import {
-  API_HOLIDAZE_BOOKINGS,
-  API_HOLIDAZE_VENUES,
-  API_KEY,
-} from "../constants/api";
+import { API_HOLIDAZE_VENUES, API_KEY } from "../constants/api";
 
 // Fetch venues
-// Fetch venue/name
-// Post venue
-// Update venue
-// Edit booking
 
 export const fetchVenue = async (venueId: string | undefined) => {
   try {
@@ -56,37 +48,33 @@ export const createVenue = async (
   accessToken: string
 ) => {
   try {
-    const response = await fetch(
-      `${API_HOLIDAZE_VENUES}/?_owner=true&_bookings=true`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-          "X-Noroff-API-Key": API_KEY,
-        },
-        body: JSON.stringify({
-          name,
-          description,
-          media,
-          price,
-          maxGuests,
-          rating,
-          meta,
-          location,
-        }),
-      }
-    );
+    const response = await fetch(`${API_HOLIDAZE_VENUES}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "X-Noroff-API-Key": API_KEY,
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        media,
+        price,
+        maxGuests,
+        rating,
+        meta,
+        location,
+      }),
+    });
 
     if (!response.ok) {
-      throw new Error("Failed to create venue");
+      const errorData = await response.json();
+      throw new Error(errorData.errors?.[0]?.message);
     }
     const data = await response.json();
     return data.data;
   } catch (error) {
-    throw error instanceof Error
-      ? error
-      : new Error("Unknown error occurred while attempting to create venue");
+    throw error instanceof Error ? error : "Failed to create venue";
   }
 };
 
@@ -123,51 +111,36 @@ export const updateVenue = async (
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update venue");
+      const errorData = await response.json();
+      console.log(errorData);
+      throw new Error(errorData.errors?.[0]?.message);
     }
     const data = await response.json();
     return data.data;
   } catch (error) {
-    throw error instanceof Error
-      ? error
-      : new Error("Unknown error occurred while attempting to update venue");
+    throw error instanceof Error ? error : "Failed to update venue";
   }
 };
 
-export const createBooking = async (
-  dateFrom: Date,
-  dateTo: Date,
-  guests: number,
-  venueId: string,
-  accessToken: string
-) => {
+export const deleteVenue = async (venueId: string, accessToken: string) => {
   try {
-    const response = await fetch(
-      `${API_HOLIDAZE_BOOKINGS}/?_customer=true&_venue=true`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-          "X-Noroff-API-Key": API_KEY,
-        },
-        body: JSON.stringify({
-          dateFrom: dateFrom.toISOString(),
-          dateTo: dateTo.toISOString(),
-          guests,
-          venueId,
-        }),
-      }
-    );
+    const response = await fetch(`${API_HOLIDAZE_VENUES}/${venueId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "X-Noroff-API-Key": API_KEY,
+      },
+    });
 
-    if (!response.ok) {
-      throw new Error("Failed to book");
+    const text = await response.text();
+    if (text) {
+      const data = JSON.parse(text);
+      return data.data;
     }
-    const data = await response.json();
-    return data.data;
+    return true;
   } catch (error) {
     throw error instanceof Error
       ? error
-      : new Error("Unknown error occurred while booking");
+      : new Error("Unknown error occurred while attempting to delete venue");
   }
 };
