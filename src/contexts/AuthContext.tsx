@@ -50,18 +50,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const token = localStorage.getItem("accessToken");
     const name = localStorage.getItem("username");
 
-    if (token) {
-      setAccessToken(token);
-    }
+    if (token) setAccessToken(token);
+    if (name) setUsername(name);
+  }, []);
 
-    if (name) {
-      setUsername(name);
-    }
+  useEffect(() => {
     if (accessToken && username) {
       refreshProfile();
     }
+  }, [accessToken, username]);
 
-    setAuthLoading(false);
+  useEffect(() => {
+    if (accessToken !== undefined && username !== undefined) {
+      setAuthLoading(false);
+    }
   }, [accessToken, username]);
 
   const login = (token: string, name: string) => {

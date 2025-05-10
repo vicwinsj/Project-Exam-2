@@ -138,6 +138,7 @@ export default function VenueModal({
           );
           if (result) {
             if (onVenueUpdated) await onVenueUpdated();
+            await refreshProfile();
             onClose();
             console.log("updated!");
           }
@@ -192,11 +193,17 @@ export default function VenueModal({
           <h3 className="text-black">Details</h3>
           <div className="flex flex-col gap-1">
             <label htmlFor="name">Name</label>
-            <input defaultValue={venue?.name} name="name" id="name"></input>
+            <input
+              required
+              defaultValue={venue?.name}
+              name="name"
+              id="name"
+            ></input>
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="description">Description</label>
             <textarea
+              required
               defaultValue={venue?.description}
               className="h-50"
               name="description"
@@ -207,6 +214,7 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="price">Price per night</label>
               <input
+                required
                 defaultValue={venue?.price}
                 className=""
                 type="number"
@@ -217,6 +225,8 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="capacity">Guest capacity</label>
               <input
+                required
+                max="100"
                 defaultValue={venue?.maxGuests}
                 className=""
                 type="number"
@@ -229,6 +239,7 @@ export default function VenueModal({
         <fieldset className="flex flex-col gap-3">
           <h3 className="text-black">Star rating</h3>
           <select
+            required
             defaultValue={venue?.rating}
             className="w-fit"
             name="rating"
@@ -311,9 +322,8 @@ export default function VenueModal({
           </div>
           <div className="grid grid-cols-6 gap-3">
             {images.map((url, idx) => (
-              <div className="relative size-20 overflow-hidden">
+              <div key={idx} className="relative size-20 overflow-hidden">
                 <img
-                  key={idx}
                   src={url}
                   alt=""
                   className="size-full object-cover rounded-lg"
@@ -337,6 +347,7 @@ export default function VenueModal({
             <div className="flex-2 flex flex-col gap-1">
               <label htmlFor="address">Address</label>
               <input
+                required
                 defaultValue={venue?.location.address}
                 name="address"
                 id="address"
@@ -345,6 +356,7 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="zip">ZIP</label>
               <input
+                required
                 defaultValue={venue?.location.zip}
                 type="number"
                 name="zip"
@@ -356,6 +368,7 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="city">City</label>
               <input
+                required
                 defaultValue={venue?.location.city}
                 name="city"
                 id="city"
@@ -364,6 +377,7 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="country">Country</label>
               <input
+                required
                 defaultValue={venue?.location.country}
                 name="country"
                 id="country"

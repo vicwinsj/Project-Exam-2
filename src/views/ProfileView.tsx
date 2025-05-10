@@ -9,7 +9,7 @@ import VenueModal from "../components/modals/VenueModal";
 import { Tabs } from "../components/Tabs";
 import { VenueCard } from "../components/VenueCard";
 import { format, differenceInCalendarDays } from "date-fns";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 type Venue = {
   id: string;
@@ -75,12 +75,7 @@ const ProfileView = () => {
   const location = useLocation();
   const routeProfile = location.state?.profile;
 
-  const {
-    accessToken,
-    username,
-    profile: loggedInProfile,
-    refreshProfile,
-  } = useAuth();
+  const { accessToken, username, profile: loggedInProfile } = useAuth();
   const { name: routeName } = useParams();
   const isLoggedInProfile = routeName === username;
 
@@ -109,25 +104,14 @@ const ProfileView = () => {
   //   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadProfile = async () => {
-      setLoading(true);
-      if (isLoggedInProfile) {
-        await refreshProfile();
-      } else {
-        setProfile(routeProfile);
-        setLoading(false);
-      }
-    };
-
-    loadProfile();
-  }, [isLoggedInProfile, routeProfile, refreshProfile]);
-
-  useEffect(() => {
     if (isLoggedInProfile && loggedInProfile) {
       setProfile(loggedInProfile);
       setLoading(false);
+    } else {
+      setProfile(routeProfile);
+      setLoading(false);
     }
-  }, [isLoggedInProfile, loggedInProfile]);
+  }, [isLoggedInProfile, routeProfile, loggedInProfile]);
 
   useEffect(() => {
     if (profile) {
@@ -235,7 +219,7 @@ const ProfileView = () => {
                   {profile.bookings.map((booking) => (
                     <div key={booking.id} className="p-3 flex justify-between">
                       <Link
-                        className="flex-1"
+                        className="flex-1 truncate"
                         to={`/venue/${booking.venue.id}`}
                       >
                         <p className="truncate">{booking.venue.name}</p>
