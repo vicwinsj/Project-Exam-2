@@ -17,9 +17,11 @@ import {
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import CalendarModal from "../components/modals/CalendarModal.tsx";
-import AddPeopleModal from "../components/modals/AddPeopleModal.tsx";
+import GuestsModal from "../components/modals/GuestsModal.tsx";
+import VenueModal from "../components/modals/VenueModal.tsx";
 import { createBooking } from "../api/venues.ts";
 import { useAuth } from "../contexts/AuthContext.tsx";
+import { fetchVenue } from "../api/venues.ts";
 
 type Venue = {
   id: string;
@@ -36,8 +38,10 @@ type Venue = {
     parking: boolean;
   };
   location: {
-    country: string;
+    address: string;
     city: string;
+    country: string;
+    zip: string;
   };
   media: {
     url: string;
@@ -47,12 +51,18 @@ type Venue = {
 };
 
 const VenueView = () => {
-  const { accessToken } = useAuth();
+  const { accessToken, profile } = useAuth();
 
   const { venueId } = useParams();
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  // const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
+
+  const updateVenue = async () => {
+    const updatedVenue = await fetchVenue(venueId);
+    setVenue(updatedVenue);
+  };
 
   useEffect(() => {
     if (venue) {
@@ -61,16 +71,12 @@ const VenueView = () => {
   }, [venue]);
 
   useEffect(() => {
-    const fetchVenue = async () => {
+    const loadVenueDetails = async () => {
       try {
-        const response = await fetch(
-          `https://v2.api.noroff.dev/holidaze/venues/${venueId}?_owner=true&_bookings=true`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch venue details");
+        const venueDetails = await fetchVenue(venueId);
+        if (venueDetails) {
+          setVenue(venueDetails);
         }
-        const data = await response.json();
-        setVenue(data.data);
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
@@ -79,11 +85,14 @@ const VenueView = () => {
         setLoading(false);
       }
     };
-    fetchVenue();
+    loadVenueDetails();
   }, [venueId]);
+
+  const isOwnVenue = venue?.owner.name === profile?.name;
 
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
+  const [showVenueModal, setShowVenueModal] = useState(false);
 
   const handleOpenCalendarModal = () => {
     setShowCalendarModal(true);
@@ -97,6 +106,14 @@ const VenueView = () => {
   };
   const handleCloseAddPeopleModal = () => {
     setShowAddPeopleModal(false);
+  };
+
+  const handleOpenVenueModal = () => {
+    setShowVenueModal(true);
+  };
+
+  const handleCloseVenueModal = () => {
+    setShowVenueModal(false);
   };
 
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
@@ -180,25 +197,37 @@ const VenueView = () => {
           />
         </div>
         <div className="flex flex-col gap-10 w-full">
-          <div className="w-full flex justify-between">
+          <div className="w-full flex items-center justify-between">
             <h1 className="text-5xl">{venue.name}</h1>
-            <div className="flex items-center gap-1 text-ocean-700">
-              <FontAwesomeIcon icon={faStar} />
-              <p className="font-semibold text-xl">{venue.rating}</p>
-            </div>
+            {isOwnVenue && (
+              <div className="flex items-center gap-3">
+                <Button className="" variant="delete">
+                  Delete Venue
+                </Button>
+                <Button onClick={handleOpenVenueModal} variant="secondary">
+                  Edit Venue
+                </Button>
+              </div>
+            )}
           </div>
           <div className="flex gap-10">
-            <div className="flex flex-col gap-10 flex-[2] p-3">
-              <div className="flex justify-between">
-                <div className="flex gap-3 items-center text-ocean-700">
+            <div className="flex-2 flex flex-col gap-10 p-3">
+              <ul className="flex gap-3">
+                <li className="flex gap-1 items-center text-ocean-700">
                   <FontAwesomeIcon icon={faLocationDot} />
                   <p className="font-semibold text-black">
                     {venue.location?.city || "Unknown"},{" "}
                     {venue.location?.country || "Unknown"}
                   </p>
-                </div>
-                <p>{venue.maxGuests} guests</p>
-              </div>
+                </li>
+                <p>&#x2022;</p>
+                <li>{venue.maxGuests} guests</li>
+                <p>&#x2022;</p>
+                <li className="flex items-center gap-1 text-ocean-700">
+                  <FontAwesomeIcon className="" icon={faStar} />
+                  <p className="font-semibold">{venue.rating}</p>
+                </li>
+              </ul>
               <hr className="border-neutral-200"></hr>
               <div className="flex gap-3 items-center">
                 <Link
@@ -273,98 +302,110 @@ const VenueView = () => {
                 </div>
               </div>
             </div>
-            <form onSubmit={handleReservation} className="flex-[1] ">
-              <div className="flex flex-col gap-10 w-full h-auto rounded-xl p-10">
-                <p className="text-xl">
-                  <strong>{venue.price * nights || venue.price} NOK</strong> for{" "}
-                  {nights || 1} {nights > 1 ? "nights" : "night"}
-                </p>
-                <div className="flex flex-col gap-1">
-                  <div className="relative">
-                    <Button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenCalendarModal();
-                        if (showAddPeopleModal) {
-                          handleCloseAddPeopleModal();
-                        }
-                        if (showCalendarModal) {
-                          handleCloseCalendarModal();
-                        }
-                      }}
-                      variant="outline"
-                      className="w-full flex items-center gap-3"
-                    >
-                      <FontAwesomeIcon
-                        icon={faCalendar}
-                        className="w-1/12"
-                      ></FontAwesomeIcon>
-                      {nights > 0 && startDate && endDate ? (
-                        <p>
-                          {format(startDate, "MMM d")} –{" "}
-                          {format(endDate, "MMM d")}
-                        </p>
-                      ) : (
-                        <p>Select dates</p>
+            {isOwnVenue ? (
+              <div className="flex-1">hey</div>
+            ) : (
+              <form onSubmit={handleReservation} className="flex-1 ">
+                <div className="flex flex-col gap-10 w-full h-auto rounded-xl p-10">
+                  <p className="text-xl">
+                    <strong>{venue.price * nights || venue.price} NOK</strong>{" "}
+                    for {nights || 1} {nights > 1 ? "nights" : "night"}
+                  </p>
+                  <div className="flex flex-col gap-1">
+                    <div className="relative">
+                      <Button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenCalendarModal();
+                          if (showAddPeopleModal) {
+                            handleCloseAddPeopleModal();
+                          }
+                          if (showCalendarModal) {
+                            handleCloseCalendarModal();
+                          }
+                        }}
+                        variant="outline"
+                        className="w-full flex items-center gap-3"
+                      >
+                        <FontAwesomeIcon
+                          icon={faCalendar}
+                          className="w-1/12"
+                        ></FontAwesomeIcon>
+                        {nights > 0 && startDate && endDate ? (
+                          <p>
+                            {format(startDate, "MMM d")} –{" "}
+                            {format(endDate, "MMM d")}
+                          </p>
+                        ) : (
+                          <p>Select dates</p>
+                        )}
+                      </Button>
+                      {showCalendarModal && (
+                        <div className="w-full drop-shadow-md absolute top-10 -left-45 z-10">
+                          <CalendarModal
+                            disabledDates={disabledDates}
+                            onClose={handleCloseCalendarModal}
+                            onRangeSelect={handleRangeSelect}
+                            selectedRange={selectedRange}
+                            nights={nights}
+                          />
+                        </div>
                       )}
-                    </Button>
-                    {showCalendarModal && (
-                      <div className="w-full drop-shadow-md absolute top-10 -left-45 z-10">
-                        <CalendarModal
-                          disabledDates={disabledDates}
-                          onClose={handleCloseCalendarModal}
-                          onRangeSelect={handleRangeSelect}
-                          selectedRange={selectedRange}
-                          nights={nights}
-                        />
-                      </div>
-                    )}
+                    </div>
+                    <div className="relative">
+                      <Button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenAddPeopleModal();
+                          if (showCalendarModal) {
+                            handleCloseCalendarModal();
+                          }
+                          if (showAddPeopleModal) {
+                            handleCloseAddPeopleModal();
+                          }
+                        }}
+                        variant="outline"
+                        className="w-full flex items-center gap-3"
+                      >
+                        <FontAwesomeIcon
+                          icon={faPeopleRoof}
+                          className="w-1/12"
+                        ></FontAwesomeIcon>
+                        {totalGuests} {totalGuests === 1 ? "guest" : "guests"}
+                      </Button>
+                      {showAddPeopleModal && (
+                        <div className="w-full drop-shadow-md absolute top-10 left-0 z-10">
+                          <GuestsModal
+                            guestLimit={venue.maxGuests}
+                            adults={adults}
+                            children={children}
+                            setAdults={setAdults}
+                            setChildren={setChildren}
+                            onClose={handleCloseAddPeopleModal}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="relative">
-                    <Button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenAddPeopleModal();
-                        if (showCalendarModal) {
-                          handleCloseCalendarModal();
-                        }
-                        if (showAddPeopleModal) {
-                          handleCloseAddPeopleModal();
-                        }
-                      }}
-                      variant="outline"
-                      className="w-full flex items-center gap-3"
-                    >
-                      <FontAwesomeIcon
-                        icon={faPeopleRoof}
-                        className="w-1/12"
-                      ></FontAwesomeIcon>
-                      {totalGuests} {totalGuests === 1 ? "guest" : "guests"}
-                    </Button>
-                    {showAddPeopleModal && (
-                      <div className="w-full drop-shadow-md absolute top-10 left-0 z-10">
-                        <AddPeopleModal
-                          guestLimit={venue.maxGuests}
-                          adults={adults}
-                          children={children}
-                          setAdults={setAdults}
-                          setChildren={setChildren}
-                          onClose={handleCloseAddPeopleModal}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  <Button type="submit" variant="primary" size="lg">
+                    Reserve
+                  </Button>
                 </div>
-                <Button type="submit" variant="primary" size="lg">
-                  Reserve
-                </Button>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
         </div>
       </article>
+      {showVenueModal && (
+        <VenueModal
+          venue={venue}
+          title="Edit venue"
+          onClose={handleCloseVenueModal}
+          onVenueUpdated={updateVenue}
+        />
+      )}
     </>
   );
 };

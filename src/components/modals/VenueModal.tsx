@@ -2,20 +2,60 @@ import ModalWrapper from "./ModalWrapper";
 import { Button } from "../form/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faTrash } from "@fortawesome/free-solid-svg-icons";
-// import placeholderImage from "../../assets/placeholder_venue.png";
 import { useAuth } from "../../contexts/AuthContext";
-import { createVenue } from "../../api/venues";
-import { useState } from "react";
+import { createVenue, updateVenue } from "../../api/venues";
+import { useState, useEffect } from "react";
 
-interface CreateVenueProps {
+type Venue = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  maxGuests: number;
+  owner: { avatar: { url: string; alt: string }; name: string };
+  rating: number;
+  meta: {
+    wifi: boolean;
+    parking: boolean;
+    breakfast: boolean;
+    pets: boolean;
+  };
+  location: {
+    address: string;
+    city: string;
+    country: string;
+    zip: string;
+  };
+  media: {
+    url: string;
+    alt: string;
+  }[];
+  bookings: [{ dateFrom: string; dateTo: string }];
+};
+
+interface VenueModalProps {
+  title: string;
   onClose: () => void;
+  venue?: Venue;
+  onVenueUpdated?: () => Promise<void>;
 }
 
-export default function CreateVenue({ onClose }: CreateVenueProps) {
+export default function VenueModal({
+  title,
+  onClose,
+  venue,
+  onVenueUpdated,
+}: VenueModalProps) {
   const [serverError, setServerError] = useState("");
   const { accessToken, profile, refreshProfile } = useAuth();
   const [imageUrl, setImageUrl] = useState("");
   const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (venue?.media?.length) {
+      setImages(venue.media.map((image) => image.url));
+    }
+  }, [venue]);
 
   const handleAddImage = () => {
     if (imageUrl.trim()) {
@@ -82,29 +122,55 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
     }
 
     if (profile?.venueManager)
-      try {
-        const result = await createVenue(
-          name,
-          description,
-          media,
-          Number(price),
-          Number(capacity),
-          Number(rating),
-          meta,
-          location,
-          accessToken
-        );
-        if (result) {
-          await refreshProfile();
-          onClose();
-          console.log("created!");
+      if (venue) {
+        try {
+          const result = await updateVenue(
+            venue.id,
+            name,
+            description,
+            media,
+            Number(price),
+            Number(capacity),
+            Number(rating),
+            meta,
+            location,
+            accessToken
+          );
+          if (result) {
+            if (onVenueUpdated) await onVenueUpdated();
+            onClose();
+            console.log("updated!");
+          }
+          // SUCCESS MESSAGE
+        } catch (error) {
+          if (error instanceof Error) {
+            setServerError(error.message);
+          }
         }
-        // SUCCESS MESSAGE
-      } catch (error) {
-        if (error instanceof Error) {
-          setServerError(error.message);
+      } else
+        try {
+          const result = await createVenue(
+            name,
+            description,
+            media,
+            Number(price),
+            Number(capacity),
+            Number(rating),
+            meta,
+            location,
+            accessToken
+          );
+          if (result) {
+            await refreshProfile();
+            onClose();
+            console.log("created!");
+          }
+          // SUCCESS MESSAGE
+        } catch (error) {
+          if (error instanceof Error) {
+            setServerError(error.message);
+          }
         }
-      }
   };
 
   return (
@@ -121,16 +187,17 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
             onClick={onClose}
           ></FontAwesomeIcon>
         </div>
-        <h2 className="text-xl text-black">Create Venue</h2>
+        <h2 className="text-xl text-black">{title}</h2>
         <fieldset className="flex flex-col gap-3">
           <h3 className="text-black">Details</h3>
           <div className="flex flex-col gap-1">
             <label htmlFor="name">Name</label>
-            <input name="name" id="name"></input>
+            <input defaultValue={venue?.name} name="name" id="name"></input>
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="description">Description</label>
             <textarea
+              defaultValue={venue?.description}
               className="h-50"
               name="description"
               id="description"
@@ -139,11 +206,18 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
           <div className="w-1/2 flex gap-3">
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="price">Price per night</label>
-              <input className="" type="number" name="price" id="price"></input>
+              <input
+                defaultValue={venue?.price}
+                className=""
+                type="number"
+                name="price"
+                id="price"
+              ></input>
             </div>
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="capacity">Guest capacity</label>
               <input
+                defaultValue={venue?.maxGuests}
                 className=""
                 type="number"
                 name="capacity"
@@ -154,7 +228,12 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
         </fieldset>
         <fieldset className="flex flex-col gap-3">
           <h3 className="text-black">Star rating</h3>
-          <select className="w-fit" name="rating" id="rating">
+          <select
+            defaultValue={venue?.rating}
+            className="w-fit"
+            name="rating"
+            id="rating"
+          >
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -168,6 +247,7 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
             <div className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <input
+                  defaultChecked={venue?.meta.wifi}
                   className="cursor-pointer size-5"
                   type="checkbox"
                   id="wifi"
@@ -177,6 +257,7 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
               </div>
               <div className="flex items-center gap-1">
                 <input
+                  defaultChecked={venue?.meta.parking}
                   className="cursor-pointer size-5"
                   type="checkbox"
                   id="parking"
@@ -188,6 +269,7 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
             <div className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <input
+                  defaultChecked={venue?.meta.breakfast}
                   className="cursor-pointer size-5"
                   type="checkbox"
                   id="breakfast"
@@ -197,6 +279,7 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
               </div>
               <div className="flex items-center gap-1">
                 <input
+                  defaultChecked={venue?.meta.pets}
                   className="cursor-pointer size-5"
                   type="checkbox"
                   id="pets"
@@ -253,25 +336,42 @@ export default function CreateVenue({ onClose }: CreateVenueProps) {
           <div className="flex gap-3">
             <div className="flex-2 flex flex-col gap-1">
               <label htmlFor="address">Address</label>
-              <input name="address" id="address"></input>
+              <input
+                defaultValue={venue?.location.address}
+                name="address"
+                id="address"
+              ></input>
             </div>
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="zip">ZIP</label>
-              <input type="number" name="zip" id="zip"></input>
+              <input
+                defaultValue={venue?.location.zip}
+                type="number"
+                name="zip"
+                id="zip"
+              ></input>
             </div>
           </div>
           <div className="flex gap-3">
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="city">City</label>
-              <input name="city" id="city"></input>
+              <input
+                defaultValue={venue?.location.city}
+                name="city"
+                id="city"
+              ></input>
             </div>
             <div className="flex-1 flex flex-col gap-1">
               <label htmlFor="country">Country</label>
-              <input name="country" id="country"></input>
+              <input
+                defaultValue={venue?.location.country}
+                name="country"
+                id="country"
+              ></input>
             </div>
           </div>
         </fieldset>
-        <Button type="submit">Create venue</Button>
+        <Button type="submit">{venue ? "Update venue" : "Create venue"}</Button>
         {serverError && <p className="text-red-500">{serverError}</p>}
       </form>
     </ModalWrapper>
