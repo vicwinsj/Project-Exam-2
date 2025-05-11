@@ -177,8 +177,8 @@ const ProfileView = () => {
           </div>
         </section>
         {isLoggedInProfile && (
-          <section className="flex flex-col gap-3">
-            <aside className="flex items-center gap-3 w-full h-full">
+          <section className="flex flex-col gap-10">
+            <aside className="flex justify-center items-center gap-3 w-full h-full">
               {profile?.venueManager ? (
                 <Tabs
                   tabs={["Saved Venues", "Your Bookings", "Your Venues"]}
@@ -199,7 +199,7 @@ const ProfileView = () => {
                 </Button>
               )}
             </aside>
-            <div className="bg-white w-full rounded-xl h-full">
+            <div className="flex justify-center bg-white w-full rounded-xl h-full">
               {/* Saved Venues */}
               {currentTab === "Saved Venues" && <p>Here are your favs...</p>}
 
@@ -207,31 +207,35 @@ const ProfileView = () => {
               {currentTab === "Your Bookings" &&
               profile?.bookings &&
               profile?.bookings.length > 0 ? (
-                <article className="drop-shadow-sm bg-white rounded-xl">
-                  <div className="font-semibold p-3 bg-air-100 border-b-[.1px] border-neutral-300 text-ocean-700 flex w-full justify-between rounded-t-xl">
-                    <p className="flex-1">Venue</p>
+                <article className="w-2/3 border-neutral-300 border-[.1px] bg-white rounded-xl">
+                  <div className="text-sm font-semibold p-3 border-b-[.1px] border-neutral-300 text-ocean-700 flex w-full justify-between rounded-t-xl">
+                    <p className="flex-3">Venue</p>
                     <p className="flex-1">City</p>
-                    <p className="flex-1">Duration</p>
-                    <p className="flex-1">Guests</p>
+                    <p className="flex-2">Duration</p>
+                    <p className="flex-1 flex justify-center">Guests</p>
                     <p className="flex-1">Total Cost</p>
                     <p className="flex-1">Manage</p>
                   </div>
                   {profile.bookings.map((booking) => (
                     <div key={booking.id} className="p-3 flex justify-between">
                       <Link
-                        className="flex-1 truncate"
+                        className="flex-3 truncate"
                         to={`/venue/${booking.venue.id}`}
                       >
-                        <p className="truncate">{booking.venue.name}</p>
+                        <strong className="truncate">
+                          {booking.venue.name}
+                        </strong>
                       </Link>
                       <p className="flex-1 truncate">
                         {booking.venue.location.city || "Unknown"}
                       </p>
-                      <p className="flex-1">
+                      <p className="flex-2">
                         {format(booking.dateFrom, "MMM d")} –{" "}
                         {format(booking.dateTo, "MMM d y")}
                       </p>
-                      <p className="flex-1">{booking.guests}</p>
+                      <p className="flex-1 flex justify-center">
+                        {booking.guests}
+                      </p>
                       <strong className="flex-1">
                         {differenceInCalendarDays(
                           booking.dateTo,

@@ -30,7 +30,17 @@ type Venue = {
     url: string;
     alt: string;
   }[];
-  bookings: [{ dateFrom: string; dateTo: string }];
+  bookings: [
+    {
+      id: string;
+      dateFrom: Date;
+      dateTo: Date;
+      guests: number;
+      customer: {
+        name: string;
+      };
+    },
+  ];
 };
 
 interface VenueModalProps {

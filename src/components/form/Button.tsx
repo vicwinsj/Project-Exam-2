@@ -10,7 +10,7 @@ const variantClasses = {
   secondary:
     "bg-ocean-700 border-white border-1 text-white hover:text-turquoise-500 hover:border-turquoise-500",
   outline:
-    "border-1 font-normal! border-neutral-500 text-neutral-600 hover:border-black hover:bg-air-100 rounded-sm",
+    "border-[.1px] font-normal! border-neutral-500 text-neutral-600 hover:border-black hover:bg-air-100 rounded-sm",
   delete:
     "bg-red-500 border-red-500 hover:bg-red-700 hover:border-red-700 text-white",
 };

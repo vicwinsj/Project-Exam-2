@@ -42,12 +42,13 @@ export const DeleteModal = ({
   return (
     <ModalWrapper onClose={onClose}>
       <form
-        className="flex flex-col gap-10 p-10 bg-white rounded-xl"
+        className="w-1/2 flex flex-col gap-10 p-10 bg-white rounded-xl"
         onSubmit={handleDelete}
       >
-        <h3 className="text-black">
-          Are you sure you want to delete your venue "{venueName}"?
-        </h3>
+        <h3 className="text-xl text-black text-center">Confirm</h3>
+        <p className="text-center">
+          Are you sure you want to delete "{venueName}"?
+        </p>
         <div className="flex justify-center items-center gap-3">
           <Button onClick={onClose} variant="outline">
             Cancel
