@@ -23,6 +23,7 @@ import { createBooking } from "../api/bookings.ts";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { fetchVenue } from "../api/venues.ts";
 import { DeleteModal } from "../components/modals/DeleteModal.tsx";
+import { CustomerBookings } from "../components/CustomerBookings.tsx";
 
 type Venue = {
   id: string;
@@ -48,11 +49,22 @@ type Venue = {
     url: string;
     alt: string;
   }[];
-  bookings: [{ dateFrom: string; dateTo: string }];
+  bookings: [
+    {
+      id: string;
+      dateFrom: Date;
+      dateTo: Date;
+      guests: number;
+      customer: {
+        name: string;
+        email: string;
+      };
+    },
+  ];
 };
 
 const VenueView = () => {
-  const { accessToken, profile } = useAuth();
+  const { accessToken, profile, refreshProfile } = useAuth();
 
   const { venueId } = useParams();
   const [venue, setVenue] = useState<Venue | null>(null);
@@ -169,6 +181,7 @@ const VenueView = () => {
           accessToken
         );
         if (result) {
+          await refreshProfile();
           console.log("Booked!");
         }
         // SUCCESS MESSAGE
@@ -207,10 +220,10 @@ const VenueView = () => {
           />
         </div>
         <div className="flex flex-col gap-10 w-full">
-          <div className="w-full flex items-center justify-between">
-            <h1 className="text-5xl">{venue.name}</h1>
+          <div className="w-full flex items-start justify-between">
+            <h1 className="flex-2 text-5xl">{venue.name}</h1>
             {isOwnVenue && (
-              <div className="flex items-center gap-3">
+              <div className="flex-1 flex justify-end items-center gap-3">
                 <Button
                   onClick={handleOpenDeleteModal}
                   className=""
@@ -317,14 +330,19 @@ const VenueView = () => {
               </div>
             </div>
             {isOwnVenue ? (
-              <div className="flex-1">hey</div>
+              <CustomerBookings bookings={venue.bookings}></CustomerBookings>
             ) : (
-              <form onSubmit={handleReservation} className="flex-1 ">
-                <div className="flex flex-col gap-10 w-full h-auto rounded-xl p-10">
-                  <p className="text-xl">
-                    <strong>{venue.price * nights || venue.price} NOK</strong>{" "}
-                    for {nights || 1} {nights > 1 ? "nights" : "night"}
-                  </p>
+              <aside className="flex-1">
+                <form
+                  onSubmit={handleReservation}
+                  className="flex flex-col gap-10 w-full h-auto border-[.1px] border-neutral-300 rounded-xl p-10"
+                >
+                  <h3 className="text-xl text-black">
+                    {venue.price * nights || venue.price} NOK{" "}
+                    <span className="font-normal">
+                      for {nights || 1} {nights > 1 ? "nights" : "night"}
+                    </span>
+                  </h3>
                   <div className="flex flex-col gap-1">
                     <div className="relative">
                       <Button
@@ -406,8 +424,8 @@ const VenueView = () => {
                   <Button type="submit" variant="primary" size="lg">
                     Reserve
                   </Button>
-                </div>
-              </form>
+                </form>
+              </aside>
             )}
           </div>
         </div>
