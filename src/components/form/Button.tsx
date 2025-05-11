@@ -10,7 +10,7 @@ const variantClasses = {
   secondary:
     "bg-ocean-700 border-white border-1 text-white hover:text-turquoise-500 hover:border-turquoise-500",
   outline:
-    "border-[.1px] font-normal! border-neutral-500 text-neutral-600 hover:border-black hover:bg-air-100 rounded-sm",
+    "border-1 font-normal! border-neutral-300 text-black hover:border-black hover:bg-neutral-50",
   delete:
     "bg-red-500 border-red-500 hover:bg-red-700 hover:border-red-700 text-white",
 };
@@ -30,7 +30,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`h-fit whitespace-nowrap rounded-sm font-semibold transition-colors duration-300 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`h-fit whitespace-nowrap rounded-lg font-semibold transition-colors duration-300 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {children}

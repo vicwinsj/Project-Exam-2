@@ -5,6 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { fetchVenues } from "../api/venues";
 
 type Venue = {
   id: string;
@@ -23,6 +24,7 @@ type Venue = {
 
 type VenueContextType = {
   venues: Venue[];
+  resetSearch: () => void;
   searchResults: Venue[];
   searchQuery: string;
   handleSearch: (query: string) => void;
@@ -40,56 +42,57 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
-    const fetchVenues = async () => {
-      try {
-        const response = await fetch(
-          "https://v2.api.noroff.dev/holidaze/venues?sort=created&sortOrder=desc&limit=100"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch venues");
-        }
-        const data = await response.json();
-        setVenues(data.data);
-        setSearchResults(data.data);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVenues();
+    loadVenues();
   }, []);
+
+  useEffect(() => {
+    if (!loading && searchQuery) {
+      const filtered = venues.filter((venue) => {
+        const name = venue.name ?? "";
+        const city = venue.location?.city ?? "";
+        const country = venue.location?.country ?? "";
+
+        return (
+          name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          country.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      });
+
+      setSearchResults(filtered);
+    } else setSearchResults(venues);
+  }, [loading, venues, searchQuery]);
+
+  const loadVenues = async () => {
+    try {
+      const data = await fetchVenues();
+      setVenues(data);
+      setSearchResults(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred while fetching venues");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetSearch = () => {
+    setSearchQuery("");
+    loadVenues();
+  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-
-    if (!query) {
-      setSearchResults(venues);
-      return;
-    }
-    const filtered = venues.filter((venue) => {
-      const name = venue.name ?? "";
-      const city = venue.location?.city ?? "";
-      const country = venue.location?.country ?? "";
-
-      return (
-        name.toLowerCase().includes(query.toLowerCase()) ||
-        city.toLowerCase().includes(query.toLowerCase()) ||
-        country.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-    setSearchResults(filtered);
   };
 
   return (
     <VenueContext.Provider
       value={{
         venues,
+        resetSearch,
         searchResults,
         searchQuery,
         handleSearch,

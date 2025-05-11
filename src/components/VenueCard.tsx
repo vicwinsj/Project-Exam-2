@@ -36,10 +36,10 @@ export const VenueCard = (venue: Venue) => {
         </div>
         <div></div>
         <div>
-          <h2 className="truncate">{venue.name}</h2>
+          <h2 className="truncate">{venue.name || "Unnamed venue"}</h2>
           <p className="truncate">
-            {venue.location?.city || "Unknown"},{" "}
-            {venue.location?.country || "Unknown"}
+            {venue.location?.city || "Unknown city"},{" "}
+            {venue.location?.country || "Unknown country"}
           </p>
           <p>
             <span className="font-semibold">{venue.price} kr</span> per night

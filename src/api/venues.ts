@@ -1,6 +1,20 @@
 import { API_HOLIDAZE_VENUES, API_KEY } from "../constants/api";
 
-// Fetch venues
+export const fetchVenues = async () => {
+  try {
+    const response = await fetch(
+      `${API_HOLIDAZE_VENUES}?sort=created&sortOrder=desc&limit=100`
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.errors?.[0]?.message);
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    throw error instanceof Error ? error : "Failed to fetch venues";
+  }
+};
 
 export const fetchVenue = async (venueId: string | undefined) => {
   try {
@@ -8,12 +22,13 @@ export const fetchVenue = async (venueId: string | undefined) => {
       `${API_HOLIDAZE_VENUES}/${venueId}?_owner=true&_bookings=true`
     );
     if (!response.ok) {
-      throw new Error("Failed to fetch venue details");
+      const errorData = await response.json();
+      throw new Error(errorData.errors?.[0]?.message);
     }
     const data = await response.json();
     return data.data;
   } catch (error) {
-    throw error instanceof Error && error;
+    throw error instanceof Error ? error : "Failed to fetch venue details";
   }
 };
 
@@ -112,7 +127,6 @@ export const updateVenue = async (
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.log(errorData);
       throw new Error(errorData.errors?.[0]?.message);
     }
     const data = await response.json();
