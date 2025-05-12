@@ -79,7 +79,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-auto flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
+      <header className="h-auto flex flex-col gap-30 py-3 px-10 bg-ocean-700 rounded-b-[20px]">
         <div className="flex justify-between">
           <Link onClick={resetSearch} to="/">
             <img src={logo} className="w-30 h-full" />
@@ -89,7 +89,7 @@ const Header = () => {
           <nav className="text-white flex items-center gap-3">
             {accessToken ? (
               <>
-                <Button variant="secondary" onClick={handleLogout}>
+                <Button size="sm" variant="secondary" onClick={handleLogout}>
                   Logout
                 </Button>
                 <Link
@@ -113,7 +113,11 @@ const Header = () => {
                     Register
                   </Link>
                 )}
-                <Button variant="secondary" onClick={handleLoginClick}>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleLoginClick}
+                >
                   Login
                 </Button>
               </>

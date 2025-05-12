@@ -5,13 +5,22 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { fetchVenues } from "../api/venues";
+import { fetchVenues, fetchSearch } from "../api/venues";
+import { DateRange } from "react-day-picker";
 
 type Venue = {
   id: string;
   name: string;
   description: string;
   price: number;
+  maxGuests: number;
+  rating: number;
+  meta: {
+    wifi: boolean;
+    breakfast: boolean;
+    pets: boolean;
+    parking: boolean;
+  };
   location: {
     country: string;
     city: string;
@@ -22,10 +31,21 @@ type Venue = {
   }[];
 };
 
+type Filters = {
+  dateRange?: DateRange;
+  guests?: number;
+  wifi?: boolean;
+  parking?: boolean;
+  breakfast?: boolean;
+  pets?: boolean;
+  rating?: number;
+};
+
 type VenueContextType = {
   venues: Venue[];
   resetSearch: () => void;
   searchResults: Venue[];
+  setFilters: (filters: Filters) => void;
   searchQuery: string;
   handleSearch: (query: string) => void;
   error: string | null;
@@ -40,48 +60,105 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filters, setFilters] = useState<Filters>({});
 
   useEffect(() => {
     loadVenues();
   }, []);
 
   useEffect(() => {
-    if (!loading && searchQuery) {
-      const filtered = venues.filter((venue) => {
-        const name = venue.name ?? "";
-        const city = venue.location?.city ?? "";
-        const country = venue.location?.country ?? "";
+    if (searchQuery.trim()) {
+      searchVenues(searchQuery);
+    } else {
+      setSearchResults(venues);
+    }
+  }, [searchQuery, venues]);
 
-        return (
-          name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          country.toLowerCase().includes(searchQuery.toLowerCase())
+  useEffect(() => {
+    const applyFilters = () => {
+      let filtered = [...venues];
+
+      if (searchQuery?.trim()) {
+        filtered = filtered.filter(
+          (venue) =>
+            venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            venue.location.city
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            venue.location.country
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            venue.description?.toLowerCase().includes(searchQuery.toLowerCase())
         );
-      });
+      }
+
+      if (filters.guests) {
+        filtered = filtered.filter(
+          (venue) => venue.maxGuests >= filters.guests!
+        );
+      }
+
+      // if (filters.dateRange) {
+      //   filtered = filtered.filter((venue) => dateFrom <= venue.bookings.))
+      // }
+
+      // if (filters.priceRange) {
+      //   filtered = filtered.filter((venue) => priceFrom <= venue.price <= priceTo)
+      // }
+
+      if (filters.wifi) {
+        filtered = filtered.filter((venue) => venue.meta?.wifi);
+      }
+      if (filters.parking) {
+        filtered = filtered.filter((venue) => venue.meta?.parking);
+      }
+      if (filters.breakfast) {
+        filtered = filtered.filter((venue) => venue.meta?.breakfast);
+      }
+      if (filters.pets) {
+        filtered = filtered.filter((venue) => venue.meta?.pets);
+      }
+
+      if (filters.rating) {
+        filtered = filtered.filter((venue) => venue.rating >= filters.rating!);
+      }
 
       setSearchResults(filtered);
-    } else setSearchResults(venues);
-  }, [loading, venues, searchQuery]);
+    };
+
+    applyFilters();
+  }, [searchQuery, venues, filters]);
 
   const loadVenues = async () => {
+    setLoading(true);
     try {
       const data = await fetchVenues();
       setVenues(data);
-      setSearchResults(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("An unknown error occurred while fetching venues");
+      if (!searchQuery) {
+        setSearchResults(data);
       }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unknown error");
     } finally {
       setLoading(false);
     }
   };
 
-  const resetSearch = () => {
+  const searchVenues = async (query: string) => {
+    setLoading(true);
+    try {
+      const results = await fetchSearch(query);
+      setSearchResults(results);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unknown search error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetSearch = async () => {
     setSearchQuery("");
-    loadVenues();
+    await loadVenues();
   };
 
   const handleSearch = (query: string) => {
@@ -98,6 +175,7 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
         handleSearch,
         error,
         loading,
+        setFilters,
       }}
     >
       {children}

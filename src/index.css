@@ -26,9 +26,33 @@
     @apply cursor-pointer;
   }
 
+  label {
+    @apply text-sm font-semibold font-rubik;
+  }
+
+  select {
+    @apply cursor-pointer;
+  }
+
   input,
   textarea,
   select {
-    @apply w-full transition-colors duration-300 px-3 py-1 border-[.1px] rounded-sm hover:bg-air-100 outline-sunset-800 border-neutral-300 resize-none;
+    @apply w-full transition-colors duration-300 px-3 py-1 border-1 rounded-sm hover:bg-air-100 outline-sunset-800 border-neutral-300 resize-none;
   }
+
+  details {
+    @apply p-3 flex flex-col gap-3 cursor-pointer transition-all duration-300;
+  }
+
+  summary {
+    @apply text-ocean-700 group-open:border-b-[.1px] border-neutral-300 p-3 -m-3 transition-all duration-300;
+  }
+}
+
+summary {
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
 }

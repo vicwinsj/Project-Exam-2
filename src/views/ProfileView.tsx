@@ -207,7 +207,7 @@ const ProfileView = () => {
               {currentTab === "Your Bookings" &&
               profile?.bookings &&
               profile?.bookings.length > 0 ? (
-                <article className="w-2/3 border-neutral-300 border-1 bg-white rounded-xl">
+                <article className="w-2/3 border-neutral-300 border-1 bg-white rounded-t-xl">
                   <div className="text-sm font-semibold p-3 border-b-[.1px] border-neutral-300 text-ocean-700 flex w-full justify-between rounded-t-xl">
                     <p className="flex-3">Venue</p>
                     <p className="flex-1">City</p>

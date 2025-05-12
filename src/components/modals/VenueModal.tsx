@@ -188,17 +188,19 @@ export default function VenueModal({
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="max-h-3/4 overflow-y-auto z-100 flex flex-col gap-10 w-1/2 bg-white p-10 border-1 border-neutral-500 rounded-xl"
+        className="max-h-3/4 overflow-y-auto z-100 flex flex-col gap-10 w-1/2 bg-white p-10 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">
-          <FontAwesomeIcon
-            className="cursor-pointer"
-            icon={faXmark}
-            onClick={onClose}
-          ></FontAwesomeIcon>
+        <div className="flex justify-between">
+          <h2 className="text-xl text-black">{title}</h2>
+          <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">
+            <FontAwesomeIcon
+              className="cursor-pointer"
+              icon={faXmark}
+              onClick={onClose}
+            ></FontAwesomeIcon>
+          </div>
         </div>
-        <h2 className="text-xl text-black">{title}</h2>
         <fieldset className="flex flex-col gap-3">
           <h3 className="text-black">Details</h3>
           <div className="flex flex-col gap-1">

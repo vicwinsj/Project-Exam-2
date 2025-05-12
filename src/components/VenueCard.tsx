@@ -21,13 +21,13 @@ type Venue = {
 
 export const VenueCard = (venue: Venue) => {
   return (
-    <article>
+    <article className="transition-colors duration-300 border-1 border-neutral-300 hover:border-neutral-500 hover:bg-air-100 rounded-t-2xl overflow-hidden">
       <Link
         className="flex flex-col gap-3"
         to={`/venue/${venue.id}`}
         key={venue.id}
       >
-        <div className="rounded-t-2xl overflow-hidden w-full h-50">
+        <div className="overflow-hidden w-full h-50">
           <img
             className="w-full h-full object-cover"
             src={venue.media[0]?.url || placeholderImage}
@@ -35,7 +35,7 @@ export const VenueCard = (venue: Venue) => {
           />
         </div>
         <div></div>
-        <div>
+        <div className="px-3 pb-3">
           <h2 className="truncate">{venue.name || "Unnamed venue"}</h2>
           <p className="truncate">
             {venue.location?.city || "Unknown city"},{" "}
