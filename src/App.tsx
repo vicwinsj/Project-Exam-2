@@ -12,6 +12,7 @@ const App = () => {
       <Layout>
         <Routes>
           <Route path="/" element={<HomeView />} />
+          <Route path="/search" element={<HomeView />} />
           <Route path="/register" element={<RegisterView />} />
           <Route path="/profile/:name" element={<ProfileView />} />
           <Route path="/venue/:venueId" element={<VenueView />} />

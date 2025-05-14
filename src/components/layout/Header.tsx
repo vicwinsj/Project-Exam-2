@@ -1,66 +1,66 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import logo from "../../assets/holidaze_main.svg";
 import { Button } from "../form/Button.tsx";
 import Search from "../Search.tsx";
 import { useVenues } from "../../contexts/VenueContext.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import LoginModal from "../modals/LoginModal.tsx";
-import { fetchProfile } from "../../api/profile.ts";
+// import { fetchProfile } from "../../api/profile.ts";
 
 const Header = () => {
-  const { accessToken, username, logout, authLoading } = useAuth();
-  const { handleSearch } = useVenues();
+  const { accessToken, logout, profile } = useAuth();
+  const { resetSearch } = useVenues();
   const location = useLocation();
   const navigate = useNavigate();
 
   const [showLogin, setShowLogin] = useState(false);
 
-  type Profile = {
-    name: string;
-    email: string;
-    bio: string;
-    avatar: {
-      url: string;
-      alt: string;
-    };
-    banner: {
-      url: string;
-      alt: string;
-    };
-    venueManager: boolean;
-  };
+  // type Profile = {
+  //   name: string;
+  //   email: string;
+  //   bio: string;
+  //   avatar: {
+  //     url: string;
+  //     alt: string;
+  //   };
+  //   banner: {
+  //     url: string;
+  //     alt: string;
+  //   };
+  //   venueManager: boolean;
+  // };
 
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [profile, setProfile] = useState<Profile | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (authLoading) return;
+  // useEffect(() => {
+  //   if (authLoading) return;
 
-    const loadProfile = async () => {
-      try {
-        const data = await fetchProfile(username!, accessToken!);
-        setProfile(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //   const loadProfile = async () => {
+  //     try {
+  //       const data = await fetchProfile(username!, accessToken!);
+  //       setProfile(data);
+  //     } catch (err) {
+  //       setError(err instanceof Error ? err.message : "Unknown error");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    if (accessToken) {
-      loadProfile();
-    } else {
-      setError("Not authenticated");
-      setLoading(false);
-    }
-  }, [username, accessToken, authLoading]);
+  //   if (accessToken) {
+  //     loadProfile();
+  //   } else {
+  //     setError("Not authenticated");
+  //     setLoading(false);
+  //   }
+  // }, [username, accessToken, authLoading]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) {
-    console.warn(error);
-  }
+  // if (loading) return <p>Loading...</p>;
+  // if (error) {
+  //   console.warn(error);
+  // }
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -79,19 +79,17 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-auto flex flex-col gap-30 p-10 bg-ocean-700 rounded-b-[20px]">
+      <header className="h-auto flex flex-col gap-30 py-3 px-10 bg-ocean-700 rounded-b-[20px]">
         <div className="flex justify-between">
-          <Link to="/">
+          <Link onClick={resetSearch} to="/">
             <img src={logo} className="w-30 h-full" />
           </Link>
           {location.pathname !== "/register" &&
-            location.pathname !== "/profile" && (
-              <Search onSearch={handleSearch} />
-            )}
+            location.pathname !== "/profile" && <Search />}
           <nav className="text-white flex items-center gap-3">
             {accessToken ? (
               <>
-                <Button variant="secondary" onClick={handleLogout}>
+                <Button size="sm" variant="secondary" onClick={handleLogout}>
                   Logout
                 </Button>
                 <Link
@@ -115,7 +113,11 @@ const Header = () => {
                     Register
                   </Link>
                 )}
-                <Button variant="secondary" onClick={handleLoginClick}>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleLoginClick}
+                >
                   Login
                 </Button>
               </>

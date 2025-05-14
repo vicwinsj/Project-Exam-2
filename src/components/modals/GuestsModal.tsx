@@ -22,7 +22,7 @@ export default function GuestsModal({
   const totalGuests = adults + children;
 
   const increment = (type: "adult" | "child") => {
-    if (totalGuests >= guestLimit) return;
+    if (guestLimit && totalGuests >= guestLimit) return;
 
     if (type === "adult") setAdults(adults + 1);
     else setChildren(children + 1);

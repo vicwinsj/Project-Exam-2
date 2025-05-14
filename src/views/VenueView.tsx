@@ -1,6 +1,6 @@
 // import { useVenues } from "../context/VenueContext";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/form/Button";
 import placeholderImage from "../assets/placeholder_venue.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +13,7 @@ import {
   faPaw,
   faCalendar,
   faPeopleRoof,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
@@ -66,6 +67,7 @@ type Venue = {
 const VenueView = () => {
   const { accessToken, profile, refreshProfile } = useAuth();
 
+  const navigate = useNavigate();
   const { venueId } = useParams();
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -107,6 +109,10 @@ const VenueView = () => {
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [showVenueModal, setShowVenueModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   const handleOpenCalendarModal = () => {
     setShowCalendarModal(true);
@@ -163,8 +169,6 @@ const VenueView = () => {
     to: new Date(booking.dateTo),
   }));
 
-  console.log(disabledDates);
-
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const totalGuests = adults + children;
@@ -212,6 +216,14 @@ const VenueView = () => {
         }}
         className="flex flex-col gap-10"
       >
+        <button
+          type="button"
+          onClick={handleGoBack}
+          className="flex gap-1 items-center w-fit"
+        >
+          <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+          Back
+        </button>
         <div className="rounded-t-[20px] overflow-hidden w-full h-full">
           <img
             className="w-full h-130 object-cover"
@@ -221,7 +233,7 @@ const VenueView = () => {
         </div>
         <div className="flex flex-col gap-10 w-full">
           <div className="w-full flex items-start justify-between">
-            <h1 className="flex-2 text-5xl">{venue.name}</h1>
+            <h1 className="flex-2 text-5xl">{venue.name || "Unnamed venue"}</h1>
             {isOwnVenue && (
               <div className="flex-1 flex justify-end items-center gap-3">
                 <Button
@@ -243,8 +255,8 @@ const VenueView = () => {
                 <li className="flex gap-1 items-center text-ocean-700">
                   <FontAwesomeIcon icon={faLocationDot} />
                   <p className="font-semibold text-black">
-                    {venue.location?.city || "Unknown"},{" "}
-                    {venue.location?.country || "Unknown"}
+                    {venue.location?.city || "Unknown city"},{" "}
+                    {venue.location?.country || "Unknown country"}
                   </p>
                 </li>
                 <p>&#x2022;</p>
@@ -255,7 +267,7 @@ const VenueView = () => {
                   <p className="font-semibold">{venue.rating}</p>
                 </li>
               </ul>
-              <hr className="border-neutral-200"></hr>
+              <hr className="border-neutral-300"></hr>
               <div className="flex gap-3 items-center">
                 <Link
                   to={`/profile/${venue.owner.name}`}
@@ -273,9 +285,15 @@ const VenueView = () => {
                   <p className="font-semibold">{venue.owner.name}</p>
                 </div>
               </div>
-              <hr className="border-neutral-200"></hr>
-              <p>{venue.description}</p>
-              <hr className="border-neutral-200"></hr>
+              <hr className="border-neutral-300"></hr>
+              <p>
+                {venue.description || (
+                  <span className="italic">
+                    This venue doesn't have a description yet.
+                  </span>
+                )}
+              </p>
+              <hr className="border-neutral-300"></hr>
               {noFacilities ? null : (
                 <>
                   <div className="flex flex-col gap-10">
@@ -315,7 +333,7 @@ const VenueView = () => {
                       )}
                     </ul>
                   </div>
-                  <hr className="border-neutral-200"></hr>
+                  <hr className="border-neutral-300"></hr>
                 </>
               )}
               <div className="flex flex-col gap-10">
@@ -335,7 +353,7 @@ const VenueView = () => {
               <aside className="flex-1">
                 <form
                   onSubmit={handleReservation}
-                  className="flex flex-col gap-10 w-full h-auto border-[.1px] border-neutral-300 rounded-xl p-10"
+                  className="flex flex-col gap-10 w-full h-auto border-1 border-neutral-300 rounded-xl p-10"
                 >
                   <h3 className="text-xl text-black">
                     {venue.price * nights || venue.price} NOK{" "}

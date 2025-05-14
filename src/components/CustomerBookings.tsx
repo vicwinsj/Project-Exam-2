@@ -19,7 +19,7 @@ export const CustomerBookings = ({ bookings }: CustomerBookingsProps) => {
   return (
     <aside className="flex-1 flex flex-col gap-10">
       <h2 className="text-xl text-black">Upcoming bookings</h2>
-      <div className="border-neutral-300 border-1 bg-white rounded-xl flex flex-col gap-1 overflow-hidden">
+      <div className="border-neutral-300 border-1 bg-white rounded-t-xl flex flex-col gap-1 overflow-hidden">
         <div className="font-semibold p-3 border-b-[.1px] border-neutral-300 text-sm text-ocean-700 flex">
           <p className="flex-2">Customer</p>
           <p className="flex-4">Booked dates</p>

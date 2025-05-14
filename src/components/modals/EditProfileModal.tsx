@@ -5,12 +5,9 @@ import { Button } from "../form/Button";
 import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { CloseProp } from "../../types/close";
 
-interface EditProfileModalProps {
-  onClose: () => void;
-}
-
-const EditProfileModal = ({ onClose }: EditProfileModalProps) => {
+const EditProfileModal = ({ onClose }: CloseProp) => {
   const { accessToken, profile, refreshProfile } = useAuth();
 
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar.url);

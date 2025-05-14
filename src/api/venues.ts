@@ -1,6 +1,61 @@
 import { API_HOLIDAZE_VENUES, API_KEY } from "../constants/api";
 
-// Fetch venues
+type Venue = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  location: {
+    country: string;
+    city: string;
+  };
+  media: {
+    url: string;
+    alt: string;
+  }[];
+  _count?: {
+    bookings: number;
+  };
+};
+
+export const fetchVenues = async () => {
+  try {
+    const response = await fetch(
+      `${API_HOLIDAZE_VENUES}?sort=created&sortOrder=desc&wifi=true&limit=100&maxGuests=10`
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.errors?.[0]?.message);
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    throw error instanceof Error ? error : "Failed to fetch venues";
+  }
+};
+
+export const fetchSearch = async (query: string) => {
+  try {
+    const response = await fetch(
+      `${API_HOLIDAZE_VENUES}/search?q=${query}&sort=created&sortOrder=desc&limit=100`,
+      {
+        headers: {
+          "X-Noroff-API-Key": API_KEY,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.errors?.[0]?.message || "Search failed");
+    }
+
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    throw error instanceof Error ? error : new Error("Search fetch failed");
+  }
+};
 
 export const fetchVenue = async (venueId: string | undefined) => {
   try {
@@ -8,12 +63,13 @@ export const fetchVenue = async (venueId: string | undefined) => {
       `${API_HOLIDAZE_VENUES}/${venueId}?_owner=true&_bookings=true`
     );
     if (!response.ok) {
-      throw new Error("Failed to fetch venue details");
+      const errorData = await response.json();
+      throw new Error(errorData.errors?.[0]?.message);
     }
     const data = await response.json();
     return data.data;
   } catch (error) {
-    throw error instanceof Error && error;
+    throw error instanceof Error ? error : "Failed to fetch venue details";
   }
 };
 
@@ -112,7 +168,6 @@ export const updateVenue = async (
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.log(errorData);
       throw new Error(errorData.errors?.[0]?.message);
     }
     const data = await response.json();
