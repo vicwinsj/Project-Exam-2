@@ -25,8 +25,8 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
   const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
   const [guests, setGuests] = useState(1);
 
-  const handleSelect = (r: DateRange | undefined) => {
-    setDateRange(r);
+  const handleSelect = (range: DateRange | undefined) => {
+    setDateRange(range);
   };
 
   const guestLimit = 100;

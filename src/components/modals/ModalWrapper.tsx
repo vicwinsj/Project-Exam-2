@@ -12,7 +12,7 @@ const ModalWrapper = ({ onClose, children }: ModalWrapperProps) => {
 
   return (
     <div
-      className="fixed inset-0 flex justify-center items-center bg-black/50"
+      className="z-10 fixed inset-0 flex justify-center items-center bg-black/50"
       onClick={handleBackgroundClick}
     >
       {children}

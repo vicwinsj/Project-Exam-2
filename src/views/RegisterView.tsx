@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../components/form/Button";
 import { registerUser, loginUser } from "../api/auth";
+import toast from "react-hot-toast";
+import { Toast } from "../components/toast/toast";
 
 const RegisterView = () => {
   const navigate = useNavigate();
@@ -66,10 +68,11 @@ const RegisterView = () => {
 
       try {
         const result = await registerUser(userData);
-        console.log(result);
-        // Success message pops up
-        loginUser({ email, password });
-        navigate("/");
+        if (result) {
+          toast.custom(<Toast message="Profile successfully registered!" />);
+          loginUser({ email, password });
+          navigate("/");
+        }
       } catch (error) {
         if (error instanceof Error) {
           setServerError(error.message);

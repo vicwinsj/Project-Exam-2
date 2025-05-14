@@ -1,8 +1,6 @@
 import { DayPicker, DateRange, getDefaultClassNames } from "react-day-picker";
 import { startOfDay } from "date-fns";
 
-// import type { ReactNode } from "react";
-
 export interface DateRangePickerProps {
   selectedRange?: DateRange;
   onSelect: (range: DateRange | undefined) => void;
@@ -27,7 +25,7 @@ export function DateRangePicker({
       numberOfMonths={numberOfMonths}
       disabled={[{ before: today }, ...disabledRanges]}
       classNames={{
-        disabled: `line-through cursor-default text-neutral-300`,
+        disabled: `text-neutral-300`,
         root: `w-full grid grid-cols-[auto_1fr_auto] items-center justify-center`,
         nav: "z-10 order-[-1] col-span-2 -mb-7 flex justify-between items-center",
         chevron: `transition-all duration-300 ${defaultClassNames.chevron} fill-ocean-700 size-8 p-2 hover:bg-neutral-100 rounded-lg`,

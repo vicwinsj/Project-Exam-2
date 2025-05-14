@@ -6,6 +6,8 @@ import Search from "../Search.tsx";
 import { useVenues } from "../../contexts/VenueContext.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import LoginModal from "../modals/LoginModal.tsx";
+import toast from "react-hot-toast";
+import { Toast } from "../toast/toast.tsx";
 // import { fetchProfile } from "../../api/profile.ts";
 
 const Header = () => {
@@ -72,7 +74,8 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    if (location.pathname === "/profile") {
+    toast.custom(<Toast message="Successfully logged out!" />);
+    if (location.pathname.startsWith("/profile")) {
       navigate("/");
     }
   };

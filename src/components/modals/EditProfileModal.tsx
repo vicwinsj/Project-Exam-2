@@ -5,9 +5,13 @@ import { Button } from "../form/Button";
 import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { CloseProp } from "../../types/close";
 
-const EditProfileModal = ({ onClose }: CloseProp) => {
+export interface EditProfileProps {
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
   const { accessToken, profile, refreshProfile } = useAuth();
 
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar.url);
@@ -81,9 +85,9 @@ const EditProfileModal = ({ onClose }: CloseProp) => {
           );
           if (result) {
             await refreshProfile();
+            onSuccess?.();
             onClose();
           }
-          // SUCCESS MESSAGE
         } catch (error) {
           if (error instanceof Error) {
             setServerError(error.message);
@@ -176,7 +180,9 @@ const EditProfileModal = ({ onClose }: CloseProp) => {
                 checked={venueManager}
                 onChange={(e) => setVenueManager(e.target.checked)}
               />
-              <label htmlFor="Manager">Manager</label>
+              <label htmlFor="manager" className="cursor-pointer">
+                Manager
+              </label>
             </div>
             <Button type="submit" variant="secondary">
               Save

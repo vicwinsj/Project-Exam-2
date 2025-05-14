@@ -18,6 +18,10 @@ export default function CalendarModal({
   selectedRange,
   nights,
 }: CalendarModalProps) {
+  const handleReset = () => {
+    onRangeSelect(undefined, 0);
+  };
+
   const handleSelect = (range: DateRange | undefined) => {
     const calculatedNights =
       range?.from && range?.to
@@ -26,15 +30,6 @@ export default function CalendarModal({
 
     onRangeSelect(range, calculatedNights);
   };
-
-  const handleReset = () => {
-    onRangeSelect(undefined, 0);
-  };
-
-  // const disabled: (DateRange | { before: Date })[] = [
-  //   ...(disabledDates || []),
-  //   { before: today },
-  // ];
 
   return (
     <div

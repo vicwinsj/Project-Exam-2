@@ -46,6 +46,7 @@ type Venue = {
 interface VenueModalProps {
   title: string;
   onClose: () => void;
+  onSuccess: () => void;
   venue?: Venue;
   onVenueUpdated?: () => Promise<void>;
 }
@@ -55,6 +56,7 @@ export default function VenueModal({
   onClose,
   venue,
   onVenueUpdated,
+  onSuccess,
 }: VenueModalProps) {
   const [serverError, setServerError] = useState("");
   const { accessToken, profile, refreshProfile } = useAuth();
@@ -149,10 +151,9 @@ export default function VenueModal({
           if (result) {
             if (onVenueUpdated) await onVenueUpdated();
             await refreshProfile();
+            onSuccess?.();
             onClose();
-            console.log("updated!");
           }
-          // SUCCESS MESSAGE
         } catch (error) {
           if (error instanceof Error) {
             setServerError(error.message);
@@ -173,10 +174,9 @@ export default function VenueModal({
           );
           if (result) {
             await refreshProfile();
+            onSuccess?.();
             onClose();
-            console.log("created!");
           }
-          // SUCCESS MESSAGE
         } catch (error) {
           if (error instanceof Error) {
             setServerError(error.message);
@@ -271,7 +271,6 @@ export default function VenueModal({
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.wifi}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="wifi"
                   name="wifi"
@@ -281,7 +280,6 @@ export default function VenueModal({
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.parking}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="parking"
                   name="parking"
@@ -293,7 +291,6 @@ export default function VenueModal({
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.breakfast}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="breakfast"
                   name="breakfast"
@@ -303,7 +300,6 @@ export default function VenueModal({
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.pets}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="pets"
                   name="pets"
