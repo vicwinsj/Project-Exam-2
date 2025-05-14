@@ -12,6 +12,7 @@ import { DateRangePicker } from "../DateRangePicker";
 import { Button } from "../form/Button";
 import { useState } from "react";
 import { useVenues } from "../../contexts/VenueContext";
+import PriceRangeSlider from "../PriceRangeSlider";
 
 type FilterModalProps = {
   onClose: () => void;
@@ -20,11 +21,12 @@ type FilterModalProps = {
 
 export const FilterModal = ({ onClose, query }: FilterModalProps) => {
   const { setFilters } = useVenues();
-  const [range, setRange] = useState<DateRange>();
+  const [dateRange, setDateRange] = useState<DateRange>();
+  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
   const [guests, setGuests] = useState(1);
 
   const handleSelect = (r: DateRange | undefined) => {
-    setRange(r);
+    setDateRange(r);
   };
 
   const guestLimit = 100;
@@ -43,7 +45,8 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
     const formData = new FormData(event.currentTarget as HTMLFormElement);
 
     setFilters({
-      dateRange: range,
+      dateRange: dateRange,
+      priceRange: priceRange,
       guests,
       wifi: formData.get("wifi") === "on",
       parking: formData.get("parking") === "on",
@@ -62,7 +65,7 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
         className="max-h-3/4 overflow-y-auto bg-white rounded-xl w-1/2 p-10 flex flex-col gap-10"
       >
         <div className="text-xl flex items-center justify-between">
-          <h3 className="text-black text-xl">Filter</h3>
+          <h2 className="text-black text-xl">Filter</h2>
           <FontAwesomeIcon
             className="transition-colors duration-300 cursor-pointer text-neutral-500 hover:text-neutral-700"
             icon={faXmark}
@@ -71,12 +74,27 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
         </div>
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-1">
-            <label htmlFor="search">Search text</label>
+            <h3 className="text-black ">Search text</h3>
             <input
               name="search"
               id="search"
               defaultValue={query}
               placeholder="Enter e.g. name of venue, city, country etc."
+            />
+          </div>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-black ">Budget per night</h3>
+              {priceRange ? (
+                <p className="text-sm">
+                  {priceRange[0]} NOK – {priceRange[1]} NOK
+                </p>
+              ) : (
+                <p className="text-sm">0 NOK – 1000 NOK</p>
+              )}
+            </div>
+            <PriceRangeSlider
+              onChange={(value) => setPriceRange(() => value)}
             />
           </div>
           <details className="open flex flex-col open:gap-6 group relative p-3 border-1 open:border-neutral-500 rounded-t-xl border-neutral-300 overflow-hidden">
@@ -87,11 +105,11 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
               <span className="hidden group-open:inline absolute right-2">
                 <FontAwesomeIcon icon={faAngleUp}></FontAwesomeIcon>
               </span>
-              Dates
+              Travel dates
             </summary>
             <DateRangePicker
               onSelect={handleSelect}
-              selectedRange={range}
+              selectedRange={dateRange}
               numberOfMonths={2}
             />
           </details>

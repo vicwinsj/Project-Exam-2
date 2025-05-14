@@ -78,7 +78,7 @@ const HomeView = () => {
           )}
         </div>
       )}
-      {showFilter && <FilterModal onClose={handleCloseFilter} />}
+      {showFilter && <FilterModal onClose={handleCloseFilter} query={query} />}
     </section>
   );
 };

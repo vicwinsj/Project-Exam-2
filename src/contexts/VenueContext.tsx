@@ -29,10 +29,15 @@ type Venue = {
     url: string;
     alt: string;
   }[];
+  bookings: {
+    dateFrom: Date;
+    dateTo: Date;
+  }[];
 };
 
 type Filters = {
-  dateRange?: DateRange;
+  dateRange?: DateRange | null;
+  priceRange?: [number, number] | null;
   guests?: number;
   wifi?: boolean;
   parking?: boolean;
@@ -98,13 +103,27 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
         );
       }
 
-      // if (filters.dateRange) {
-      //   filtered = filtered.filter((venue) => dateFrom <= venue.bookings.))
-      // }
+      if (filters.dateRange?.from && filters.dateRange?.to) {
+        const selectedStart = new Date(filters.dateRange.from);
+        const selectedEnd = new Date(filters.dateRange.to);
 
-      // if (filters.priceRange) {
-      //   filtered = filtered.filter((venue) => priceFrom <= venue.price <= priceTo)
-      // }
+        filtered = filtered.filter((venue) => {
+          const hasOverlappingBooking = venue.bookings?.some((booking) => {
+            const bookingStart = new Date(booking.dateFrom);
+            const bookingEnd = new Date(booking.dateTo);
+
+            return bookingStart <= selectedEnd && bookingEnd >= selectedStart;
+          });
+          return !hasOverlappingBooking;
+        });
+      }
+
+      if (filters.priceRange) {
+        const [minPrice, maxPrice] = filters.priceRange;
+        filtered = filtered.filter(
+          (venue) => venue.price >= minPrice && venue.price <= maxPrice
+        );
+      }
 
       if (filters.wifi) {
         filtered = filtered.filter((venue) => venue.meta?.wifi);
