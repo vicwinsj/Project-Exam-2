@@ -231,8 +231,8 @@ const ProfileView = () => {
                         {booking.venue.location.city || "Unknown"}
                       </p>
                       <p className="flex-2">
-                        {format(booking.dateFrom, "MMM d")} –{" "}
-                        {format(booking.dateTo, "MMM d y")}
+                        {format(booking.dateFrom, "dd.MM.yy")}–
+                        {format(booking.dateTo, "dd.MM.yy")}
                       </p>
                       <p className="flex-1 flex justify-center">
                         {booking.guests}

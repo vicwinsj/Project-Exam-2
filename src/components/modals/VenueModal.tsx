@@ -227,6 +227,7 @@ export default function VenueModal({
               <label htmlFor="price">Price per night</label>
               <input
                 required
+                max="10000"
                 defaultValue={venue?.price}
                 className=""
                 type="number"
@@ -270,12 +271,15 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <input
+                  className="cursor-pointer"
                   defaultChecked={venue?.meta.wifi}
                   type="checkbox"
                   id="wifi"
                   name="wifi"
                 />
-                <label htmlFor="wifi">Free wifi</label>
+                <label className="cursor-pointer" htmlFor="wifi">
+                  Free wifi
+                </label>
               </div>
               <div className="flex items-center gap-1">
                 <input
@@ -284,7 +288,9 @@ export default function VenueModal({
                   id="parking"
                   name="parking"
                 />
-                <label htmlFor="parking">Free parking</label>
+                <label className="cursor-pointer" htmlFor="parking">
+                  Free parking
+                </label>
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-1">
@@ -295,7 +301,9 @@ export default function VenueModal({
                   id="breakfast"
                   name="breakfast"
                 />
-                <label htmlFor="breakfast">Breakfast included</label>
+                <label className="cursor-pointer" htmlFor="breakfast">
+                  Breakfast included
+                </label>
               </div>
               <div className="flex items-center gap-1">
                 <input
@@ -304,7 +312,9 @@ export default function VenueModal({
                   id="pets"
                   name="pets"
                 />
-                <label htmlFor="pets">Pets allowed</label>
+                <label className="cursor-pointer" htmlFor="pets">
+                  Pets allowed
+                </label>
               </div>
             </div>
           </div>

@@ -47,8 +47,8 @@ const PriceRangeSlider = ({ onChange }: PriceRangeSliderProps) => {
           if (trackIndex === 1) {
             bg = "bg-ocean-700";
           }
-
-          return <div {...props} className={`h-2 ${bg} rounded-xl`} />;
+          const { key, ...rest } = props;
+          return <div key={key} {...rest} className={`h-2 ${bg} rounded-xl`} />;
         }}
       />
     </div>

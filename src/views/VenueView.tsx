@@ -290,8 +290,8 @@ const VenueView = () => {
               </div>
             )}
           </div>
-          <div className="flex gap-10">
-            <div className="flex-2 flex flex-col gap-10 p-3">
+          <div className="w-full flex gap-10">
+            <div className="flex-2 flex flex-col gap-10 p-3 overflow-hidden">
               <ul className="flex gap-3">
                 <li className="flex gap-1 items-center text-ocean-700">
                   <FontAwesomeIcon icon={faLocationDot} />
@@ -327,7 +327,7 @@ const VenueView = () => {
                 </div>
               </div>
               <hr className="border-neutral-300"></hr>
-              <p>
+              <p className="w-full">
                 {venue.description || (
                   <span className="italic">
                     This venue doesn't have a description yet.

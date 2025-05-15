@@ -111,7 +111,7 @@ const Header = () => {
                 {location.pathname !== "/register" && (
                   <Link
                     to="/register"
-                    className="font-semibold transition-colors duration-300 hover:text-turquoise-500"
+                    className="text-sm font-semibold transition-colors duration-300 hover:text-turquoise-500"
                   >
                     Register
                   </Link>
