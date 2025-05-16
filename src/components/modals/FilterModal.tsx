@@ -20,23 +20,49 @@ type FilterModalProps = {
   onClose: () => void;
   urlText?: string;
   urlRating?: string | null;
+  urlGuests?: number | null;
+  urlWifi?: boolean;
+  urlBreakfast?: boolean;
+  urlParking?: boolean;
+  urlPets?: boolean;
+  urlDateRange?: DateRange;
+  urlPriceRange?: [number, number] | null;
 };
 
 export const FilterModal = ({
   onClose,
   urlText,
   urlRating,
+  urlGuests,
+  urlWifi,
+  urlBreakfast,
+  urlParking,
+  urlPets,
+  urlDateRange,
+  urlPriceRange,
 }: FilterModalProps) => {
   const navigate = useNavigate();
   const { setFilters } = useVenues();
-  const [dateRange, setDateRange] = useState<DateRange>();
-  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+  const [dateRange, setDateRange] = useState(urlDateRange || undefined);
+  const [priceRange, setPriceRange] = useState<[number, number]>(() => {
+    if (urlPriceRange && urlPriceRange[1] !== 0) {
+      return urlPriceRange;
+    }
+    return [0, 10000];
+  });
   const [guests, setGuests] = useState(1);
   const [selectedRating, setSelectedRating] = useState(urlRating || "");
 
+  console.log("urlPriceRange", urlPriceRange);
+
   useEffect(() => {
     setSelectedRating(urlRating || "");
-  }, [urlRating]);
+    setGuests(urlGuests || 1);
+    if (urlPriceRange && urlPriceRange[1] !== 0) {
+      setPriceRange(urlPriceRange);
+    } else setPriceRange([0, 10000]);
+    setDateRange(urlDateRange || undefined);
+  }, [urlRating, urlGuests, urlPriceRange, urlDateRange]);
 
   const handleSelect = (range: DateRange | undefined) => {
     setDateRange(range);
@@ -71,7 +97,7 @@ export const FilterModal = ({
       searchParams.set("from", format(dateRange.from, "dd.MM.yyyy"));
       searchParams.set("to", format(dateRange.to, "dd.MM.yyyy"));
     }
-    if (priceRange) {
+    if (priceRange[0] !== 0 || priceRange[1] !== 10000) {
       searchParams.set("minprice", String(priceRange[0]));
       searchParams.set("maxprice", String(priceRange[1]));
     }
@@ -128,7 +154,8 @@ export const FilterModal = ({
             <h3 className="text-black ">Budget per night</h3>
             <div className="flex flex-col gap-3">
               <PriceRangeSlider
-                onChange={(value) => setPriceRange(() => value)}
+                urlRange={priceRange ?? [0, 10000]}
+                onChange={(value) => setPriceRange(value)}
               />
               {priceRange && (
                 <p className="text-sm">
@@ -159,7 +186,7 @@ export const FilterModal = ({
               <div className="flex w-28 gap-3 items-center border-1 rounded-sm border-neutral-300 ">
                 <button
                   type="button"
-                  onClick={() => decrement}
+                  onClick={decrement}
                   className="flex-1 transition-all duration-300 flex items-center justify-center rounded-lg text-ocean-700 hover:bg-neutral-100 size-8"
                 >
                   <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
@@ -167,7 +194,7 @@ export const FilterModal = ({
                 <p className="flex-1 text-center">{guests}</p>
                 <button
                   type="button"
-                  onClick={() => increment}
+                  onClick={increment}
                   disabled={guests > guestLimit}
                   className="flex-1 transition-all duration-300 flex items-center justify-center rounded-lg text-ocean-700 hover:bg-neutral-100 size-8"
                 >
@@ -179,8 +206,7 @@ export const FilterModal = ({
               <h3 className="text-black">Minimum rating</h3>
               <select
                 required
-                value={selectedRating}
-                onChange={(event) => setSelectedRating(event.target.value)}
+                defaultValue={selectedRating}
                 className="w-fit"
                 name="rating"
                 id="rating"
@@ -199,45 +225,53 @@ export const FilterModal = ({
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.wifi}
+                    defaultChecked={urlWifi}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="wifi"
                     name="wifi"
                   />
-                  <label htmlFor="wifi">Free wifi</label>
+                  <label className="cursor-pointer" htmlFor="wifi">
+                    Free wifi
+                  </label>
                 </div>
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.parking}
+                    defaultChecked={urlParking}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="parking"
                     name="parking"
                   />
-                  <label htmlFor="parking">Free parking</label>
+                  <label className="cursor-pointer" htmlFor="parking">
+                    Free parking
+                  </label>
                 </div>
               </div>
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.breakfast}
+                    defaultChecked={urlBreakfast}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="breakfast"
                     name="breakfast"
                   />
-                  <label htmlFor="breakfast">Breakfast included</label>
+                  <label className="cursor-pointer" htmlFor="breakfast">
+                    Breakfast included
+                  </label>
                 </div>
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.pets}
+                    defaultChecked={urlPets}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="pets"
                     name="pets"
                   />
-                  <label htmlFor="pets">Pets allowed</label>
+                  <label className="cursor-pointer" htmlFor="pets">
+                    Pets allowed
+                  </label>
                 </div>
               </div>
             </div>

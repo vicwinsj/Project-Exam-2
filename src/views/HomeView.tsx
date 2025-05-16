@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FilterModal } from "../components/modals/FilterModal";
 import { FilterLabel } from "../components/filterLabel";
+import { parse } from "date-fns";
 
 const HomeView = () => {
   const [searchParams] = useSearchParams();
@@ -20,10 +21,15 @@ const HomeView = () => {
   const dateTo = searchParams.get("to");
   const minPrice = searchParams.get("minprice");
   const maxPrice = searchParams.get("maxprice");
-  const wifi = searchParams.get("wifi");
-  const pets = searchParams.get("pets");
-  const parking = searchParams.get("parking");
-  const breakfast = searchParams.get("breakfast");
+  const wifi = searchParams.get("wifi") === "true";
+  const pets = searchParams.get("pets") === "true";
+  const parking = searchParams.get("parking") === "true";
+  const breakfast = searchParams.get("breakfast") === "true";
+
+  const dateRange = {
+    from: dateFrom ? parse(dateFrom, "dd.MM.yyyy", new Date()) : undefined,
+    to: dateTo ? parse(dateTo, "dd.MM.yyyy", new Date()) : undefined,
+  };
 
   const [showFilter, setShowFilter] = useState(false);
 
@@ -156,6 +162,13 @@ const HomeView = () => {
           onClose={handleCloseFilter}
           urlText={searchText}
           urlRating={rating}
+          urlGuests={Number(guests)}
+          urlWifi={wifi}
+          urlBreakfast={breakfast}
+          urlParking={parking}
+          urlPets={pets}
+          urlDateRange={dateRange}
+          urlPriceRange={[Number(minPrice), Number(maxPrice)]}
         />
       )}
     </section>
