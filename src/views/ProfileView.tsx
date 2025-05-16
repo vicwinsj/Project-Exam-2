@@ -10,6 +10,8 @@ import { Tabs } from "../components/Tabs";
 import { VenueCard } from "../components/VenueCard";
 import { format, differenceInCalendarDays } from "date-fns";
 import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Toast } from "../components/toast/toast";
 
 type Venue = {
   id: string;
@@ -75,7 +77,7 @@ const ProfileView = () => {
   const location = useLocation();
   const routeProfile = location.state?.profile;
 
-  const { accessToken, username, profile: loggedInProfile } = useAuth();
+  const { username, profile: loggedInProfile } = useAuth();
   const { name: routeName } = useParams();
   const isLoggedInProfile = routeName === username;
 
@@ -121,7 +123,6 @@ const ProfileView = () => {
 
   if (loading) return <p>Loading...</p>;
   //   if (error) return <p>Error: {error}</p>;
-  if (!accessToken) return <p>No profile available.</p>;
 
   return (
     <>
@@ -230,8 +231,8 @@ const ProfileView = () => {
                         {booking.venue.location.city || "Unknown"}
                       </p>
                       <p className="flex-2">
-                        {format(booking.dateFrom, "MMM d")} –{" "}
-                        {format(booking.dateTo, "MMM d y")}
+                        {format(booking.dateFrom, "dd.MM.yy")}–
+                        {format(booking.dateTo, "dd.MM.yy")}
                       </p>
                       <p className="flex-1 flex justify-center">
                         {booking.guests}
@@ -276,9 +277,22 @@ const ProfileView = () => {
           </section>
         )}
       </div>
-      {showEditProfile && <EditProfileModal onClose={handleCloseEditProfile} />}
+      {showEditProfile && (
+        <EditProfileModal
+          onClose={handleCloseEditProfile}
+          onSuccess={() =>
+            toast.custom(<Toast message="Profile successfully updated!" />)
+          }
+        />
+      )}
       {showVenueModal && (
-        <VenueModal title="Create venue" onClose={handleCloseVenueModal} />
+        <VenueModal
+          title="Create venue"
+          onClose={handleCloseVenueModal}
+          onSuccess={() =>
+            toast.custom(<Toast message="Venue successfully created!" />)
+          }
+        />
       )}
     </>
   );

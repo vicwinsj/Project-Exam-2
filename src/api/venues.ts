@@ -1,22 +1,22 @@
 import { API_HOLIDAZE_VENUES, API_KEY } from "../constants/api";
 
-type Venue = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  location: {
-    country: string;
-    city: string;
-  };
-  media: {
-    url: string;
-    alt: string;
-  }[];
-  _count?: {
-    bookings: number;
-  };
-};
+// type Venue = {
+//   id: string;
+//   name: string;
+//   description: string;
+//   price: number;
+//   location: {
+//     country: string;
+//     city: string;
+//   };
+//   media: {
+//     url: string;
+//     alt: string;
+//   }[];
+//   _count?: {
+//     bookings: number;
+//   };
+// };
 
 export const fetchVenues = async () => {
   try {

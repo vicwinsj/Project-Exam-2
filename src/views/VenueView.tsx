@@ -25,6 +25,9 @@ import { useAuth } from "../contexts/AuthContext.tsx";
 import { fetchVenue } from "../api/venues.ts";
 import { DeleteModal } from "../components/modals/DeleteModal.tsx";
 import { CustomerBookings } from "../components/CustomerBookings.tsx";
+import { Toast } from "../components/toast/toast.tsx";
+import toast from "react-hot-toast";
+import LoginModal from "../components/modals/LoginModal.tsx";
 
 type Venue = {
   id: string;
@@ -72,7 +75,16 @@ const VenueView = () => {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
   // const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
+
+  const handleOpenLogin = () => {
+    setShowLogin(true);
+  };
+
+  const handleCloseLogin = () => {
+    setShowLogin(false);
+  };
 
   const updateVenue = async () => {
     const updatedVenue = await fetchVenue(venueId);
@@ -144,10 +156,15 @@ const VenueView = () => {
     setShowDeleteModal(false);
   };
 
+  type ErrorState = {
+    date?: string;
+  };
+
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
   const [nights, setNights] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [errors, setErrors] = useState<ErrorState>({});
 
   const handleRangeSelect = (range: DateRange | undefined, nights: number) => {
     if (!range) {
@@ -175,7 +192,26 @@ const VenueView = () => {
 
   const handleReservation = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (startDate && endDate && venueId && accessToken) {
+
+    const validateForm = () => {
+      const newErrors: ErrorState = {};
+
+      if (startDate == endDate) {
+        newErrors.date = "You need to book at least one night.";
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
+    if (
+      validateForm() &&
+      startDate &&
+      endDate &&
+      venueId &&
+      accessToken &&
+      startDate != endDate
+    )
       try {
         const result = await createBooking(
           startDate,
@@ -185,16 +221,21 @@ const VenueView = () => {
           accessToken
         );
         if (result) {
+          if (errors) {
+            setErrors({});
+          }
           await refreshProfile();
-          console.log("Booked!");
+          await updateVenue();
+          setSelectedRange(undefined);
+          toast.custom(
+            <Toast message="Venue has been booked. Enjoy your stay!" />
+          );
         }
-        // SUCCESS MESSAGE
       } catch (error) {
         if (error instanceof Error) {
           // setServerError(error.message);
         }
       }
-    }
   };
 
   const noFacilities =
@@ -249,8 +290,8 @@ const VenueView = () => {
               </div>
             )}
           </div>
-          <div className="flex gap-10">
-            <div className="flex-2 flex flex-col gap-10 p-3">
+          <div className="w-full flex gap-10">
+            <div className="flex-2 flex flex-col gap-10 p-3 overflow-hidden">
               <ul className="flex gap-3">
                 <li className="flex gap-1 items-center text-ocean-700">
                   <FontAwesomeIcon icon={faLocationDot} />
@@ -286,7 +327,7 @@ const VenueView = () => {
                 </div>
               </div>
               <hr className="border-neutral-300"></hr>
-              <p>
+              <p className="w-full">
                 {venue.description || (
                   <span className="italic">
                     This venue doesn't have a description yet.
@@ -376,7 +417,7 @@ const VenueView = () => {
                           }
                         }}
                         variant="outline"
-                        className="w-full flex items-center gap-3"
+                        className={`w-full flex items-center gap-3 ${errors.date && "border-red-500"}`}
                       >
                         <FontAwesomeIcon
                           icon={faCalendar}
@@ -391,6 +432,11 @@ const VenueView = () => {
                           <p>Select dates</p>
                         )}
                       </Button>
+                      {errors.date && (
+                        <p className="mt-1 mb-3 text-red-500 text-sm">
+                          {errors.date}
+                        </p>
+                      )}
                       {showCalendarModal && (
                         <div className="w-full drop-shadow-md absolute top-10 -left-45 z-10">
                           <CalendarModal
@@ -439,9 +485,20 @@ const VenueView = () => {
                       )}
                     </div>
                   </div>
-                  <Button type="submit" variant="primary" size="lg">
-                    Reserve
-                  </Button>
+                  {accessToken ? (
+                    <Button type="submit" variant="primary" size="lg">
+                      Reserve
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={handleOpenLogin}
+                      variant="primary"
+                      size="lg"
+                    >
+                      Login to reserve
+                    </Button>
+                  )}
                 </form>
               </aside>
             )}
@@ -453,6 +510,9 @@ const VenueView = () => {
           venue={venue}
           title="Edit venue"
           onClose={handleCloseVenueModal}
+          onSuccess={() =>
+            toast.custom(<Toast message="Venue successfully updated!" />)
+          }
           onVenueUpdated={updateVenue}
         />
       )}
@@ -461,8 +521,12 @@ const VenueView = () => {
           venueId={venue.id}
           venueName={venue.name}
           onClose={handleCloseDeleteModal}
+          onSuccess={() =>
+            toast.custom(<Toast message="Venue successfully deleted!" />)
+          }
         />
       )}
+      {showLogin && <LoginModal onClose={handleCloseLogin} />}
     </>
   );
 };

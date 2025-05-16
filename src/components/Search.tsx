@@ -1,18 +1,27 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useVenues } from "../contexts/VenueContext";
+import { useSearchParams } from "react-router-dom";
 
 // type SearchProps = {
 //   onSearch: (query: string) => void;
 // };
 
 const Search = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { resetSearch } = useVenues();
+  const { searchQuery, setSearchQuery, filters, setFilters, resetSearch } =
+    useVenues();
 
-  const [query, setQuery] = useState("");
+  const urlQuery = searchParams.get("q") || "";
+
+  useEffect(() => {
+    setQuery(urlQuery || "");
+  }, [urlQuery]);
+
+  const [query, setQuery] = useState(urlQuery || "");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -23,16 +32,24 @@ const Search = () => {
 
   const handleErase = () => {
     setQuery("");
-    inputRef.current?.focus();
+    inputRef.current?.blur();
     resetSearch();
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // onSearch(query);
 
-    navigate(`/search?q=${encodeURIComponent(query)}`);
+    if (filters) {
+      setFilters({});
+    }
+    if (searchQuery) {
+      setSearchQuery("");
+    }
+    // onSearch(query);
+    const newParams = new URLSearchParams();
+    if (query) newParams.set("q", query.trim());
+    navigate({ pathname: "/search", search: newParams.toString() });
   };
 
   return (

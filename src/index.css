@@ -40,12 +40,22 @@
     @apply w-full transition-colors duration-300 px-3 py-1 border-1 rounded-sm hover:bg-air-100 outline-sunset-800 border-neutral-300 resize-none;
   }
 
+  input[type="checkbox"] {
+    @apply size-5 cursor-pointer bg-ocean-700;
+  }
+
   details {
     @apply p-3 flex flex-col gap-3 cursor-pointer transition-all duration-300;
   }
 
   summary {
     @apply text-ocean-700 group-open:border-b-[.1px] border-neutral-300 p-3 -m-3 transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .rdp-day_button:disabled {
+    @apply cursor-default;
   }
 }
 

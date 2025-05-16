@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { loginUser } from "../../api/auth.ts";
 import ModalWrapper from "./ModalWrapper.tsx";
+import toast from "react-hot-toast";
+import { Toast } from "../toast/toast.tsx";
 
 type LoginProps = {
   onClose: () => void;
@@ -31,8 +33,8 @@ const LoginModal = ({ onClose }: LoginProps) => {
 
     try {
       const result = await loginUser(userData);
-      //   if (result) SUCCESS MESSAGE
       if (result && result.data && result.data.accessToken) {
+        toast.custom(<Toast message="Successfully logged in!" />);
         login(result.data.accessToken, result.data.name);
         onClose();
       }
@@ -80,7 +82,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
             />
           </div>
         </fieldset>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className="flex gap-1 h-fit">
             <input
               className="cursor-pointer"
@@ -88,9 +90,11 @@ const LoginModal = ({ onClose }: LoginProps) => {
               id="remember"
               name="remember"
             />
-            <label htmlFor="remember">Remember me</label>
+            <label htmlFor="remember" className="cursor-pointer">
+              Remember me
+            </label>
           </div>
-          <a className="font-semibold" href="">
+          <a className="font-semibold text-sm" href="">
             Forgot password?
           </a>
         </div>

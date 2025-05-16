@@ -10,49 +10,117 @@ import {
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "../DateRangePicker";
 import { Button } from "../form/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useVenues } from "../../contexts/VenueContext";
 import PriceRangeSlider from "../PriceRangeSlider";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 
 type FilterModalProps = {
   onClose: () => void;
-  query?: string;
+  urlText?: string;
+  urlRating?: string | null;
+  urlGuests?: number | null;
+  urlWifi?: boolean;
+  urlBreakfast?: boolean;
+  urlParking?: boolean;
+  urlPets?: boolean;
+  urlDateRange?: DateRange;
+  urlPriceRange?: [number, number] | null;
 };
 
-export const FilterModal = ({ onClose, query }: FilterModalProps) => {
+export const FilterModal = ({
+  onClose,
+  urlText,
+  urlRating,
+  urlGuests,
+  urlWifi,
+  urlBreakfast,
+  urlParking,
+  urlPets,
+  urlDateRange,
+  urlPriceRange,
+}: FilterModalProps) => {
+  const navigate = useNavigate();
   const { setFilters } = useVenues();
-  const [dateRange, setDateRange] = useState<DateRange>();
-  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+  const [dateRange, setDateRange] = useState(urlDateRange || undefined);
+  const [priceRange, setPriceRange] = useState<[number, number]>(() => {
+    if (urlPriceRange && urlPriceRange[1] !== 0) {
+      return urlPriceRange;
+    }
+    return [0, 10000];
+  });
   const [guests, setGuests] = useState(1);
+  const [selectedRating, setSelectedRating] = useState(urlRating || "");
 
-  const handleSelect = (r: DateRange | undefined) => {
-    setDateRange(r);
+  console.log("urlPriceRange", urlPriceRange);
+
+  useEffect(() => {
+    setSelectedRating(urlRating || "");
+    setGuests(urlGuests || 1);
+    if (urlPriceRange && urlPriceRange[1] !== 0) {
+      setPriceRange(urlPriceRange);
+    } else setPriceRange([0, 10000]);
+    setDateRange(urlDateRange || undefined);
+  }, [urlRating, urlGuests, urlPriceRange, urlDateRange]);
+
+  const handleSelect = (range: DateRange | undefined) => {
+    setDateRange(range);
   };
 
   const guestLimit = 100;
 
-  const increment = (type: "guests") => {
+  const increment = () => {
     if (guests >= guestLimit) return;
-    if (type === "guests") setGuests(guests + 1);
+    setGuests(guests + 1);
   };
 
-  const decrement = (type: "guests") => {
-    if (type === "guests" && guests > 1) setGuests(guests - 1);
+  const decrement = () => {
+    if (guests > 1) setGuests(guests - 1);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const searchText = formData.get("search")?.toString().trim();
+    const wifi = formData.get("wifi") === "on";
+    const parking = formData.get("parking") === "on";
+    const breakfast = formData.get("breakfast") === "on";
+    const pets = formData.get("pets") === "on";
+    const rating = Number(formData.get("rating"));
+    const searchParams = new URLSearchParams();
+
+    if (searchText) {
+      searchParams.set("q", searchText);
+    }
+    if (dateRange?.from && dateRange?.to) {
+      searchParams.set("from", format(dateRange.from, "dd.MM.yyyy"));
+      searchParams.set("to", format(dateRange.to, "dd.MM.yyyy"));
+    }
+    if (priceRange[0] !== 0 || priceRange[1] !== 10000) {
+      searchParams.set("minprice", String(priceRange[0]));
+      searchParams.set("maxprice", String(priceRange[1]));
+    }
+    if (guests > 1) searchParams.set("guests", String(guests));
+    if (wifi) searchParams.set("wifi", "true");
+    if (parking) searchParams.set("parking", "true");
+    if (breakfast) searchParams.set("breakfast", "true");
+    if (pets) searchParams.set("pets", "true");
+    if (rating > 1) searchParams.set("minrating", String(rating));
+
+    const query = searchParams.toString();
+    navigate(query ? `/search?${query}` : "/");
 
     setFilters({
+      searchText: searchText,
       dateRange: dateRange,
       priceRange: priceRange,
       guests,
-      wifi: formData.get("wifi") === "on",
-      parking: formData.get("parking") === "on",
-      breakfast: formData.get("breakfast") === "on",
-      pets: formData.get("pets") === "on",
-      rating: Number(formData.get("rating")),
+      wifi: wifi,
+      parking: parking,
+      breakfast: breakfast,
+      pets: pets,
+      rating: rating,
     });
 
     onClose();
@@ -73,29 +141,28 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
           ></FontAwesomeIcon>
         </div>
         <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-3">
             <h3 className="text-black ">Search text</h3>
             <input
               name="search"
               id="search"
-              defaultValue={query}
+              defaultValue={urlText}
               placeholder="Enter e.g. name of venue, city, country etc."
             />
           </div>
           <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <h3 className="text-black ">Budget per night</h3>
-              {priceRange ? (
+            <h3 className="text-black ">Budget per night</h3>
+            <div className="flex flex-col gap-3">
+              <PriceRangeSlider
+                urlRange={priceRange ?? [0, 10000]}
+                onChange={(value) => setPriceRange(value)}
+              />
+              {priceRange && (
                 <p className="text-sm">
                   {priceRange[0]} NOK – {priceRange[1]} NOK
                 </p>
-              ) : (
-                <p className="text-sm">0 NOK – 1000 NOK</p>
               )}
             </div>
-            <PriceRangeSlider
-              onChange={(value) => setPriceRange(() => value)}
-            />
           </div>
           <details className="open flex flex-col open:gap-6 group relative p-3 border-1 open:border-neutral-500 rounded-t-xl border-neutral-300 overflow-hidden">
             <summary className="transition-all duration-300 bg-white group-open:bg-air-100 border-neutral-300 border-b-[.1px]">
@@ -119,7 +186,7 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
               <div className="flex w-28 gap-3 items-center border-1 rounded-sm border-neutral-300 ">
                 <button
                   type="button"
-                  onClick={() => decrement("guests")}
+                  onClick={decrement}
                   className="flex-1 transition-all duration-300 flex items-center justify-center rounded-lg text-ocean-700 hover:bg-neutral-100 size-8"
                 >
                   <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
@@ -127,7 +194,7 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
                 <p className="flex-1 text-center">{guests}</p>
                 <button
                   type="button"
-                  onClick={() => increment("guests")}
+                  onClick={increment}
                   disabled={guests > guestLimit}
                   className="flex-1 transition-all duration-300 flex items-center justify-center rounded-lg text-ocean-700 hover:bg-neutral-100 size-8"
                 >
@@ -139,7 +206,7 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
               <h3 className="text-black">Minimum rating</h3>
               <select
                 required
-                //   defaultValue={venue?.rating}
+                defaultValue={selectedRating}
                 className="w-fit"
                 name="rating"
                 id="rating"
@@ -158,45 +225,53 @@ export const FilterModal = ({ onClose, query }: FilterModalProps) => {
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.wifi}
+                    defaultChecked={urlWifi}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="wifi"
                     name="wifi"
                   />
-                  <label htmlFor="wifi">Free wifi</label>
+                  <label className="cursor-pointer" htmlFor="wifi">
+                    Free wifi
+                  </label>
                 </div>
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.parking}
+                    defaultChecked={urlParking}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="parking"
                     name="parking"
                   />
-                  <label htmlFor="parking">Free parking</label>
+                  <label className="cursor-pointer" htmlFor="parking">
+                    Free parking
+                  </label>
                 </div>
               </div>
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.breakfast}
+                    defaultChecked={urlBreakfast}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="breakfast"
                     name="breakfast"
                   />
-                  <label htmlFor="breakfast">Breakfast included</label>
+                  <label className="cursor-pointer" htmlFor="breakfast">
+                    Breakfast included
+                  </label>
                 </div>
                 <div className="flex items-center gap-1">
                   <input
-                    // defaultChecked={venue?.meta.pets}
+                    defaultChecked={urlPets}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="pets"
                     name="pets"
                   />
-                  <label htmlFor="pets">Pets allowed</label>
+                  <label className="cursor-pointer" htmlFor="pets">
+                    Pets allowed
+                  </label>
                 </div>
               </div>
             </div>

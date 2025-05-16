@@ -2,6 +2,7 @@ import { useState } from "react";
 import ReactSlider from "react-slider";
 
 type PriceRangeSliderProps = {
+  urlRange: [number, number];
   onChange: (range: [number, number]) => void;
 };
 
@@ -19,7 +20,7 @@ type TrackState = {
   index: number;
 };
 
-const PriceRangeSlider = ({ onChange }: PriceRangeSliderProps) => {
+const PriceRangeSlider = ({ urlRange, onChange }: PriceRangeSliderProps) => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
 
   const handleChange = (values: [number, number]) => {
@@ -36,7 +37,7 @@ const PriceRangeSlider = ({ onChange }: PriceRangeSliderProps) => {
         min={0}
         max={10000}
         step={1}
-        value={priceRange}
+        value={urlRange || priceRange}
         onChange={handleChange}
         pearling
         minDistance={1}
@@ -47,8 +48,8 @@ const PriceRangeSlider = ({ onChange }: PriceRangeSliderProps) => {
           if (trackIndex === 1) {
             bg = "bg-ocean-700";
           }
-
-          return <div {...props} className={`h-2 ${bg} rounded-xl`} />;
+          const { key, ...rest } = props;
+          return <div key={key} {...rest} className={`h-2 ${bg} rounded-xl`} />;
         }}
       />
     </div>

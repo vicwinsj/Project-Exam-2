@@ -46,6 +46,7 @@ type Venue = {
 interface VenueModalProps {
   title: string;
   onClose: () => void;
+  onSuccess: () => void;
   venue?: Venue;
   onVenueUpdated?: () => Promise<void>;
 }
@@ -55,6 +56,7 @@ export default function VenueModal({
   onClose,
   venue,
   onVenueUpdated,
+  onSuccess,
 }: VenueModalProps) {
   const [serverError, setServerError] = useState("");
   const { accessToken, profile, refreshProfile } = useAuth();
@@ -149,10 +151,9 @@ export default function VenueModal({
           if (result) {
             if (onVenueUpdated) await onVenueUpdated();
             await refreshProfile();
+            onSuccess?.();
             onClose();
-            console.log("updated!");
           }
-          // SUCCESS MESSAGE
         } catch (error) {
           if (error instanceof Error) {
             setServerError(error.message);
@@ -173,10 +174,9 @@ export default function VenueModal({
           );
           if (result) {
             await refreshProfile();
+            onSuccess?.();
             onClose();
-            console.log("created!");
           }
-          // SUCCESS MESSAGE
         } catch (error) {
           if (error instanceof Error) {
             setServerError(error.message);
@@ -227,6 +227,7 @@ export default function VenueModal({
               <label htmlFor="price">Price per night</label>
               <input
                 required
+                max="10000"
                 defaultValue={venue?.price}
                 className=""
                 type="number"
@@ -270,45 +271,50 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <input
+                  className="cursor-pointer"
                   defaultChecked={venue?.meta.wifi}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="wifi"
                   name="wifi"
                 />
-                <label htmlFor="wifi">Free wifi</label>
+                <label className="cursor-pointer" htmlFor="wifi">
+                  Free wifi
+                </label>
               </div>
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.parking}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="parking"
                   name="parking"
                 />
-                <label htmlFor="parking">Free parking</label>
+                <label className="cursor-pointer" htmlFor="parking">
+                  Free parking
+                </label>
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.breakfast}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="breakfast"
                   name="breakfast"
                 />
-                <label htmlFor="breakfast">Breakfast included</label>
+                <label className="cursor-pointer" htmlFor="breakfast">
+                  Breakfast included
+                </label>
               </div>
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.pets}
-                  className="cursor-pointer size-5"
                   type="checkbox"
                   id="pets"
                   name="pets"
                 />
-                <label htmlFor="pets">Pets allowed</label>
+                <label className="cursor-pointer" htmlFor="pets">
+                  Pets allowed
+                </label>
               </div>
             </div>
           </div>

@@ -36,6 +36,7 @@ type Venue = {
 };
 
 type Filters = {
+  searchText?: string;
   dateRange?: DateRange | null;
   priceRange?: [number, number] | null;
   guests?: number;
@@ -51,8 +52,9 @@ type VenueContextType = {
   resetSearch: () => void;
   searchResults: Venue[];
   setFilters: (filters: Filters) => void;
+  filters: Filters;
   searchQuery: string;
-  handleSearch: (query: string) => void;
+  setSearchQuery: (searchQuery: string) => void;
   error: string | null;
   loading: boolean;
 };
@@ -83,7 +85,8 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
     const applyFilters = () => {
       let filtered = [...venues];
 
-      if (searchQuery?.trim()) {
+      if (filters.searchText?.trim()) {
+        setSearchQuery(filters.searchText);
         filtered = filtered.filter(
           (venue) =>
             venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -177,21 +180,19 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
 
   const resetSearch = async () => {
     setSearchQuery("");
+    setFilters({});
     await loadVenues();
-  };
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
   };
 
   return (
     <VenueContext.Provider
       value={{
+        filters,
         venues,
         resetSearch,
         searchResults,
         searchQuery,
-        handleSearch,
+        setSearchQuery,
         error,
         loading,
         setFilters,

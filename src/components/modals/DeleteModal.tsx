@@ -9,12 +9,14 @@ interface DeleteModalProps {
   venueId: string;
   venueName: string;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
 export const DeleteModal = ({
   venueId,
   venueName,
   onClose,
+  onSuccess,
 }: DeleteModalProps) => {
   const { accessToken, refreshProfile } = useAuth();
   const navigate = useNavigate();
@@ -27,8 +29,8 @@ export const DeleteModal = ({
       try {
         const deleteSuccess = await deleteVenue(venueId, accessToken);
         if (deleteSuccess) {
-          console.log("deleted!");
           await refreshProfile();
+          onSuccess?.();
           onClose();
           navigate("/");
         }
@@ -47,7 +49,8 @@ export const DeleteModal = ({
       >
         <h3 className="text-xl text-black text-center">Confirm</h3>
         <p className="text-center">
-          Are you sure you want to delete "{venueName}"?
+          Are you sure you want to delete your venue{" "}
+          <strong>"{venueName}"</strong>?
         </p>
         <div className="flex justify-center items-center gap-3">
           <Button onClick={onClose} variant="outline">
