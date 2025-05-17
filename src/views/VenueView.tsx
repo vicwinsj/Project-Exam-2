@@ -28,6 +28,7 @@ import { CustomerBookings } from "../components/CustomerBookings.tsx";
 import { Toast } from "../components/toast/toast.tsx";
 import toast from "react-hot-toast";
 import LoginModal from "../components/modals/LoginModal.tsx";
+import { ImageCarousel } from "../components/modals/ImageCarousel.tsx";
 
 type Venue = {
   id: string;
@@ -76,7 +77,17 @@ const VenueView = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showLogin, setShowLogin] = useState(false);
-  // const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
+  const [showImageCarousel, setShowImageCarousel] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const handleOpenImageCarousel = (index: number) => {
+    setShowImageCarousel(true);
+    setActiveImageIndex(index);
+  };
+
+  const handleCloseImageCarousel = () => {
+    setShowImageCarousel(false);
+  };
 
   const handleOpenLogin = () => {
     setShowLogin(true);
@@ -265,12 +276,58 @@ const VenueView = () => {
           <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
           Back
         </button>
-        <div className="rounded-t-[20px] overflow-hidden w-full h-full">
-          <img
-            className="w-full h-130 object-cover"
-            src={venue.media[0]?.url || placeholderImage}
-            alt={venue.media[0]?.alt || "Picture of the venue"}
-          />
+        <div className="flex h-130 gap-3 rounded-t-[20px] overflow-hidden w-full">
+          <div
+            onClick={() => {
+              if (venue.media) {
+                handleOpenImageCarousel(0);
+              }
+            }}
+            className="relative cursor-pointer flex-3 h-full"
+          >
+            <img
+              className=" w-full h-full object-cover"
+              src={venue.media[0]?.url || placeholderImage}
+              alt={venue.media[0]?.alt || "Picture of the venue"}
+            />
+            <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
+          </div>
+          {venue.media.length > 1 && (
+            <div className="flex-1 flex flex-col gap-3 h-full">
+              <div
+                onClick={() => {
+                  if (venue.media) {
+                    handleOpenImageCarousel(1);
+                  }
+                }}
+                className="relative cursor-pointer w-full h-1/2"
+              >
+                <img
+                  className="w-full h-full object-cover"
+                  src={venue.media[1]?.url || placeholderImage}
+                  alt={venue.media[1]?.alt || "Picture of the venue"}
+                />
+                <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
+              </div>
+              {venue.media.length > 2 && (
+                <div
+                  onClick={() => {
+                    if (venue.media) {
+                      handleOpenImageCarousel(2);
+                    }
+                  }}
+                  className="relative cursor-pointer w-full h-1/2"
+                >
+                  <img
+                    className="w-full h-full object-cover"
+                    src={venue.media[2]?.url || placeholderImage}
+                    alt={venue.media[2]?.alt || "Picture of the venue"}
+                  />
+                  <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-10 w-full">
           <div className="w-full flex items-start justify-between">
@@ -527,6 +584,13 @@ const VenueView = () => {
         />
       )}
       {showLogin && <LoginModal onClose={handleCloseLogin} />}
+      {showImageCarousel && (
+        <ImageCarousel
+          images={venue.media}
+          onClose={handleCloseImageCarousel}
+          activeImageIndex={activeImageIndex}
+        />
+      )}
     </>
   );
 };

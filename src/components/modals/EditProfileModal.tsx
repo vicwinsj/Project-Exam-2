@@ -6,7 +6,7 @@ import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-export interface EditProfileProps {
+interface EditProfileProps {
   onClose: () => void;
   onSuccess?: () => void;
 }

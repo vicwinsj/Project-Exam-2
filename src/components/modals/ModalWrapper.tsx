@@ -1,19 +1,15 @@
+import { handleBackgroundClick } from "../utilities/handleBackgroundClick";
+
 type ModalWrapperProps = {
   onClose: () => void;
   children: React.ReactNode;
 };
 
 const ModalWrapper = ({ onClose, children }: ModalWrapperProps) => {
-  const handleBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
     <div
       className="z-10 fixed inset-0 flex justify-center items-center bg-black/50"
-      onClick={handleBackgroundClick}
+      onClick={(event) => handleBackgroundClick({ onClose }, event)}
     >
       {children}
     </div>

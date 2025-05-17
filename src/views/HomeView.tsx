@@ -118,7 +118,7 @@ const HomeView = () => {
             {guests && <FilterLabel>Guests: {guests}</FilterLabel>}
             {rating && (
               <FilterLabel>
-                Rating {">"} <strong>{rating}</strong>
+                Rating {">"} {rating}
               </FilterLabel>
             )}
             {breakfast && <FilterLabel>Breakfast included</FilterLabel>}
