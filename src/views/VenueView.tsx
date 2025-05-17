@@ -78,9 +78,11 @@ const VenueView = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showImageCarousel, setShowImageCarousel] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const handleOpenImageCarousel = () => {
+  const handleOpenImageCarousel = (index: number) => {
     setShowImageCarousel(true);
+    setActiveImageIndex(index);
   };
 
   const handleCloseImageCarousel = () => {
@@ -276,37 +278,52 @@ const VenueView = () => {
         </button>
         <div className="flex h-130 gap-3 rounded-t-[20px] overflow-hidden w-full">
           <div
-            onClick={venue.media && handleOpenImageCarousel}
-            className="cursor-pointer flex-3 h-full"
+            onClick={() => {
+              if (venue.media) {
+                handleOpenImageCarousel(0);
+              }
+            }}
+            className="relative cursor-pointer flex-3 h-full"
           >
             <img
-              className="w-full h-full object-cover"
+              className=" w-full h-full object-cover"
               src={venue.media[0]?.url || placeholderImage}
               alt={venue.media[0]?.alt || "Picture of the venue"}
             />
+            <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
           </div>
           {venue.media.length > 1 && (
             <div className="flex-1 flex flex-col gap-3 h-full">
               <div
-                onClick={venue.media && handleOpenImageCarousel}
-                className="cursor-pointer w-full h-1/2"
+                onClick={() => {
+                  if (venue.media) {
+                    handleOpenImageCarousel(1);
+                  }
+                }}
+                className="relative cursor-pointer w-full h-1/2"
               >
                 <img
                   className="w-full h-full object-cover"
                   src={venue.media[1]?.url || placeholderImage}
                   alt={venue.media[1]?.alt || "Picture of the venue"}
                 />
+                <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
               </div>
               {venue.media.length > 2 && (
                 <div
-                  onClick={venue.media && handleOpenImageCarousel}
-                  className="cursor-pointer w-full h-1/2"
+                  onClick={() => {
+                    if (venue.media) {
+                      handleOpenImageCarousel(2);
+                    }
+                  }}
+                  className="relative cursor-pointer w-full h-1/2"
                 >
                   <img
                     className="w-full h-full object-cover"
                     src={venue.media[2]?.url || placeholderImage}
                     alt={venue.media[2]?.alt || "Picture of the venue"}
                   />
+                  <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
                 </div>
               )}
             </div>
@@ -571,6 +588,7 @@ const VenueView = () => {
         <ImageCarousel
           images={venue.media}
           onClose={handleCloseImageCarousel}
+          activeImageIndex={activeImageIndex}
         />
       )}
     </>

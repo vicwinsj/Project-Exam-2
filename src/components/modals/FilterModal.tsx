@@ -43,6 +43,7 @@ export const FilterModal = ({
 }: FilterModalProps) => {
   const navigate = useNavigate();
   const { setFilters } = useVenues();
+  const [searchText, setSearchText] = useState(urlText || "");
   const [dateRange, setDateRange] = useState(urlDateRange || undefined);
   const [priceRange, setPriceRange] = useState<[number, number]>(() => {
     if (urlPriceRange && urlPriceRange[1] !== 0) {
@@ -50,10 +51,14 @@ export const FilterModal = ({
     }
     return [0, 10000];
   });
-  const [guests, setGuests] = useState(1);
-  const [selectedRating, setSelectedRating] = useState(urlRating || "");
-
-  console.log("urlPriceRange", urlPriceRange);
+  const [guests, setGuests] = useState(urlGuests || 1);
+  const [selectedRating, setSelectedRating] = useState(urlRating || "1");
+  const [selectedWifi, setSelectedWifi] = useState(urlWifi || false);
+  const [selectedParking, setSelectedParking] = useState(urlParking || false);
+  const [selectedBreakfast, setSelectedBreakfast] = useState(
+    urlBreakfast || false
+  );
+  const [selectedPets, setSelectedPets] = useState(urlPets || false);
 
   useEffect(() => {
     setSelectedRating(urlRating || "");
@@ -77,6 +82,19 @@ export const FilterModal = ({
 
   const decrement = () => {
     if (guests > 1) setGuests(guests - 1);
+  };
+
+  const handleReset = (event: React.FormEvent) => {
+    event.preventDefault();
+    setSearchText("");
+    setDateRange(undefined);
+    setPriceRange([0, 10000]);
+    setGuests(1);
+    setSelectedRating("1");
+    setSelectedWifi(false);
+    setSelectedBreakfast(false);
+    setSelectedParking(false);
+    setSelectedPets(false);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -146,7 +164,8 @@ export const FilterModal = ({
             <input
               name="search"
               id="search"
-              defaultValue={urlText}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
               placeholder="Enter e.g. name of venue, city, country etc."
             />
           </div>
@@ -206,7 +225,8 @@ export const FilterModal = ({
               <h3 className="text-black">Minimum rating</h3>
               <select
                 required
-                defaultValue={selectedRating}
+                value={selectedRating}
+                onChange={(e) => setSelectedRating(e.target.value)}
                 className="w-fit"
                 name="rating"
                 id="rating"
@@ -225,7 +245,8 @@ export const FilterModal = ({
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <input
-                    defaultChecked={urlWifi}
+                    checked={selectedWifi === true}
+                    onChange={(e) => setSelectedWifi(e.target.checked)}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="wifi"
@@ -237,7 +258,8 @@ export const FilterModal = ({
                 </div>
                 <div className="flex items-center gap-1">
                   <input
-                    defaultChecked={urlParking}
+                    checked={selectedParking === true}
+                    onChange={(e) => setSelectedParking(e.target.checked)}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="parking"
@@ -251,7 +273,8 @@ export const FilterModal = ({
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <input
-                    defaultChecked={urlBreakfast}
+                    checked={selectedBreakfast === true}
+                    onChange={(e) => setSelectedBreakfast(e.target.checked)}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="breakfast"
@@ -263,7 +286,8 @@ export const FilterModal = ({
                 </div>
                 <div className="flex items-center gap-1">
                   <input
-                    defaultChecked={urlPets}
+                    checked={selectedPets === true}
+                    onChange={(e) => setSelectedPets(e.target.checked)}
                     className="cursor-pointer size-5"
                     type="checkbox"
                     id="pets"
@@ -278,7 +302,7 @@ export const FilterModal = ({
           </fieldset>
         </div>
         <div className="flex justify-center gap-3">
-          <Button type="button" variant="outline">
+          <Button onClick={handleReset} type="button" variant="outline">
             Reset
           </Button>
           <Button type="submit" variant="primary">
