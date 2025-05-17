@@ -5,14 +5,12 @@ type ButtonProps = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const variantClasses = {
-  primary:
-    "border-sunset-800 border-1 bg-sunset-800 text-white hover:border-sunset-900 hover:bg-sunset-900",
+  primary: "bg-sunset-800 text-white hover:bg-sunset-900",
   secondary:
     "bg-ocean-700 border-white border-1 text-white hover:text-turquoise-500 hover:border-turquoise-500",
   outline:
     "border-1 font-normal! border-neutral-300 text-black hover:border-black hover:bg-neutral-50",
-  delete:
-    "bg-red-500 border-red-500 hover:bg-red-700 hover:border-red-700 text-white",
+  delete: "bg-red-500 hover:bg-red-700 text-white",
 };
 
 const sizeClasses = {

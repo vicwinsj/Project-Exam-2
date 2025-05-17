@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { FilterModal } from "../components/modals/FilterModal";
 import { FilterLabel } from "../components/filterLabel";
 import { parse } from "date-fns";
-import { SkeletonLoader } from "../components/loaders/SkeletonLoader";
+import { HomeLoader } from "../components/loaders/SkeletonLoader";
 
 const HomeView = () => {
   const [searchParams] = useSearchParams();
@@ -53,7 +53,7 @@ const HomeView = () => {
   return (
     <section className="flex flex-col gap-10">
       {loading ? (
-        <SkeletonLoader />
+        <HomeLoader />
       ) : (
         <>
           <div className="flex flex-col gap-1">

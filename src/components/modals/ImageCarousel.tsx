@@ -36,9 +36,9 @@ export const ImageCarousel = ({
     <ModalWrapper onClose={onClose}>
       <div
         onClick={(event) => handleBackgroundClick({ onClose }, event)}
-        className="flex justify-center items-center p-20 h-full bg-black/70 w-full"
+        className="flex items-center justify-center p-10 h-full bg-black/70 w-full"
       >
-        <div className="relative w-full max-w-4xl h-[80vh] flex items-center justify-center">
+        <div className="w-full h-full relative">
           {/* Image */}
           <img
             src={images[currentIndex].url}

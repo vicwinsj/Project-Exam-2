@@ -1,6 +1,6 @@
 export const SkeletonCard = () => {
   return (
-    <article className="transition-colors duration-300 border-1 border-neutral-300 rounded-t-2xl overflow-hidden animate-pulse">
+    <article className="border-1 border-neutral-300 rounded-t-2xl overflow-hidden animate-[pulse_1s_ease-in-out_infinite]">
       <div className="flex flex-col gap-3">
         <div className="overflow-hidden bg-neutral-300 w-full h-50"></div>
         <div></div>

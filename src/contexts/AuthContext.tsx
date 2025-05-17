@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const refreshProfile = async () => {
+    setAuthLoading(true);
     if (accessToken && username) {
       try {
         const data = await fetchProfile(username, accessToken);
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
+      setAuthLoading(false);
     }
   };
 
