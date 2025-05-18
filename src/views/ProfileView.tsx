@@ -12,6 +12,7 @@ import { format, differenceInCalendarDays } from "date-fns";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Toast } from "../components/toast/toast";
+import { VenueLoader } from "../components/loaders/SkeletonLoader";
 
 type Venue = {
   id: string;
@@ -121,7 +122,7 @@ const ProfileView = () => {
     }
   }, [profile]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <VenueLoader />;
   //   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -178,7 +179,7 @@ const ProfileView = () => {
           </div>
         </section>
         {isLoggedInProfile && (
-          <section className="flex flex-col gap-10">
+          <section className="flex flex-col p-10 gap-10 bg-orange-50 border-1 border-ocean-700 rounded-b-xl">
             <aside className="flex justify-center items-center gap-3 w-full h-full">
               {profile?.venueManager ? (
                 <Tabs

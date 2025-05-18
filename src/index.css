@@ -53,6 +53,23 @@
   }
 }
 
+/* Loader */
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@layer components {
+  .loading {
+    @apply animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-neutral-300 via-white to-neutral-300 bg-[length:200%_100%];
+  }
+}
+
 @layer utilities {
   .rdp-day_button:disabled {
     @apply cursor-default;

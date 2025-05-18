@@ -7,18 +7,33 @@ import { loginUser } from "../../api/auth.ts";
 import ModalWrapper from "./ModalWrapper.tsx";
 import toast from "react-hot-toast";
 import { Toast } from "../toast/toast.tsx";
+import { ButtonLoader } from "../loaders/ButtonLoader.tsx";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type LoginProps = {
   onClose: () => void;
 };
 
 const LoginModal = ({ onClose }: LoginProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { login } = useAuth();
 
+  const handleRegisterClick = () => {
+    if (location.pathname === "/register") {
+      onClose();
+    } else {
+      navigate("/register");
+    }
+  };
+
   const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const form = event.currentTarget;
 
@@ -37,12 +52,16 @@ const LoginModal = ({ onClose }: LoginProps) => {
         toast.custom(<Toast message="Successfully logged in!" />);
         login(result.data.accessToken, result.data.name);
         onClose();
+        if (location.pathname === "/register") {
+          navigate("/");
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
         setServerError(error.message);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -98,13 +117,22 @@ const LoginModal = ({ onClose }: LoginProps) => {
             Forgot password?
           </a>
         </div>
-        <Button type="submit">Login</Button>
+        <Button
+          className={`${loading && "cursor-not-allowed bg-sunset-800/50 hover:bg-sunset-900/50"}`}
+          type="submit"
+        >
+          {loading ? <ButtonLoader buttonText="Logging in ..." /> : "Login"}
+        </Button>
         {serverError && <p className="text-red-600">{serverError}!</p>}
         <div className="flex gap-1">
           <p>Don't got an account?</p>{" "}
-          <a href="/register" className="font-semibold">
+          <button
+            className="font-semibold"
+            type="button"
+            onClick={handleRegisterClick}
+          >
             Register here.
-          </a>
+          </button>
         </div>
       </form>
     </ModalWrapper>

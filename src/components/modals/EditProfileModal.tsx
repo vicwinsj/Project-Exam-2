@@ -194,9 +194,9 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
               variant="secondary"
             >
               {loading ? (
-                <ButtonLoader buttonText="Saving profile ..." />
+                <ButtonLoader buttonText="Saving Profile ..." />
               ) : (
-                "Save profile"
+                "Save Profile"
               )}
             </Button>
           </div>
