@@ -4,6 +4,7 @@ import { deleteVenue } from "../../api/venues";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ButtonLoader } from "../loaders/ButtonLoader";
 
 interface DeleteModalProps {
   venueId: string;
@@ -22,9 +23,12 @@ export const DeleteModal = ({
   const navigate = useNavigate();
 
   const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
+
     if (accessToken)
       try {
         const deleteSuccess = await deleteVenue(venueId, accessToken);
@@ -39,6 +43,7 @@ export const DeleteModal = ({
           setServerError(error.message);
         }
       }
+    setLoading(false);
   };
 
   return (
@@ -56,8 +61,16 @@ export const DeleteModal = ({
           <Button onClick={onClose} variant="outline">
             Cancel
           </Button>
-          <Button type="submit" variant="delete">
-            Delete
+          <Button
+            className={`${loading && "cursor-not-allowed bg-red-500/50 hover:bg-red-700/50"}`}
+            type="submit"
+            variant="delete"
+          >
+            {loading ? (
+              <ButtonLoader buttonText="Deleting venue ..." />
+            ) : (
+              "Delete venue"
+            )}
           </Button>
         </div>
         {serverError && <p>{serverError}</p>}

@@ -5,6 +5,7 @@ import { Button } from "../form/Button";
 import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { ButtonLoader } from "../loaders/ButtonLoader";
 
 interface EditProfileProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
   const [bannerUrl, setBannerUrl] = useState(profile?.banner.url);
   const [bioText, setBioText] = useState(profile?.bio);
   const [venueManager, setVenueManager] = useState(profile?.venueManager);
+  const [loading, setLoading] = useState(false);
 
   type ErrorState = {
     bannerUrl?: string;
@@ -30,6 +32,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const validateForm = () => {
       const newErrors: ErrorState = {};
@@ -93,6 +96,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
             setServerError(error.message);
           }
         }
+        setLoading(false);
       }
     }
   };
@@ -184,8 +188,16 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
                 Manager
               </label>
             </div>
-            <Button type="submit" variant="secondary">
-              Save
+            <Button
+              className={`${loading && "cursor-not-allowed bg-ocean-700/50"}`}
+              type="submit"
+              variant="secondary"
+            >
+              {loading ? (
+                <ButtonLoader buttonText="Saving Profile ..." />
+              ) : (
+                "Save Profile"
+              )}
             </Button>
           </div>
         </div>

@@ -4,10 +4,25 @@ import { Button } from "../components/form/Button";
 import { registerUser, loginUser } from "../api/auth";
 import toast from "react-hot-toast";
 import { Toast } from "../components/toast/toast";
+import LoginModal from "../components/modals/LoginModal";
+import { ButtonLoader } from "../components/loaders/ButtonLoader";
+import { useAuth } from "../contexts/AuthContext";
 
 const RegisterView = () => {
+  const { login } = useAuth();
+
   const navigate = useNavigate();
   const [accountType, setAccountType] = useState("customer");
+  const [showLogin, setShowLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLoginClick = () => {
+    setShowLogin(true);
+  };
+
+  const handleCloseLogin = () => {
+    setShowLogin(false);
+  };
 
   type ErrorState = {
     name?: string;
@@ -21,6 +36,7 @@ const RegisterView = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const form = event.currentTarget;
 
@@ -67,10 +83,13 @@ const RegisterView = () => {
       };
 
       try {
-        const result = await registerUser(userData);
-        if (result) {
+        const registerSuccess = await registerUser(userData);
+        if (registerSuccess) {
           toast.custom(<Toast message="Profile successfully registered!" />);
-          loginUser({ email, password });
+          const loginSuccess = await loginUser({ email, password });
+          if (loginSuccess) {
+            login(loginSuccess.data.accessToken, loginSuccess.data.name);
+          }
           navigate("/");
         }
       } catch (error) {
@@ -79,106 +98,139 @@ const RegisterView = () => {
         }
       }
     }
+    setLoading(false);
   };
 
   return (
-    <section className="flex flex-col items-center">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-10 w-1/3 p-10 border-1 border-neutral-500 rounded-xl"
-      >
-        <h1 className="text-xl text-black w-full text-center">
-          Create account
-        </h1>
-        <div className="flex flex-col gap-10">
-          <fieldset className="flex gap-3">
-            <legend className="font-semibold">Select account type</legend>
-            <label className="cursor-pointer">
-              <input
-                type="radio"
-                name="radio"
-                value="customer"
-                checked={accountType === "customer"}
-                onChange={() => setAccountType("customer")}
-              />{" "}
-              Customer
-            </label>
-            <label className="cursor-pointer">
-              <input
-                type="radio"
-                name="radio"
-                value="manager"
-                checked={accountType === "manager"}
-                onChange={() => setAccountType("manager")}
-              />{" "}
-              Manager
-            </label>
-          </fieldset>
-          <fieldset className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1 ">
-              <label htmlFor="name">Name</label>
-              <input
-                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                  errors.name && "border-red-500"
-                }`}
-                type="text"
-                name="name"
-                required
-              />
-              {errors.name && <p className="text-red-500">{errors.name}.</p>}
-            </div>
-            <div className="flex flex-col gap-1 ">
-              <label htmlFor="email">Email</label>
-              <input
-                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                  errors.email && "border-red-500"
-                }`}
-                type="email"
-                name="email"
-                required
-              />
-              {errors.email && <p className="text-red-500">{errors.email}.</p>}
-            </div>
-            <div className="flex flex-col gap-1 ">
-              <label htmlFor="password">Password</label>
-              <input
-                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                  errors.password && "border-red-500"
-                } ${errors.confirmPassword && "border-red-500"}`}
-                type="password"
-                name="password"
-                required
-              />
-              {errors.password && (
-                <p className="text-red-500">{errors.password}.</p>
+    <>
+      <section className="flex flex-col items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-10 w-1/3 p-10 border-1 border-neutral-500 rounded-xl"
+        >
+          <h1 className="text-xl text-black w-full text-center">
+            Create account
+          </h1>
+          <div className="flex flex-col gap-10">
+            <fieldset className="flex gap-3">
+              <legend className="font-semibold">Select account type</legend>
+              <div className="flex gap-3">
+                <input
+                  className="cursor-pointer"
+                  type="radio"
+                  name="customer"
+                  id="customer"
+                  value="customer"
+                  defaultChecked
+                  checked={accountType === "customer"}
+                  onChange={() => setAccountType("customer")}
+                />{" "}
+                <label htmlFor="customer" className="cursor-pointer">
+                  Customer
+                </label>
+              </div>
+              <div className="flex gap-3">
+                <input
+                  className="cursor-pointer"
+                  type="radio"
+                  name="manager"
+                  id="manager"
+                  value="manager"
+                  checked={accountType === "manager"}
+                  onChange={() => setAccountType("manager")}
+                />{" "}
+                <label htmlFor="manager" className="cursor-pointer">
+                  Manager
+                </label>
+              </div>
+            </fieldset>
+            <fieldset className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1 ">
+                <label htmlFor="name">Username</label>
+                <input
+                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
+                    errors.name && "border-red-500"
+                  }`}
+                  type="text"
+                  name="name"
+                  placeholder="Enter preferred username"
+                  required
+                />
+                {errors.name && <p className="text-red-500">{errors.name}.</p>}
+              </div>
+              <div className="flex flex-col gap-1 ">
+                <label htmlFor="email">Email</label>
+                <input
+                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
+                    errors.email && "border-red-500"
+                  }`}
+                  type="email"
+                  name="email"
+                  placeholder="Enter your @stud.noroff.no email"
+                  required
+                />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email}.</p>
+                )}
+              </div>
+              <div className="flex flex-col gap-1 ">
+                <label htmlFor="password">Password</label>
+                <input
+                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
+                    errors.password && "border-red-500"
+                  } ${errors.confirmPassword && "border-red-500"}`}
+                  type="password"
+                  name="password"
+                  placeholder="Fill in password"
+                  required
+                />
+                {errors.password && (
+                  <p className="text-red-500">{errors.password}.</p>
+                )}
+              </div>
+              <div className="flex flex-col gap-1 ">
+                <label htmlFor="confirm-password">Confirm password</label>
+                <input
+                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
+                    errors.confirmPassword && "border-red-500"
+                  }`}
+                  type="password"
+                  name="confirm-password"
+                  placeholder="Confirm password"
+                  required
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500">{errors.confirmPassword}.</p>
+                )}
+              </div>
+            </fieldset>
+            <Button
+              className={`${loading && "cursor-not-allowed bg-sunset-800/50 hover:bg-sunset-900/50"}`}
+              type="submit"
+              variant="primary"
+            >
+              {loading ? (
+                <ButtonLoader buttonText="Registering account ..." />
+              ) : (
+                "Register"
               )}
+            </Button>
+            {serverError && <p className="text-red-600">{serverError}!</p>}
+            <div className="flex gap-1">
+              <p>Already got an account?</p>
+              <button
+                type="button"
+                onClick={handleLoginClick}
+                className="font-semibold"
+              >
+                Sign in here.
+              </button>
             </div>
-            <div className="flex flex-col gap-1 ">
-              <label htmlFor="confirm-password">Confirm password</label>
-              <input
-                className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                  errors.confirmPassword && "border-red-500"
-                }`}
-                type="password"
-                name="confirm-password"
-                required
-              />
-              {errors.confirmPassword && (
-                <p className="text-red-500">{errors.confirmPassword}.</p>
-              )}
-            </div>
-          </fieldset>
-          <Button type="submit" variant="primary">
-            Register
-          </Button>
-          {serverError && <p className="text-red-600">{serverError}!</p>}
-          <div className="flex gap-1">
-            <p>Already got an account?</p>
-            <p className="font-semibold">Sign in here.</p>
           </div>
-        </div>
-      </form>
-    </section>
+        </form>
+      </section>
+      {showLogin && <LoginModal onClose={handleCloseLogin} />}
+    </>
   );
 };
 

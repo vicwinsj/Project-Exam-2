@@ -6,11 +6,13 @@ import RegisterView from "./views/RegisterView";
 import VenueView from "./views/VenueView";
 import ProfileView from "./views/ProfileView";
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   return (
     <Router>
       <Layout>
+        <ScrollToTop />
         <Toaster position="bottom-center" />
         <Routes>
           <Route path="/" element={<HomeView />} />

@@ -5,6 +5,7 @@ import { faXmark, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../contexts/AuthContext";
 import { createVenue, updateVenue } from "../../api/venues";
 import { useState, useEffect } from "react";
+import { ButtonLoader } from "../loaders/ButtonLoader";
 
 type Venue = {
   id: string;
@@ -62,6 +63,7 @@ export default function VenueModal({
   const { accessToken, profile, refreshProfile } = useAuth();
   const [imageUrl, setImageUrl] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (venue?.media?.length) {
@@ -82,6 +84,7 @@ export default function VenueModal({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const form = event.currentTarget;
 
@@ -182,6 +185,7 @@ export default function VenueModal({
             setServerError(error.message);
           }
         }
+    setLoading(false);
   };
 
   return (
@@ -403,7 +407,18 @@ export default function VenueModal({
             </div>
           </div>
         </fieldset>
-        <Button type="submit">{venue ? "Update venue" : "Create venue"}</Button>
+        <Button
+          className={`${loading && "cursor-not-allowed bg-sunset-800/50 hover:bg-sunset-900/50"}`}
+          type="submit"
+        >
+          {loading ? (
+            <ButtonLoader
+              buttonText={venue ? "Updating venue ..." : "Creating venue ..."}
+            />
+          ) : (
+            <>{venue ? "Update venue" : "Create venue"}</>
+          )}
+        </Button>
         {serverError && <p className="text-red-500">{serverError}</p>}
       </form>
     </ModalWrapper>
