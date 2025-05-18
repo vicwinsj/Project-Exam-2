@@ -57,47 +57,46 @@ const HomeView = () => {
       ) : (
         <>
           <div className="flex flex-col gap-1">
-            <div className="flex justify-between">
-              {searchText ||
-              rating ||
-              guests ||
-              dateFrom ||
-              dateTo ||
-              minPrice ||
-              maxPrice ||
-              wifi ||
-              pets ||
-              parking ||
-              breakfast ? (
-                <>
-                  {searchText ? (
-                    <h2 className="text-black text-xl">
-                      Search results for{" "}
-                      <span className="font-semibold text-ocean-700">
-                        "{searchText}"
-                      </span>
-                    </h2>
-                  ) : (
-                    <h2 className="text-black text-xl">Filtered by</h2>
-                  )}
-                </>
-              ) : (
-                <div>
-                  <h1 className="text-5xl">Venues awaiting you</h1>
-                  <h2 className="text-black text-[32px]">
-                    Check out our wide assortment of stays
+            {searchText ||
+            rating ||
+            guests ||
+            dateFrom ||
+            dateTo ||
+            minPrice ||
+            maxPrice ||
+            wifi ||
+            pets ||
+            parking ||
+            breakfast ? (
+              <>
+                {searchText ? (
+                  <h2 className="text-black text-xl">
+                    Search results for{" "}
+                    <span className="font-semibold text-ocean-700">
+                      "{searchText}"
+                    </span>
                   </h2>
-                </div>
-              )}
-              <Button
-                onClick={handleOpenFilter}
-                variant="outline"
-                size="sm"
-                className="w-fit"
-              >
-                <FontAwesomeIcon icon={faSliders}></FontAwesomeIcon> Filter
-              </Button>
-            </div>
+                ) : (
+                  <h2 className="text-black text-xl">Filtered by</h2>
+                )}
+              </>
+            ) : (
+              <div>
+                <h1 className="text-3xl md:text-5xl">Venues awaiting you</h1>
+                <h2 className="text-black text-lg md:text-[32px]">
+                  Check out our wide assortment of stays
+                </h2>
+              </div>
+            )}
+
+            <Button
+              onClick={handleOpenFilter}
+              variant="outline"
+              size="sm"
+              className="self-end w-fit"
+            >
+              <FontAwesomeIcon icon={faSliders}></FontAwesomeIcon> Filter
+            </Button>
             {(rating ||
               guests ||
               dateFrom ||
@@ -134,7 +133,7 @@ const HomeView = () => {
           </div>
           {searchResults.length > 0 && (
             <div className="flex flex-col gap-10 justify-center">
-              <div className="w-full grid grid-cols-4 gap-10">
+              <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-10">
                 {searchResults.map((venue) => (
                   <VenueCard key={venue.id} {...venue} />
                 ))}

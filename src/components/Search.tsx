@@ -53,7 +53,10 @@ const Search = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full flex justify-center gap-3">
+    <form
+      onSubmit={handleSubmit}
+      className="hidden md:flex w-full justify-center gap-3"
+    >
       <div className="w-1/2 relative">
         <input
           className="w-full px-3 py-3 rounded-lg border-2 border-transparent hover:bg-air-100 outline-none focus:border-sunset-800 bg-white placeholder:font-semibold placeholder-ocean-700 placeholder:font-rubik"

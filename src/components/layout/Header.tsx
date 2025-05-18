@@ -18,52 +18,6 @@ const Header = () => {
 
   const [showLogin, setShowLogin] = useState(false);
 
-  // type Profile = {
-  //   name: string;
-  //   email: string;
-  //   bio: string;
-  //   avatar: {
-  //     url: string;
-  //     alt: string;
-  //   };
-  //   banner: {
-  //     url: string;
-  //     alt: string;
-  //   };
-  //   venueManager: boolean;
-  // };
-
-  // const [profile, setProfile] = useState<Profile | null>(null);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   if (authLoading) return;
-
-  //   const loadProfile = async () => {
-  //     try {
-  //       const data = await fetchProfile(username!, accessToken!);
-  //       setProfile(data);
-  //     } catch (err) {
-  //       setError(err instanceof Error ? err.message : "Unknown error");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (accessToken) {
-  //     loadProfile();
-  //   } else {
-  //     setError("Not authenticated");
-  //     setLoading(false);
-  //   }
-  // }, [username, accessToken, authLoading]);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) {
-  //   console.warn(error);
-  // }
-
   const handleLoginClick = () => {
     setShowLogin(true);
   };
@@ -82,10 +36,17 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-auto flex flex-col gap-30 py-3 px-10 bg-ocean-700 rounded-b-[20px]">
+      <header className="h-auto flex flex-col gap-30 py-3 px-10 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]">
         <div className="flex justify-between">
-          <Link onClick={resetSearch} to="/">
-            <img src={logo} className="w-30 h-full" />
+          <Link
+            className="flex items-center justify-start"
+            onClick={resetSearch}
+            to="/"
+          >
+            <strong className="transform-colors duration-300 font-rubik text-sm md:text-2xl text-white hover:text-turquoise-500">
+              holida<span className="italic">z</span>e
+            </strong>
+            {/* <img src={logo} className="w-30 h-full" /> */}
           </Link>
           {location.pathname !== "/register" &&
             location.pathname !== "/profile" && <Search />}
