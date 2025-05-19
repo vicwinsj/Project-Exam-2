@@ -148,10 +148,10 @@ export const FilterModal = ({
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="max-h-3/4 overflow-y-auto bg-white rounded-xl w-full mx-1 sm:w-2/3 lg:w-1/2 p-10 flex flex-col gap-10"
+        className="max-h-full mx-1 md:max-h-3/4 overflow-y-auto bg-white rounded-xl w-full sm:w-2/3 lg:w-1/2 px-3 py-10 md:p-10 flex flex-col gap-10"
       >
         <div className="text-xl flex items-center justify-between">
-          <h2 className="text-black text-xl">Filter</h2>
+          <h2 className="text-black text-xl">Search Filter</h2>
           <FontAwesomeIcon
             className="transition-colors duration-300 cursor-pointer text-neutral-500 hover:text-neutral-700"
             icon={faXmark}
@@ -183,8 +183,8 @@ export const FilterModal = ({
               )}
             </div>
           </div>
-          <details className=" w-full open flex flex-col open:gap-6 group relative p-3 border-1 open:border-neutral-500 rounded-t-xl border-neutral-300 overflow-hidden">
-            <summary className=" text-ocean-700 p-3 -m-3 transition-all duration-300 bg-white group-open:bg-air-100 border-neutral-300 border-b-[.1px]">
+          <details className="w-full open flex flex-col open:gap-6 group relative p-3 border-1 open:border-neutral-500 rounded-t-xl border-neutral-300 overflow-hidden">
+            <summary className=" text-ocean-700 p-3 -mx-3 -mt-3 transition-all duration-300 bg-white group-open:bg-air-100 border-neutral-300 border-b-[.1px]">
               <span className="group-open:hidden absolute right-2">
                 <FontAwesomeIcon icon={faAngleDown}></FontAwesomeIcon>
               </span>

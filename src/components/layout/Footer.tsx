@@ -1,4 +1,4 @@
-import logo from "../../assets/holidaze_small.svg";
+import logo from "../../assets/holidaze_small_orange.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
@@ -121,7 +121,7 @@ const Footer = () => {
       </div>
       <div className="w-full flex flex-col md:flex-row justify-center items-center gap-1 text-sm">
         <div className="flex flex-col md:flex-row w-fit justify-center items-center gap-3">
-          <div className="md:self-start border-white border-1">
+          <div className="md:self-start ">
             <img className="size-5" src={logo} />
           </div>
           <p className="flex flex-col items-center text-center w-full gap-1">
