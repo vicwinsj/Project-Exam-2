@@ -283,7 +283,7 @@ const VenueView = () => {
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               Back
             </button>
-            <div className="flex h-130 gap-3 rounded-t-[20px] overflow-hidden w-full">
+            <div className="flex h-100 gap-3 rounded-t-[20px] overflow-hidden w-full">
               <div
                 onClick={() => {
                   if (venue.media) {
@@ -338,11 +338,11 @@ const VenueView = () => {
             </div>
             <div className="flex flex-col gap-10 w-full">
               <div className="w-full flex items-start justify-between">
-                <h1 className="flex-2 text-5xl">
+                <h1 className="flex-2 w-full text-5xl truncate">
                   {venue.name || "Unnamed venue"}
                 </h1>
                 {isOwnVenue && (
-                  <div className="flex-1 flex justify-end items-center gap-3">
+                  <div className="w-full flex-1 flex justify-end items-center gap-3">
                     <Button
                       onClick={handleOpenDeleteModal}
                       className=""
@@ -357,25 +357,28 @@ const VenueView = () => {
                 )}
               </div>
               <div className="w-full flex gap-10">
-                <div className="flex-2 flex flex-col gap-10 p-3 overflow-hidden">
-                  <ul className="flex gap-3">
-                    <li className="flex gap-1 items-center text-ocean-700">
-                      <FontAwesomeIcon icon={faLocationDot} />
-                      <p className="font-semibold text-black">
-                        {venue.location?.city || "Unknown city"},{" "}
+                <div className="flex-2 w-2/3 flex flex-col gap-10 p-3">
+                  <ul className="flex items-center w-full gap-3">
+                    <li className="flex max-w-3/4 gap-1 items-center text-ocean-700">
+                      <FontAwesomeIcon className="w-fit" icon={faLocationDot} />
+                      <strong className="max-w-full truncate">
+                        {venue.location?.city || "Unknown city"}
+                      </strong>
+                      <strong className="w-fit -ml-1">,</strong>
+                      <strong className="max-w-full truncate">
                         {venue.location?.country || "Unknown country"}
-                      </p>
+                      </strong>
                     </li>
-                    <p>&#x2022;</p>
-                    <li>{venue.maxGuests} guests</li>
-                    <p>&#x2022;</p>
-                    <li className="flex items-center gap-1 text-ocean-700">
+                    <p className="w-fit">&#x2022;</p>
+                    <li className="w-fit">{venue.maxGuests} guests</li>
+                    <p className="w-fit">&#x2022;</p>
+                    <li className="w-fit flex items-center gap-1 text-ocean-700">
                       <FontAwesomeIcon className="" icon={faStar} />
                       <p className="font-semibold">{venue.rating}</p>
                     </li>
                   </ul>
                   <hr className="border-neutral-300"></hr>
-                  <div className="flex gap-3 items-center">
+                  <div className="w-full flex gap-3 items-center">
                     <Link
                       to={`/profile/${venue.owner.name}`}
                       state={{ profile: venue.owner }}
@@ -387,9 +390,9 @@ const VenueView = () => {
                         alt={venue.owner.avatar.alt}
                       ></img>
                     </Link>
-                    <div>
+                    <div className="w-full">
                       <p>Hosted by</p>
-                      <p className="font-semibold">{venue.owner.name}</p>
+                      <p className="w-full font-semibold">{venue.owner.name}</p>
                     </div>
                   </div>
                   <hr className="border-neutral-300"></hr>
@@ -456,12 +459,12 @@ const VenueView = () => {
                     </div>
                   </div>
                 </div>
-                {isOwnVenue ? (
-                  <CustomerBookings
-                    bookings={venue.bookings}
-                  ></CustomerBookings>
-                ) : (
-                  <aside className="flex-1">
+                <aside className="flex-1 w-full">
+                  {isOwnVenue ? (
+                    <CustomerBookings
+                      bookings={venue.bookings}
+                    ></CustomerBookings>
+                  ) : (
                     <form
                       onSubmit={handleReservation}
                       className="flex flex-col gap-10 w-full h-auto border-1 border-neutral-300 rounded-xl p-10"
@@ -580,8 +583,8 @@ const VenueView = () => {
                         </Button>
                       )}
                     </form>
-                  </aside>
-                )}
+                  )}
+                </aside>
               </div>
             </div>
           </article>
