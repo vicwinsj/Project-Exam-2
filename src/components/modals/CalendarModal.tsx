@@ -45,7 +45,6 @@ export default function CalendarModal({
         selectedRange={selectedRange}
         onSelect={handleSelect}
         disabledRanges={disabledDates || []}
-        numberOfMonths={2}
       />
       <div className="flex justify-center gap-1 border- items-center">
         <Button type="button" variant="outline" onClick={handleReset}>

@@ -82,13 +82,14 @@ const HomeView = () => {
               </>
             ) : (
               <div>
-                <h1 className="text-3xl md:text-5xl">Venues awaiting you</h1>
+                <h1 className="text-3xl md:text-5xl">
+                  Stunning venues awaiting you
+                </h1>
                 <h2 className="text-black text-lg md:text-[32px]">
                   Check out our wide assortment of stays
                 </h2>
               </div>
             )}
-
             <Button
               onClick={handleOpenFilter}
               variant="outline"

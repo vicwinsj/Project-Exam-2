@@ -5,7 +5,7 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const Footer = () => {
   return (
-    <footer className="w-full text-white h-full flex flex-col gap-20 p-10 bg-ocean-700 rounded-t-[20px]">
+    <footer className="w-full text-white h-full flex flex-col gap-10 md:gap-20 p-3 md:p-10 bg-ocean-700 rounded-t-[20px]">
       <div className="flex flex-col md:flex-row justify-between">
         {/* Help */}
         <details className="group flex-1 md:hidden relative">
@@ -36,7 +36,7 @@ const Footer = () => {
 
         {/* Discover */}
         <details className="group flex-1 md:hidden relative">
-          <summary className="border-none text-turquoise-500 font-rubik font-semibold">
+          <summary className=" text-turquoise-500 font-rubik font-semibold">
             <span className="group-open:hidden absolute right-2">
               <FontAwesomeIcon icon={faAngleDown}></FontAwesomeIcon>
             </span>

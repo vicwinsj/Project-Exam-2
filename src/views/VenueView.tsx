@@ -359,19 +359,19 @@ const VenueView = () => {
               <div className="w-full flex gap-10">
                 <div className="flex-2 w-2/3 flex flex-col gap-10 p-3">
                   <ul className="flex items-center w-full gap-3">
-                    <li className="flex truncate max-w-3/4 gap-1 items-center text-ocean-700">
+                    <li className="flex max-w-3/4 gap-1 items-center text-ocean-700">
                       <FontAwesomeIcon className="w-fit" icon={faLocationDot} />
-                      <strong className="max-w-1/2 truncate">
+                      <strong className="max-w-full truncate">
                         {venue.location?.city || "Unknown city"}
                       </strong>
-                      <strong className="-ml-1">,</strong>
-                      <strong className="max-w-1/2 truncate">
+                      <strong className="w-fit -ml-1">,</strong>
+                      <strong className="max-w-full truncate">
                         {venue.location?.country || "Unknown country"}
                       </strong>
                     </li>
-                    <p>&#x2022;</p>
+                    <p className="w-fit">&#x2022;</p>
                     <li className="w-fit">{venue.maxGuests} guests</li>
-                    <p>&#x2022;</p>
+                    <p className="w-fit">&#x2022;</p>
                     <li className="w-fit flex items-center gap-1 text-ocean-700">
                       <FontAwesomeIcon className="" icon={faStar} />
                       <p className="font-semibold">{venue.rating}</p>
