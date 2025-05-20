@@ -192,7 +192,7 @@ export default function VenueModal({
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="h-full md:max-h-3/4 overflow-y-auto z-100 flex flex-col gap-10 mx-1 w-full md:w-1/2 bg-white px-3 py-10 md:p-10 rounded-xl"
+        className="max-h-3/4 overflow-y-auto z-100 flex flex-col gap-10 mx-1 w-full sm:w-2/3 lg:w-1/2 bg-white px-3 py-10 md:p-10 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between">

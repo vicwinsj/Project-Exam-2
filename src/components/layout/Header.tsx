@@ -36,6 +36,8 @@ const Header = () => {
   const [showMobileNav, setShowMobileNav] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
   const [showVenueModal, setShowVenueModal] = useState(false);
+  const [mobileNavOpacity, setMobileNavOpacity] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const searchText = searchParams.get("q") || "";
   const rating = searchParams.get("minrating");
@@ -71,22 +73,41 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const updateScreenVisibility = () => {
-      const width = window.innerWidth;
-      if (width > 1024) {
-        setShowMobileNav(false);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY) {
+        setMobileNavOpacity(false);
+      } else {
+        setMobileNavOpacity(true);
       }
-      if (width > 768) {
-        setShowSearch(true);
+
+      setLastScrollY(currentScrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    const updateScreenSizeVisibility = () => {
+      const width = window.innerWidth;
+      if (width > 1200) {
         setShowMobileNav(false);
       } else {
-        setShowSearch(false);
         setShowMobileNav(true);
       }
+
+      if (width > 768) {
+        setShowSearch(true);
+      } else {
+        setShowSearch(false);
+      }
     };
-    updateScreenVisibility();
-    window.addEventListener("resize", updateScreenVisibility);
-    return () => window.removeEventListener("resize", updateScreenVisibility);
+    updateScreenSizeVisibility();
+    window.addEventListener("resize", updateScreenSizeVisibility);
+    return () =>
+      window.removeEventListener("resize", updateScreenSizeVisibility);
   }, []);
 
   const handleLoginClick = () => {
@@ -185,7 +206,9 @@ const Header = () => {
         />
       )}
       {showMobileNav && (
-        <div className="z-10 w-full px-1 py-3 fixed bottom-0 left-0 bg-turquoise-500">
+        <div
+          className={`transition-all duration-300 z-10 w-full px-1 py-3 fixed bottom-0 left-0 bg-turquoise-500 ${mobileNavOpacity ? "opacity-100" : "opacity-30"}`}
+        >
           <nav className="w-full h-full flex justify-around items-center">
             <Link
               className="w-fit h-full flex flex-col items-center justify-center gap-1"
