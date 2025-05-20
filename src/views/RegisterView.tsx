@@ -103,10 +103,10 @@ const RegisterView = () => {
 
   return (
     <>
-      <section className="flex flex-col items-center">
+      <section className="flex flex-col items-center bg-ocean-700">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-10 w-1/3 p-10 border-1 border-neutral-500 rounded-xl"
+          className="flex flex-col gap-10 w-11/12 sm:w-1/2 lg:w-1/3 px-3 py-10 sm:p-10 rounded-xl bg-white"
         >
           <h1 className="text-xl text-black w-full text-center">
             Create account
@@ -148,12 +148,9 @@ const RegisterView = () => {
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="name">Username</label>
                 <input
-                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                    errors.name && "border-red-500"
-                  }`}
+                  className={errors.name && "border-red-500"}
                   type="text"
                   name="name"
-                  placeholder="Enter preferred username"
                   required
                 />
                 {errors.name && <p className="text-red-500">{errors.name}.</p>}
@@ -161,12 +158,10 @@ const RegisterView = () => {
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="email">Email</label>
                 <input
-                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                    errors.email && "border-red-500"
-                  }`}
+                  className={errors.email && "border-red-500"}
                   type="email"
                   name="email"
-                  placeholder="Enter your @stud.noroff.no email"
+                  placeholder="youremail@stud.noroff.no"
                   required
                 />
                 {errors.email && (
@@ -176,12 +171,12 @@ const RegisterView = () => {
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="password">Password</label>
                 <input
-                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                    errors.password && "border-red-500"
-                  } ${errors.confirmPassword && "border-red-500"}`}
+                  className={
+                    (errors.password || errors.confirmPassword) &&
+                    "border-red-500"
+                  }
                   type="password"
                   name="password"
-                  placeholder="Fill in password"
                   required
                 />
                 {errors.password && (
@@ -191,12 +186,9 @@ const RegisterView = () => {
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="confirm-password">Confirm password</label>
                 <input
-                  className={`transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 ${
-                    errors.confirmPassword && "border-red-500"
-                  }`}
+                  className={errors.confirmPassword && "border-red-500"}
                   type="password"
                   name="confirm-password"
-                  placeholder="Confirm password"
                   required
                 />
                 {errors.confirmPassword && (
@@ -216,7 +208,7 @@ const RegisterView = () => {
               )}
             </Button>
             {serverError && <p className="text-red-600">{serverError}!</p>}
-            <div className="flex gap-1">
+            <div className="text-sm flex gap-1">
               <p>Already got an account?</p>
               <button
                 type="button"

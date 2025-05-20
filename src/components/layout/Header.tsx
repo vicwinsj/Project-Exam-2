@@ -128,7 +128,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-auto flex flex-col gap-30 py-3 px-3 md:px-10 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]">
+      <header className="h-auto flex flex-col py-10 px-3 md:px-10 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]">
         <div className="flex justify-between">
           <Link
             className="flex items-center justify-start"

@@ -68,7 +68,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="z-10 flex flex-col gap-3 md:gap-10 mx-1 w-2/3 sm:w-1/2 lg:w-1/3 px-3 py-10 md:p-10 bg-white border-1 border-neutral-500 rounded-xl"
+        className="z-10 flex flex-col gap-3 md:gap-10 mx-1 w-11/12 sm:w-1/2 lg:w-1/3 px-3 py-10 sm:p-10 bg-white rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">
@@ -113,9 +113,9 @@ const LoginModal = ({ onClose }: LoginProps) => {
               Remember me
             </label>
           </div>
-          <a className="font-semibold text-sm" href="">
+          <button type="button" className="font-semibold text-sm">
             Forgot password?
-          </a>
+          </button>
         </div>
         <Button
           className={`${loading && "cursor-not-allowed bg-sunset-800/50 hover:bg-sunset-900/50"}`}
@@ -124,7 +124,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
           {loading ? <ButtonLoader buttonText="Logging in ..." /> : "Login"}
         </Button>
         {serverError && <p className="text-red-600">{serverError}!</p>}
-        <div className="flex gap-1">
+        <div className="text-sm flex gap-1">
           <p>Don't got an account?</p>{" "}
           <button
             className="font-semibold"

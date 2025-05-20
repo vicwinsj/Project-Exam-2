@@ -304,7 +304,7 @@ export const FilterModal = ({
           <Button onClick={handleReset} type="button" variant="outline">
             Reset Filter
           </Button>
-          <Button type="submit" variant="primary">
+          <Button type="submit" variant="secondary">
             Apply Filter
           </Button>
         </div>
