@@ -5,10 +5,10 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const Footer = () => {
   return (
-    <footer className="w-full text-white h-full flex flex-col gap-10 md:gap-20 pb-20 py-3 md:p-10 bg-ocean-700 rounded-t-[20px]">
-      <div className="flex flex-col md:flex-row justify-between">
+    <footer className="w-full text-white h-full flex flex-col gap-10 sm:gap-20 pb-20 py-3 sm:p-10 bg-ocean-700 rounded-t-[20px]">
+      <div className="flex flex-col sm:flex-row justify-between">
         {/* Help */}
-        <details className="group flex-1 md:hidden relative">
+        <details className="group flex-1 sm:hidden relative">
           <summary className="text-turquoise-500 font-rubik font-semibold">
             <span className="group-open:hidden absolute right-2">
               <FontAwesomeIcon icon={faAngleDown}></FontAwesomeIcon>
@@ -18,16 +18,16 @@ const Footer = () => {
             </span>
             Help
           </summary>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Support Center</li>
             <li>Cancel booking</li>
             <li>Contact us</li>
           </ul>
         </details>
 
-        <div className="hidden md:flex flex-col gap-1 flex-1">
+        <div className="hidden sm:flex flex-col gap-1 flex-1">
           <h3 className="text-turquoise-500">Help</h3>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Support Center</li>
             <li>Cancel booking</li>
             <li>Contact us</li>
@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
 
         {/* Discover */}
-        <details className="group flex-1 md:hidden relative">
+        <details className="group flex-1 sm:hidden relative">
           <summary className=" text-turquoise-500 font-rubik font-semibold">
             <span className="group-open:hidden absolute right-2">
               <FontAwesomeIcon icon={faAngleDown}></FontAwesomeIcon>
@@ -45,7 +45,7 @@ const Footer = () => {
             </span>
             Discover
           </summary>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Destinations</li>
             <li>Accomodation Types</li>
             <li>Support Center</li>
@@ -53,9 +53,9 @@ const Footer = () => {
           </ul>
         </details>
 
-        <div className="hidden md:flex flex-col gap-1 flex-1">
+        <div className="hidden sm:flex flex-col gap-1 flex-1">
           <h3 className="text-turquoise-500">Discover</h3>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Destinations</li>
             <li>Accomodation Types</li>
             <li>Support Center</li>
@@ -64,7 +64,7 @@ const Footer = () => {
         </div>
 
         {/* Company */}
-        <details className="group flex-1 md:hidden relative">
+        <details className="group flex-1 sm:hidden relative">
           <summary className="text-turquoise-500 font-rubik font-semibold">
             <span className="group-open:hidden absolute right-2">
               <FontAwesomeIcon icon={faAngleDown}></FontAwesomeIcon>
@@ -74,7 +74,7 @@ const Footer = () => {
             </span>
             Company
           </summary>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Career</li>
             <li>About</li>
             <li>Advertising</li>
@@ -82,18 +82,18 @@ const Footer = () => {
           </ul>
         </details>
 
-        <div className="hidden md:flex flex-col gap-1 flex-1">
+        <div className="hidden sm:flex flex-col gap-1 flex-1">
           <h3 className="text-turquoise-500">Company</h3>
-          <ul className="flex flex-col gap-1">
-            <li>Destinations</li>
-            <li>Accomodation Types</li>
-            <li>Support Center</li>
-            <li>Gift Cards</li>
+          <ul className="text-sm flex flex-col gap-1">
+            <li>Career</li>
+            <li>About</li>
+            <li>Advertising</li>
+            <li>News</li>
           </ul>
         </div>
 
         {/* Policies */}
-        <details className="group flex-1 md:hidden relative">
+        <details className="group flex-1 sm:hidden relative">
           <summary className="text-turquoise-500 font-rubik font-semibold">
             <span className="group-open:hidden absolute right-2">
               <FontAwesomeIcon icon={faAngleDown}></FontAwesomeIcon>
@@ -103,28 +103,28 @@ const Footer = () => {
             </span>
             Policies
           </summary>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Privacy</li>
             <li>Terms of Use</li>
             <li>Cookies</li>
           </ul>
         </details>
 
-        <div className="hidden md:flex flex-col gap-1 flex-1">
+        <div className="hidden sm:flex flex-col gap-1 flex-1">
           <h3 className="text-turquoise-500">Policies</h3>
-          <ul className="flex flex-col gap-1">
+          <ul className="text-sm flex flex-col gap-1">
             <li>Privacy</li>
             <li>Terms of Use</li>
             <li>Cookies</li>
           </ul>
         </div>
       </div>
-      <div className="w-full flex flex-col md:flex-row justify-center items-center gap-1 text-sm">
+      <div className="w-full flex flex-col sm:flex-row justify-center items-center gap-1 text-sm">
         <div className="flex flex-col md:flex-row w-fit justify-center items-center gap-3">
           <div className="md:self-start ">
-            <img className="size-5" src={logo} />
+            <img className="size-4" src={logo} />
           </div>
-          <p className="flex flex-col items-center text-center w-full gap-1">
+          <p className="text-xs flex flex-col items-center text-center w-full gap-1">
             <span className="w-full">
               <strong className="w-fit">©2025 Holidaze Inc.,</strong>
               <span className="w-fit"> a part of Holiday Group.</span>

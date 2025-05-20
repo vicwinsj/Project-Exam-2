@@ -37,7 +37,7 @@
   input,
   textarea,
   select {
-    @apply w-full transition-colors duration-300 px-3 py-1 border-1 rounded-sm hover:bg-air-100 outline-sunset-800 border-neutral-300 resize-none;
+    @apply w-full transition-colors duration-300 px-3 py-1 border-1 rounded-lg hover:bg-air-100 outline-sunset-800 border-neutral-300 resize-none;
   }
 
   input[type="checkbox"] {
