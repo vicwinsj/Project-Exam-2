@@ -68,7 +68,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="z-10 flex flex-col gap-3 md:gap-10 mx-1 w-full md:w-1/3 bg-white p-10 border-1 border-neutral-500 rounded-xl"
+        className="z-10 flex flex-col gap-3 md:gap-10 mx-1 w-2/3 sm:w-1/2 lg:w-1/3 px-3 py-10 md:p-10 bg-white border-1 border-neutral-500 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">
@@ -129,7 +129,10 @@ const LoginModal = ({ onClose }: LoginProps) => {
           <button
             className="font-semibold"
             type="button"
-            onClick={handleRegisterClick}
+            onClick={() => {
+              handleRegisterClick();
+              onClose();
+            }}
           >
             Register here.
           </button>

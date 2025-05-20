@@ -192,7 +192,7 @@ export default function VenueModal({
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="max-h-3/4 overflow-y-auto z-100 flex flex-col gap-10 w-1/2 bg-white p-10 rounded-xl"
+        className="max-h-3/4 overflow-y-auto z-100 flex flex-col gap-10 mx-1 w-full sm:w-2/3 lg:w-1/2 bg-white px-3 py-10 md:p-10 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between">
@@ -271,8 +271,8 @@ export default function VenueModal({
         </fieldset>
         <fieldset className="flex flex-col gap-3">
           <h3 className="text-black">Facilities</h3>
-          <div className="w-full flex gap-3 justify-start">
-            <div className="flex-1 flex flex-col gap-1">
+          <div className="w-full flex flex-col md:flex-row gap-3 justify-start items-start">
+            <div className="flex-1 flex flex-col gap-3 md:gap-1">
               <div className="flex items-center gap-1">
                 <input
                   className="cursor-pointer"
@@ -297,7 +297,7 @@ export default function VenueModal({
                 </label>
               </div>
             </div>
-            <div className="flex-1 flex flex-col gap-1">
+            <div className="flex-1 flex flex-col gap-3 md:gap-1">
               <div className="flex items-center gap-1">
                 <input
                   defaultChecked={venue?.meta.breakfast}

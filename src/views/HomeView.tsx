@@ -134,7 +134,7 @@ const HomeView = () => {
           </div>
           {searchResults.length > 0 && (
             <div className="flex flex-col gap-10 justify-center">
-              <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-10">
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
                 {searchResults.map((venue) => (
                   <VenueCard key={venue.id} {...venue} />
                 ))}

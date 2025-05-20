@@ -8,7 +8,7 @@ type ModalWrapperProps = {
 const ModalWrapper = ({ onClose, children }: ModalWrapperProps) => {
   return (
     <div
-      className="z-10 fixed inset-0 flex justify-center items-center bg-black/50"
+      className="z-20 py-1 fixed inset-0 flex justify-center items-center bg-black/50"
       onClick={(event) => handleBackgroundClick({ onClose }, event)}
     >
       {children}
