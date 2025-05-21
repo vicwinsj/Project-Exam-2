@@ -106,7 +106,7 @@ const RegisterView = () => {
       <section className="flex flex-col items-center bg-ocean-700">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-10 w-11/12 sm:w-1/2 lg:w-1/3 px-3 py-10 sm:p-10 rounded-xl bg-white"
+          className="flex flex-col gap-10 w-11/12 sm:w-1/2 lg:w-1/3 px-6 py-10 sm:p-10 rounded-xl bg-white"
         >
           <h1 className="text-xl text-black w-full text-center">
             Create account

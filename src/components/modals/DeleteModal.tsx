@@ -49,7 +49,7 @@ export const DeleteModal = ({
   return (
     <ModalWrapper onClose={onClose}>
       <form
-        className="w-1/2 flex flex-col gap-10 p-10 bg-white rounded-xl"
+        className="w-full mx-1 sm:w-1/2 flex flex-col gap-10 p-6 sm:p-10 bg-white rounded-xl"
         onSubmit={handleDelete}
       >
         <h3 className="text-xl text-black text-center">Confirm</h3>

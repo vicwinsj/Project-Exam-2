@@ -34,7 +34,7 @@ export default function CalendarModal({
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="flex flex-col gap-10 p-10 bg-white rounded-xl w-125"
+      className="flex flex-col gap-10 p-10 bg-white rounded-xl w-80 md:w-125"
     >
       <h2 className="text-xl text-black text-center font-semibold">
         {nights > 0

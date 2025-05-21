@@ -148,7 +148,7 @@ export const FilterModal = ({
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="max-h-full mx-1 md:max-h-3/4 overflow-y-auto bg-white rounded-xl w-full sm:w-2/3 lg:w-1/2 px-3 py-10 md:p-10 flex flex-col gap-10"
+        className="max-h-full mx-1 md:max-h-3/4 overflow-y-auto bg-white rounded-xl w-full sm:w-2/3 lg:w-1/2 px-6 py-10 md:p-10 flex flex-col gap-10"
       >
         <div className="text-xl flex items-center justify-between">
           <h2 className="text-black text-xl">Search Filter</h2>
