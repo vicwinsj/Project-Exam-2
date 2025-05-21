@@ -81,6 +81,9 @@ const Header = () => {
       } else {
         setMobileNavOpacity(true);
       }
+      if (currentScrollY === 0) {
+        setMobileNavOpacity(true);
+      }
 
       setLastScrollY(currentScrollY);
     };
@@ -98,7 +101,7 @@ const Header = () => {
         setShowMobileNav(true);
       }
 
-      if (width > 768) {
+      if (width >= 768) {
         setShowSearch(true);
       } else {
         setShowSearch(false);
@@ -128,8 +131,8 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-auto flex flex-col py-10 px-3 md:px-10 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]">
-        <div className="flex justify-between">
+      <header className="h-full flex flex-col p-3 md:p-10 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]">
+        <div className="flex gap-3 justify-between">
           <Link
             className="flex items-center justify-start"
             onClick={resetSearch}
@@ -207,7 +210,7 @@ const Header = () => {
       )}
       {showMobileNav && (
         <div
-          className={`transition-all duration-300 z-10 w-full px-1 py-3 fixed bottom-0 left-0 bg-turquoise-500 ${mobileNavOpacity ? "opacity-100" : "opacity-30"}`}
+          className={`transition-all duration-300 z-10 w-full p-1 fixed bottom-0 left-0 bg-turquoise-500 ${mobileNavOpacity ? "opacity-100" : "opacity-30"}`}
         >
           <nav className="w-full h-full flex justify-around items-center">
             <Link

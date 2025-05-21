@@ -30,7 +30,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div
-      className={`bg-white w-full min-h-screen flex flex-col mx-1 sm:mx-5 gap-10 ${location.pathname === "/register" && "px-1! sm:px-5! mx-0! bg-ocean-700!"}`}
+      className={`bg-white w-full min-h-screen flex flex-col mx-1 sm:mx-5 gap-6 sm:gap-10 ${location.pathname === "/register" && "px-1! sm:px-5! mx-0! bg-ocean-700!"}`}
     >
       <Header />
       <main className="flex-1">{children}</main>
