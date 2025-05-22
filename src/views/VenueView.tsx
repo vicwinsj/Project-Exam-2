@@ -399,7 +399,7 @@ const VenueView = () => {
             ></ReserveModal>
           )}
           {showBookingsBanner && !isOwnVenue && (
-            <div className="z-20 w-full flex items-center justify-around p-3 fixed bottom-0 left-0 bg-orange-50">
+            <div className="z-20 w-full flex items-center justify-around p-4 fixed bottom-0 left-0 bg-orange-50">
               <h3 className="text-xl text-black">
                 {venue.price} NOK
                 <span className="font-normal"> / night</span>
