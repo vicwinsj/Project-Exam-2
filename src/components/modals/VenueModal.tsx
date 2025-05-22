@@ -342,7 +342,7 @@ export default function VenueModal({
               Add image
             </Button>
           </div>
-          <div className="grid grid-cols-6 gap-3">
+          <div className="w-fit flex flex-wrap gap-1">
             {images.map((url, idx) => (
               <div key={idx} className="relative size-20 overflow-hidden">
                 <img
