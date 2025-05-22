@@ -105,7 +105,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="z-100 flex flex-col gap-10 w-1/2 bg-white p-10 border-1 border-neutral-500 rounded-xl"
+        className="mx-1 z-100 flex flex-col gap-10 w-full sm:w-2/3 lg:w-1/2 bg-white p-6 sm:p-10 border-1 border-neutral-500 rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-xl flex items-center justify-between">
@@ -117,14 +117,14 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
           ></FontAwesomeIcon>
         </div>
         <div className="relative flex flex-col gap-1">
-          <div className="w-full h-50 rounded-t-xl overflow-hidden">
+          <div className="w-full h-30 sm:h-40 lg:h-50 rounded-t-xl overflow-hidden">
             <img
               className="size-full object-cover"
               src={bannerUrl}
               alt={profile?.banner.alt}
             />
           </div>
-          <div className="absolute top-37 left-10 size-40 rounded-l-xl overflow-hidden border-5 border-white">
+          <div className="absolute top-20 sm:top-28 lg:top-37 left-10 size-25 sm:size-28 md:size-33 lg:size-35 rounded-l-xl overflow-hidden border-5 border-white">
             <img
               className="size-full object-cover"
               src={avatarUrl}

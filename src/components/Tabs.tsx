@@ -15,13 +15,13 @@ export const Tabs = ({ tabs, onTabChange }: TabsProps) => {
   };
 
   return (
-    <div className="flex gap-3 items-center">
+    <div className="w-1/2 sm:w-fit flex flex-col sm:flex-row gap-3 items-center">
       {tabs.map((tab) => (
         <Button
           variant="outline"
           key={tab}
           onClick={() => handleClick(tab)}
-          className={` ${activeTab === tab && "font-semibold! border-2! text-ocean-700 border-ocean-700 hover:border-ocean-700 hover:bg-white"}`}
+          className={`w-full ${activeTab === tab && "font-semibold! border-2! text-ocean-700 border-ocean-700 hover:border-ocean-700 hover:bg-white"}`}
         >
           {tab}
         </Button>

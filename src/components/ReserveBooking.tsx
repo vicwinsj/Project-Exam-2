@@ -21,7 +21,6 @@ import { fetchVenue } from "../api/venues.ts";
 
 type ReserveBookingProps = {
   venue: Venue;
-  venueId: string | undefined;
   onVenueUpdate: (updatedVenue: Venue) => void;
   isInModal?: boolean;
   onClose?: () => void;
@@ -29,7 +28,6 @@ type ReserveBookingProps = {
 
 export const ReserveBooking = ({
   venue,
-  venueId,
   onVenueUpdate,
   isInModal,
   onClose,
@@ -114,7 +112,7 @@ export const ReserveBooking = ({
       validateForm() &&
       startDate &&
       endDate &&
-      venueId &&
+      venue.id &&
       accessToken &&
       startDate != endDate
     )
@@ -123,7 +121,7 @@ export const ReserveBooking = ({
           startDate,
           endDate,
           totalGuests,
-          venueId,
+          venue.id,
           accessToken
         );
         if (result) {
@@ -131,7 +129,7 @@ export const ReserveBooking = ({
             setErrors({});
           }
           await refreshProfile();
-          const updatedVenue = await fetchVenue(venueId);
+          const updatedVenue = await fetchVenue(venue.id);
           setSelectedRange(undefined);
           toast.custom(
             <Toast message="Venue has been booked. Enjoy your stay!" />

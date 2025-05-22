@@ -5,7 +5,7 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const Footer = () => {
   return (
-    <footer className="w-full text-white h-full flex flex-col gap-10 sm:gap-20 pb-20 p-3 sm:p-10 bg-ocean-700 rounded-t-[20px]">
+    <footer className="w-full text-white h-fit flex flex-col gap-10 sm:gap-20 pb-20 p-3 sm:p-10 bg-ocean-700 rounded-t-[20px]">
       <div className="flex flex-col sm:flex-row justify-between">
         {/* Help */}
         <details className="group flex-1 sm:hidden relative">

@@ -9,6 +9,9 @@
   --color-sunset-900: #d65425;
   --color-turquoise-500: #ccfffb;
   --color-air-100: #f7fffe;
+
+  --breakpoint-mdp: 850px;
+  --breakpoint-lgp: 1150px;
 }
 
 @layer base {

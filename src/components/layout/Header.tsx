@@ -38,6 +38,8 @@ const Header = () => {
   const [showVenueModal, setShowVenueModal] = useState(false);
   const [mobileNavOpacity, setMobileNavOpacity] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [showHeader, setShowHeader] = useState(false);
+  const [showStickyHeader, setShowStickyHeader] = useState(false);
 
   const searchText = searchParams.get("q") || "";
   const rating = searchParams.get("minrating");
@@ -76,11 +78,15 @@ const Header = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY) {
+      if (currentScrollY > lastScrollY || currentScrollY === 0) {
         setMobileNavOpacity(false);
+        setShowHeader(false);
       } else {
         setMobileNavOpacity(true);
+        setShowHeader(true);
       }
+      // } else if () {setShowHeader(true);}
+
       if (currentScrollY === 0) {
         setMobileNavOpacity(true);
       }
@@ -97,8 +103,10 @@ const Header = () => {
       const width = window.innerWidth;
       if (width > 1200) {
         setShowMobileNav(false);
+        setShowStickyHeader(false);
       } else {
         setShowMobileNav(true);
+        setShowStickyHeader(true);
       }
 
       if (width >= 768) {
@@ -131,7 +139,9 @@ const Header = () => {
 
   return (
     <>
-      <header className="h-full flex flex-col p-3 md:p-10 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]">
+      <header
+        className={`z-10 transition-all duration-300 ${showHeader && showStickyHeader && "sticky inset-0 sm:"} h-fit flex flex-col px-6 py-3 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]`}
+      >
         <div className="flex gap-3 justify-between">
           <Link
             className="flex items-center justify-start"
@@ -212,7 +222,7 @@ const Header = () => {
         <div
           className={`transition-all duration-300 z-10 w-full p-1 fixed bottom-0 left-0 bg-turquoise-500 ${mobileNavOpacity ? "opacity-100" : "opacity-30"}`}
         >
-          <nav className="w-full h-full flex justify-around items-center">
+          <nav className="font-rubik font-semibold text-ocean-700 w-full h-full flex justify-around items-center">
             <Link
               className="w-fit h-full flex flex-col items-center justify-center gap-1"
               to="/"

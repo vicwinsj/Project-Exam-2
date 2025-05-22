@@ -147,7 +147,7 @@ const VenueView = () => {
             <button
               type="button"
               onClick={handleGoBack}
-              className="flex gap-1 items-center w-fit"
+              className="transition-all duration-300 hover:text-black/70 -my-1.5 sm:-my-5 flex gap-1 items-center w-fit"
             >
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               Back
@@ -353,7 +353,6 @@ const VenueView = () => {
                     ) : (
                       <ReserveBooking
                         venue={venue}
-                        venueId={venueId}
                         onVenueUpdate={setVenue}
                       ></ReserveBooking>
                     )}
