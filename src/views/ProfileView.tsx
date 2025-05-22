@@ -13,66 +13,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Toast } from "../components/toast/toast";
 import { VenueLoader } from "../components/loaders/SkeletonLoader";
-
-type Venue = {
-  id: string;
-  name: string;
-  price: number;
-  location: {
-    country: string;
-    city: string;
-  };
-};
-
-type Bookings = {
-  id: string;
-  name: string;
-  dateFrom: Date;
-  dateTo: Date;
-  guests: number;
-  venue: Venue;
-};
-
-type Venues = {
-  id: string;
-  name: string;
-  description: string;
-  media: {
-    url: string;
-    alt: string;
-  }[];
-  price: number;
-  _count: {
-    bookings: number;
-  };
-  location: {
-    country: string;
-    city: string;
-  };
-};
-
-type ProfileCount = {
-  venues: number;
-  bookings: number;
-};
-
-type Profile = {
-  name: string;
-  email: string;
-  bio: string;
-  avatar: {
-    url: string;
-    alt: string;
-  };
-  banner: {
-    url: string;
-    alt: string;
-  };
-  venueManager?: boolean;
-  venues?: Venues[];
-  bookings?: Bookings[];
-  _count?: ProfileCount;
-};
+import { Profile } from "../types/profile";
 
 const ProfileView = () => {
   const location = useLocation();
@@ -129,58 +70,59 @@ const ProfileView = () => {
     <>
       <div className="flex flex-col gap-20">
         <section className="relative flex flex-col">
-          <div className="w-full h-100 rounded-t-[20px] overflow-hidden">
+          <div className="w-full h-50 sm:h-80 md:h-100 rounded-t-[20px] overflow-hidden">
             <img
               className="size-full object-cover"
               src={profile?.banner.url}
               alt={profile?.banner.alt}
             />
           </div>
-          <div className="absolute top-80 left-30 size-60 rounded-l-[20px] overflow-hidden border-7 border-white">
+          <div className="absolute top-40 left-15 size-30 sm:top-60 sm:left-25 sm:size-50 md:top-80 md:left-30 md:size-60 rounded-l-[20px] overflow-hidden border-7 border-white">
             <img
               className="size-full object-cover"
               src={profile?.avatar.url}
               alt={profile?.avatar.alt}
             />
           </div>
-          <div className="pt-3 flex justify-between gap-3 w-full">
-            <div className="w-1/4"></div>
-            <div className="w-1/2 min-h-30 flex flex-col gap-3">
-              <div className="">
-                <h1 className="flex gap-3 text-black text-2xl">
-                  {profile?.name}
-                  {profile?.venueManager && (
-                    <span className="font-inter font-normal text-ocean-700">
-                      Manager
-                    </span>
-                  )}
-                </h1>
-                <p className="font-semibold">{profile?.email}</p>
+          <div className="pt-3 flex justify-end gap-3 w-full">
+            <div className="flex flex-col-reverse lg:flex-row gap-10 sm:gap-1 lg:gap-0 justify-between w-full sm:w-1/2 lg:w-[63%] xl:w-2/3">
+              <div className="mx-1 w-fit min-h-30 flex flex-col gap-3">
+                <div className="">
+                  <h1 className="flex gap-3 text-black text-2xl">
+                    {profile?.name}
+                    {profile?.venueManager && (
+                      <span className="font-inter font-normal text-ocean-700">
+                        Manager
+                      </span>
+                    )}
+                  </h1>
+                  <p className="font-semibold">{profile?.email}</p>
+                </div>
+                {profile?.bio && (
+                  <>
+                    {" "}
+                    <hr className="border-neutral-200"></hr>
+                    <p>{profile?.bio}</p>
+                  </>
+                )}
               </div>
-              {profile?.bio && (
-                <>
-                  {" "}
-                  <hr className="border-neutral-200"></hr>
-                  <p>{profile?.bio}</p>
-                </>
-              )}
-            </div>
-            <div className="flex h-fit items-end">
-              {isLoggedInProfile && (
-                <Button
-                  onClick={handleOpenEditProfile}
-                  className="h-10"
-                  variant="secondary"
-                >
-                  Edit Profile
-                </Button>
-              )}
+              <div className="flex h-fit justify-end items-center lg:justify-center lg:items-end">
+                {isLoggedInProfile && (
+                  <Button
+                    onClick={handleOpenEditProfile}
+                    className="h-10"
+                    variant="secondary"
+                  >
+                    Edit Profile
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </section>
         {isLoggedInProfile && (
-          <section className="flex flex-col p-10 gap-10 bg-orange-50 border-1 border-ocean-700 rounded-b-xl">
-            <aside className="flex justify-center items-center gap-3 w-full h-full">
+          <section className="flex flex-col items-center border-1 border-neutral-300 rounded-b-xl">
+            <aside className="bg-air-100 flex justify-between items-start sm:items-center gap-3 w-full h-full border-b-[.1px] p-3 border-neutral-300">
               {profile?.venueManager ? (
                 <Tabs
                   tabs={["Saved Venues", "Your Bookings", "Your Venues"]}
@@ -201,80 +143,117 @@ const ProfileView = () => {
                 </Button>
               )}
             </aside>
-            <div className="flex justify-center bg-white w-full rounded-xl h-full">
+            <>
               {/* Saved Venues */}
-              {currentTab === "Saved Venues" && <p>Here are your favs...</p>}
+              {currentTab === "Saved Venues" && (
+                <div className="flex justify-center h-full w-full p-6 sm:p-10">
+                  <p>You don't have any favorites yet!</p>
+                </div>
+              )}
 
               {/* Your Bookings */}
               {currentTab === "Your Bookings" &&
               profile?.bookings &&
               profile?.bookings.length > 0 ? (
-                <article className="w-2/3 border-neutral-300 border-1 bg-white rounded-t-xl">
-                  <div className="text-sm font-semibold p-3 border-b-[.1px] border-neutral-300 text-ocean-700 flex w-full justify-between rounded-t-xl">
-                    <p className="flex-3">Venue</p>
-                    <p className="flex-1">City</p>
-                    <p className="flex-2">Duration</p>
-                    <p className="flex-1 flex justify-center">Guests</p>
-                    <p className="flex-1">Total Cost</p>
-                    <p className="flex-1">Manage</p>
+                <div className="flex justify-center h-full w-full p-3 sm:p-10">
+                  <div className="w-full lg:w-2/3 border-1 border-neutral-300 bg-white rounded-t-xl">
+                    <table className="w-full">
+                      <thead className="w-full">
+                        <tr className="w-full text-sm font-semibold border-b-[.1px] border-neutral-300 text-ocean-700">
+                          <th className="text-left px-3 py-2 w-3/12">Venue</th>
+                          <th className="hidden sm:inline-block text-left px-3 py-2 w-2/12">
+                            City
+                          </th>
+                          <th className="text-left px-3 py-2 w-3/12">
+                            Duration
+                          </th>
+                          <th className="hidden sm:inline-block text-center px-3 py-2 w-2/12">
+                            Guests
+                          </th>
+                          <th className="text-left px-3 py-2 w-2/12">NOK</th>
+                        </tr>
+                      </thead>
+                      <tbody className="w-full">
+                        {profile.bookings.map((booking) => (
+                          <tr key={booking.id} className="w-full text-sm">
+                            <td className="px-3 py-1 truncate">
+                              <Link to={`/venue/${booking.venue.id}`}>
+                                <strong className="truncate block max-w-[150px]">
+                                  {booking.venue.name}
+                                </strong>
+                              </Link>
+                            </td>
+                            <td className="hidden sm:inline-block px-3 py-2 truncate">
+                              {booking.venue.location.city || "Unknown"}
+                            </td>
+                            <td className="px-3 py-1">
+                              {format(booking.dateFrom, "dd.MM.yy")} –{" "}
+                              {format(booking.dateTo, "dd.MM.yy")}
+                            </td>
+                            <td className="hidden sm:inline-block px-3 py-2 w-full text-center">
+                              {booking.guests}
+                            </td>
+                            <td className="px-3 py-1">
+                              <strong>
+                                {differenceInCalendarDays(
+                                  booking.dateTo,
+                                  booking.dateFrom
+                                ) * booking.venue.price}
+                              </strong>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                  {profile.bookings.map((booking) => (
-                    <div key={booking.id} className="p-3 flex justify-between">
-                      <Link
-                        className="flex-3 truncate"
-                        to={`/venue/${booking.venue.id}`}
-                      >
-                        <strong className="truncate">
-                          {booking.venue.name}
-                        </strong>
-                      </Link>
-                      <p className="flex-1 truncate">
-                        {booking.venue.location.city || "Unknown"}
-                      </p>
-                      <p className="flex-2">
-                        {format(booking.dateFrom, "dd.MM.yy")}–
-                        {format(booking.dateTo, "dd.MM.yy")}
-                      </p>
-                      <p className="flex-1 flex justify-center">
-                        {booking.guests}
-                      </p>
-                      <strong className="flex-1">
-                        {differenceInCalendarDays(
-                          booking.dateTo,
-                          booking.dateFrom
-                        ) * booking.venue.price}{" "}
-                        <span className="font-normal">NOK</span>
-                      </strong>
-                      <p className="flex-1">Delete</p>
-                    </div>
-                  ))}
-                </article>
+                </div>
               ) : (
                 currentTab === "Your Bookings" &&
                 profile?.bookings &&
-                profile?.bookings.length === 0 && <p>No bookings yet!</p>
+                profile?.bookings.length === 0 && (
+                  <div className="flex flex-col items-center justify-center h-full w-full p-3 sm:p-10">
+                    <p>
+                      You don't have any bookings yet! Check out our wide
+                      assortment of venues{" "}
+                      <Link className="font-semibold hover:underline" to="/">
+                        here
+                      </Link>
+                    </p>
+                  </div>
+                )
               )}
 
               {/* Your Venues */}
               {currentTab === "Your Venues" &&
               profile?.venues &&
               profile?.venues.length > 0 ? (
-                <div className="w-full grid grid-cols-4 gap-10">
-                  {profile.venues.map((venue) => (
-                    <VenueCard key={venue.id} {...venue} />
-                  ))}{" "}
+                <div className="flex justify-center h-full w-full p-6 sm:p-10">
+                  <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+                    {profile.venues.map((venue) => (
+                      <VenueCard key={venue.id} {...venue} />
+                    ))}{" "}
+                  </div>
                 </div>
               ) : (
                 currentTab === "Your Venues" &&
                 profile?.venues &&
                 profile?.venues.length === 0 && (
-                  <p>
-                    You don't have any venues yet! Upload your venues to see
-                    them here.
-                  </p>
+                  <div className="flex flex-col items-center justify-center h-full w-full p-3 sm:p-10">
+                    <p>
+                      You don't have any venues yet!{" "}
+                      <button
+                        className="font-semibold hover:underline"
+                        type="button"
+                        onClick={handleOpenVenueModal}
+                      >
+                        Upload
+                      </button>{" "}
+                      your venues to see them here.
+                    </p>
+                  </div>
                 )
               )}
-            </div>
+            </>
           </section>
         )}
       </div>

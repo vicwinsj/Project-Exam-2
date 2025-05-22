@@ -11,7 +11,6 @@ type ReserveModalProps = {
 
 export const ReserveModal = ({
   venue,
-  venueId,
   onVenueUpdate,
   onClose,
 }: ReserveModalProps) => {
@@ -20,7 +19,6 @@ export const ReserveModal = ({
       <div className="self-start sm:self-center rounded-xl bg-white w-full sm:w-1/2 flex flex-col gap-1">
         <ReserveBooking
           venue={venue}
-          venueId={venueId}
           onVenueUpdate={onVenueUpdate}
           isInModal={true}
           onClose={onClose}

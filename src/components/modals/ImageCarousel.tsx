@@ -44,7 +44,7 @@ export const ImageCarousel = ({
         {/* Exit Button */}
         <button
           onClick={onClose}
-          className="transition-colors duration-300 flex items-center justify-center absolute right-4 -top-33 sm:top-7 transform -translate-y-1/2 text-white/70 hover:text-white size-10 rounded-full p-3 "
+          className="transition-colors duration-300 flex items-center justify-center absolute right-4 -top-33 sm:top-9 transform -translate-y-1/2 text-white/70 hover:text-white size-10 rounded-full p-3 "
         >
           <FontAwesomeIcon size="lg" icon={faXmark} />
         </button>
