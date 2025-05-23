@@ -68,7 +68,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
     <ModalWrapper onClose={onClose}>
       <form
         onSubmit={handleSubmit}
-        className="z-10 flex flex-col gap-3 md:gap-10 mx-1 w-11/12 sm:w-1/2 lg:w-1/3 p-6 sm:p-10 bg-white rounded-xl"
+        className="z-10 flex flex-col gap-10 mx-1 w-11/12 sm:w-1/2 lg:w-1/3 p-6 sm:p-10 bg-white rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="transition-colors duration-300 text-xl flex items-center justify-end text-neutral-500 hover:text-neutral-700">

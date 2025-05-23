@@ -159,7 +159,7 @@ const ProfileView = () => {
                   <div className="w-full lg:w-2/3 border-1 border-neutral-300 bg-white rounded-t-xl">
                     <table className="w-full">
                       <thead className="w-full">
-                        <tr className="w-full text-sm font-semibold border-b-[.1px] border-neutral-300 text-ocean-700">
+                        <tr className="w-full text-sm font-semibold border-b-1 border-neutral-300 text-ocean-700">
                           <th className="text-left px-3 py-2 w-3/12">Venue</th>
                           <th className="hidden sm:inline-block text-left px-3 py-2 w-2/12">
                             City
