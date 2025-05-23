@@ -1,23 +1,6 @@
 import { Link } from "react-router-dom";
 import placeholderImage from "../assets/placeholder_venue.png";
-
-type Venue = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  location: {
-    country: string;
-    city: string;
-  };
-  media: {
-    url: string;
-    alt: string;
-  }[];
-  _count?: {
-    bookings: number;
-  };
-};
+import { Venue } from "../types/venue";
 
 export const VenueCard = (venue: Venue) => {
   return (
@@ -30,8 +13,8 @@ export const VenueCard = (venue: Venue) => {
         <div className="overflow-hidden w-full h-50">
           <img
             className="w-full h-full object-cover"
-            src={venue.media[0]?.url || placeholderImage}
-            alt={venue.media[0]?.alt || "Picture of the venue"}
+            src={(venue.media && venue.media[0]?.url) || placeholderImage}
+            alt={(venue.media && venue.media[0]?.alt) || "Picture of the venue"}
           />
         </div>
         <div></div>

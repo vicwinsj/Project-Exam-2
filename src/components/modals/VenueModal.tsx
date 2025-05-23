@@ -6,43 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { createVenue, updateVenue } from "../../api/venues";
 import { useState, useEffect } from "react";
 import { ButtonLoader } from "../loaders/ButtonLoader";
-
-type Venue = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  maxGuests: number;
-  owner: { avatar: { url: string; alt: string }; name: string };
-  rating: number;
-  meta: {
-    wifi: boolean;
-    parking: boolean;
-    breakfast: boolean;
-    pets: boolean;
-  };
-  location: {
-    address: string;
-    city: string;
-    country: string;
-    zip: string;
-  };
-  media: {
-    url: string;
-    alt: string;
-  }[];
-  bookings: [
-    {
-      id: string;
-      dateFrom: Date;
-      dateTo: Date;
-      guests: number;
-      customer: {
-        name: string;
-      };
-    },
-  ];
-};
+import { Venue } from "../../types/venue";
 
 interface VenueModalProps {
   title: string;
@@ -131,26 +95,26 @@ export default function VenueModal({
       country,
     };
 
+    const venueDetails = {
+      name,
+      description,
+      media,
+      price: Number(price),
+      capacity: Number(capacity),
+      rating: Number(rating),
+      meta,
+      location,
+    };
+
     if (!accessToken) {
       setServerError("You must be logged in");
       return;
     }
 
     if (profile?.venueManager)
-      if (venue) {
+      if (venue && venue.id) {
         try {
-          const result = await updateVenue(
-            venue.id,
-            name,
-            description,
-            media,
-            Number(price),
-            Number(capacity),
-            Number(rating),
-            meta,
-            location,
-            accessToken
-          );
+          const result = await updateVenue(venue.id, venueDetails, accessToken);
           if (result) {
             if (onVenueUpdated) await onVenueUpdated();
             await refreshProfile();
@@ -164,17 +128,7 @@ export default function VenueModal({
         }
       } else
         try {
-          const result = await createVenue(
-            name,
-            description,
-            media,
-            Number(price),
-            Number(capacity),
-            Number(rating),
-            meta,
-            location,
-            accessToken
-          );
+          const result = await createVenue(accessToken, venueDetails);
           if (result) {
             await refreshProfile();
             onSuccess?.();
@@ -276,7 +230,7 @@ export default function VenueModal({
               <div className="flex items-center gap-1">
                 <input
                   className="cursor-pointer"
-                  defaultChecked={venue?.meta.wifi}
+                  defaultChecked={venue?.meta?.wifi}
                   type="checkbox"
                   id="wifi"
                   name="wifi"
@@ -287,7 +241,7 @@ export default function VenueModal({
               </div>
               <div className="flex items-center gap-1">
                 <input
-                  defaultChecked={venue?.meta.parking}
+                  defaultChecked={venue?.meta?.parking}
                   type="checkbox"
                   id="parking"
                   name="parking"
@@ -300,7 +254,7 @@ export default function VenueModal({
             <div className="flex-1 flex flex-col gap-3 md:gap-1">
               <div className="flex items-center gap-1">
                 <input
-                  defaultChecked={venue?.meta.breakfast}
+                  defaultChecked={venue?.meta?.breakfast}
                   type="checkbox"
                   id="breakfast"
                   name="breakfast"
@@ -311,7 +265,7 @@ export default function VenueModal({
               </div>
               <div className="flex items-center gap-1">
                 <input
-                  defaultChecked={venue?.meta.pets}
+                  defaultChecked={venue?.meta?.pets}
                   type="checkbox"
                   id="pets"
                   name="pets"
@@ -370,7 +324,7 @@ export default function VenueModal({
               <label htmlFor="address">Address</label>
               <input
                 required
-                defaultValue={venue?.location.address}
+                defaultValue={venue?.location?.address}
                 name="address"
                 id="address"
               ></input>
@@ -379,7 +333,7 @@ export default function VenueModal({
               <label htmlFor="zip">ZIP</label>
               <input
                 required
-                defaultValue={venue?.location.zip}
+                defaultValue={venue?.location?.zip}
                 type="number"
                 name="zip"
                 id="zip"
@@ -391,7 +345,7 @@ export default function VenueModal({
               <label htmlFor="city">City</label>
               <input
                 required
-                defaultValue={venue?.location.city}
+                defaultValue={venue?.location?.city}
                 name="city"
                 id="city"
               ></input>
@@ -400,7 +354,7 @@ export default function VenueModal({
               <label htmlFor="country">Country</label>
               <input
                 required
-                defaultValue={venue?.location.country}
+                defaultValue={venue?.location?.country}
                 name="country"
                 id="country"
               ></input>

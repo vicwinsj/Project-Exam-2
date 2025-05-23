@@ -171,10 +171,15 @@ export const ReserveBooking = ({
           </div>
         )}
         <h3 className="text-xl text-black">
-          {venue.price * nights || venue.price} NOK{" "}
-          <span className="font-normal">
-            for {nights || 1} {nights > 1 ? "nights" : "night"}
-          </span>
+          {venue.price && (
+            <>
+              ({venue.price * nights || venue.price} NOK{" "}
+              <span className="font-normal">
+                for {nights || 1} {nights > 1 ? "nights" : "night"}
+              </span>
+              )
+            </>
+          )}
         </h3>
         <div className="flex flex-col gap-1">
           <div className="relative">

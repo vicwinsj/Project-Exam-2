@@ -30,7 +30,7 @@ const VenueView = () => {
   const { profile } = useAuth();
 
   const navigate = useNavigate();
-  const { venueId } = useParams();
+  const { id } = useParams();
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,8 +47,10 @@ const VenueView = () => {
   };
 
   const updateVenue = async () => {
-    const updatedVenue = await fetchVenue(venueId);
-    setVenue(updatedVenue);
+    if (id) {
+      const updatedVenue = await fetchVenue(id);
+      setVenue(updatedVenue);
+    }
   };
 
   useEffect(() => {
@@ -59,23 +61,25 @@ const VenueView = () => {
 
   useEffect(() => {
     const loadVenueDetails = async () => {
-      try {
-        const venueDetails = await fetchVenue(venueId);
-        if (venueDetails) {
-          setVenue(venueDetails);
+      if (id) {
+        try {
+          const venueDetails = await fetchVenue(id);
+          if (venueDetails) {
+            setVenue(venueDetails);
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            setError(error.message);
+          }
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        }
-      } finally {
-        setLoading(false);
       }
     };
     loadVenueDetails();
-  }, [venueId]);
+  }, [id]);
 
-  const isOwnVenue = venue?.owner.name === profile?.name;
+  const isOwnVenue = venue?.owner?.name === profile?.name;
 
   const [showVenueModal, setShowVenueModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -130,10 +134,10 @@ const VenueView = () => {
   };
 
   const noFacilities =
-    !venue?.meta.wifi &&
-    !venue?.meta.parking &&
-    !venue?.meta.breakfast &&
-    !venue?.meta.pets;
+    !venue?.meta?.wifi &&
+    !venue?.meta?.parking &&
+    !venue?.meta?.breakfast &&
+    !venue?.meta?.pets;
 
   if (loading) return <VenueLoader />;
   if (error) return <p>Error: {error}</p>;
@@ -163,18 +167,19 @@ const VenueView = () => {
               >
                 <img
                   className="w-full h-full object-cover"
-                  src={venue.media[0]?.url || placeholderImage}
-                  alt={venue.media[0]?.alt || "Picture of the venue"}
+                  src={(venue.media && venue.media[0].url) || placeholderImage}
+                  alt={
+                    (venue.media && venue.media[0].alt) ||
+                    "Picture of the venue"
+                  }
                 />
                 <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
               </div>
-              {venue.media.length > 1 && (
+              {venue.media && venue.media.length > 1 && (
                 <div className="flex-1 flex flex-col gap-1 sm:gap-3 h-full">
                   <div
                     onClick={() => {
-                      if (venue.media) {
-                        handleOpenImageCarousel(1);
-                      }
+                      handleOpenImageCarousel(1);
                     }}
                     className="relative cursor-pointer w-full h-1/2"
                   >
@@ -188,15 +193,13 @@ const VenueView = () => {
                   {venue.media.length > 2 && (
                     <div
                       onClick={() => {
-                        if (venue.media) {
-                          handleOpenImageCarousel(2);
-                        }
+                        handleOpenImageCarousel(2);
                       }}
                       className="relative cursor-pointer w-full h-1/2"
                     >
                       <img
                         className="w-full h-full object-cover"
-                        src={venue.media[2]?.url || placeholderImage}
+                        src={venue.media[2].url || placeholderImage}
                         alt={venue.media[2]?.alt || "Picture of the venue"}
                       />
                       <div className="absolute inset-0 w-full h-full hover:bg-white/10"></div>
@@ -261,20 +264,20 @@ const VenueView = () => {
                       <hr className="border-neutral-300"></hr>
                       <div className="w-full flex gap-3 items-center">
                         <Link
-                          to={`/profile/${venue.owner.name}`}
+                          to={`/profile/${venue.owner?.name}`}
                           state={{ profile: venue.owner }}
                           className="size-15 rounded-l-lg overflow-hidden"
                         >
                           <img
                             className="size-full object-cover"
-                            src={venue.owner.avatar.url}
-                            alt={venue.owner.avatar.alt}
+                            src={venue.owner?.avatar.url}
+                            alt={venue.owner?.avatar.alt}
                           ></img>
                         </Link>
                         <div className="w-full">
                           <p>Hosted by</p>
                           <p className="w-full font-semibold">
-                            {venue.owner.name}
+                            {venue.owner?.name}
                           </p>
                         </div>
                       </div>
@@ -294,7 +297,7 @@ const VenueView = () => {
                       <div className="flex flex-col gap-10">
                         <h2 className="text-black">Facilities of this venue</h2>
                         <ul className="grid grid-cols-2 grid-rows-2">
-                          {venue.meta.wifi && (
+                          {venue.meta?.wifi && (
                             <li className="flex items-center gap-3 text-ocean-700">
                               <div className="text-center w-10 text-2xl">
                                 <FontAwesomeIcon icon={faWifi} />
@@ -302,7 +305,7 @@ const VenueView = () => {
                               <span className="text-black">Wifi</span>
                             </li>
                           )}
-                          {venue.meta.parking && (
+                          {venue.meta?.parking && (
                             <li className="flex items-center gap-3 text-ocean-700">
                               <div className="text-center w-10 text-2xl">
                                 <FontAwesomeIcon icon={faSquareParking} />
@@ -310,7 +313,7 @@ const VenueView = () => {
                               <span className="text-black">Parking</span>
                             </li>
                           )}
-                          {venue.meta.breakfast && (
+                          {venue.meta?.breakfast && (
                             <li className="flex items-center gap-3 text-ocean-700">
                               <div className="text-center w-10 text-2xl">
                                 <FontAwesomeIcon icon={faMugSaucer} />
@@ -320,7 +323,7 @@ const VenueView = () => {
                               </span>
                             </li>
                           )}
-                          {venue.meta.pets && (
+                          {venue.meta?.pets && (
                             <li className="flex items-center gap-3 text-ocean-700">
                               <div className="text-center w-10 text-2xl">
                                 <FontAwesomeIcon icon={faPaw} />
@@ -372,17 +375,17 @@ const VenueView = () => {
               onVenueUpdated={updateVenue}
             />
           )}
-          {showDeleteModal && (
+          {showDeleteModal && venue.id && venue.name && (
             <DeleteModal
-              venueId={venue.id}
-              venueName={venue.name}
+              id={venue.id}
+              name={venue.name}
               onClose={handleCloseDeleteModal}
               onSuccess={() =>
                 toast.custom(<Toast message="Venue successfully deleted!" />)
               }
             />
           )}
-          {showImageCarousel && (
+          {showImageCarousel && venue.media && (
             <ImageCarousel
               images={venue.media}
               onClose={handleCloseImageCarousel}
@@ -392,7 +395,7 @@ const VenueView = () => {
           {showReserveModal && (
             <ReserveModal
               venue={venue}
-              venueId={venueId}
+              venueId={id}
               onVenueUpdate={setVenue}
               onClose={handleCloseReserveModal}
             ></ReserveModal>

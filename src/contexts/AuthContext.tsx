@@ -1,31 +1,13 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { fetchProfile } from "../api/profile";
-
-type AuthContextType = {
-  accessToken: string | null;
-  username: string | null;
-  login: (token: string, name: string) => void;
-  logout: () => void;
-  authLoading: boolean;
-  profile: Profile | null;
-  setProfile: React.Dispatch<React.SetStateAction<Profile | null>>;
-  refreshProfile: () => Promise<void>;
-};
-
-type Profile = {
-  name: string;
-  email: string;
-  bio: string;
-  avatar: {
-    url: string;
-    alt: string;
-  };
-  banner: {
-    url: string;
-    alt: string;
-  };
-  venueManager: boolean;
-};
+import { Profile } from "../types/profile";
+import { AuthContextType } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -35,7 +17,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authLoading, setAuthLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     setAuthLoading(true);
     if (accessToken && username) {
       try {
@@ -44,9 +26,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
-      setAuthLoading(false);
     }
-  };
+    setAuthLoading(false);
+  }, [accessToken, username]);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -60,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (accessToken && username) {
       refreshProfile();
     }
-  }, [accessToken, username]);
+  }, [accessToken, username, refreshProfile]);
 
   useEffect(() => {
     if (accessToken !== undefined && username !== undefined) {
