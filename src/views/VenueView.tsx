@@ -87,7 +87,7 @@ const VenueView = () => {
     const updateScreenSizeVisibility = () => {
       const width = window.innerWidth;
 
-      if (width > 1200) {
+      if (width > 1024) {
         setShowBookingsBanner(false);
         setShowAsideBookings(true);
       } else {

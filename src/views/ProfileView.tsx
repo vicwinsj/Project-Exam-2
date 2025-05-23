@@ -164,9 +164,7 @@ const ProfileView = () => {
                           <th className="hidden sm:inline-block text-left px-3 py-2 w-2/12">
                             City
                           </th>
-                          <th className="text-left px-3 py-2 w-3/12">
-                            Duration
-                          </th>
+                          <th className="text-left px-3 py-2 w-3/12">Dates</th>
                           <th className="hidden sm:inline-block text-center px-3 py-2 w-2/12">
                             Guests
                           </th>
