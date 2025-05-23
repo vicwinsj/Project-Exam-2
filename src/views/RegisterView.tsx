@@ -112,36 +112,40 @@ const RegisterView = () => {
             Create account
           </h1>
           <div className="flex flex-col gap-10">
-            <fieldset className="flex gap-3">
-              <legend className="font-semibold">Select account type</legend>
-              <div className="flex gap-3">
-                <input
-                  className="cursor-pointer"
-                  type="radio"
-                  name="customer"
-                  id="customer"
-                  value="customer"
-                  defaultChecked
-                  checked={accountType === "customer"}
-                  onChange={() => setAccountType("customer")}
-                />{" "}
-                <label htmlFor="customer" className="cursor-pointer">
-                  Customer
-                </label>
-              </div>
-              <div className="flex gap-3">
-                <input
-                  className="cursor-pointer"
-                  type="radio"
-                  name="manager"
-                  id="manager"
-                  value="manager"
-                  checked={accountType === "manager"}
-                  onChange={() => setAccountType("manager")}
-                />{" "}
-                <label htmlFor="manager" className="cursor-pointer">
-                  Manager
-                </label>
+            <fieldset className="w-full flex flex-col gap-3">
+              <legend className="w-full font-semibold">
+                Select account type
+              </legend>
+              <div className="flex gap-3 w-full">
+                <div className="w-fit gap-1 flex items-center">
+                  <input
+                    className="w-fit cursor-pointer"
+                    type="radio"
+                    name="customer"
+                    id="customer"
+                    value="customer"
+                    defaultChecked
+                    checked={accountType === "customer"}
+                    onChange={() => setAccountType("customer")}
+                  />{" "}
+                  <label htmlFor="customer" className="w-fit cursor-pointer">
+                    Customer
+                  </label>
+                </div>
+                <div className="flex gap-1 items-center w-fit">
+                  <input
+                    className="w-fit cursor-pointer"
+                    type="radio"
+                    name="manager"
+                    id="manager"
+                    value="manager"
+                    checked={accountType === "manager"}
+                    onChange={() => setAccountType("manager")}
+                  />{" "}
+                  <label htmlFor="manager" className="w-fit cursor-pointer">
+                    Manager
+                  </label>
+                </div>
               </div>
             </fieldset>
             <fieldset className="flex flex-col gap-3">

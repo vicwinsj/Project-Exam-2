@@ -17,7 +17,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
   faPlus,
-  faSuitcase,
   faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FilterModal } from "../modals/FilterModal.tsx";
@@ -25,7 +24,7 @@ import VenueModal from "../modals/VenueModal.tsx";
 import parse from "date-fns/parse";
 
 const Header = () => {
-  const { accessToken, logout, profile, username } = useAuth();
+  const { accessToken, logout, profile } = useAuth();
   const { resetSearch } = useVenues();
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,6 +39,7 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showHeader, setShowHeader] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
+  const [showLoginButton, setShowLoginButton] = useState(false);
 
   const searchText = searchParams.get("q") || "";
   const rating = searchParams.get("minrating");
@@ -85,7 +85,6 @@ const Header = () => {
         setMobileNavOpacity(true);
         setShowHeader(true);
       }
-      // } else if () {setShowHeader(true);}
 
       if (currentScrollY === 0) {
         setMobileNavOpacity(true);
@@ -101,18 +100,16 @@ const Header = () => {
   useEffect(() => {
     const updateScreenSizeVisibility = () => {
       const width = window.innerWidth;
-      if (width > 1200) {
+      if (width > 1024) {
         setShowMobileNav(false);
+        setShowLoginButton(true);
+        setShowSearch(true);
         setShowStickyHeader(false);
       } else {
         setShowMobileNav(true);
-        setShowStickyHeader(true);
-      }
-
-      if (width >= 768) {
-        setShowSearch(true);
-      } else {
+        setShowLoginButton(false);
         setShowSearch(false);
+        setShowStickyHeader(true);
       }
     };
     updateScreenSizeVisibility();
@@ -140,9 +137,9 @@ const Header = () => {
   return (
     <>
       <header
-        className={`z-10 transition-all duration-300 ${showHeader && showStickyHeader && "sticky inset-0 sm:"} h-fit flex flex-col px-6 py-3 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]`}
+        className={`z-10 transition-all duration-300 ${showHeader && showStickyHeader && location.pathname !== "/register" && "sticky inset-0 sm:"} h-fit flex flex-col px-6 py-3 bg-ocean-700 rounded-b-lg md:rounded-b-[20px]`}
       >
-        <div className="flex gap-3 justify-between">
+        <div className="flex justify-between items-center">
           <Link
             className="flex items-center justify-start"
             onClick={resetSearch}
@@ -161,16 +158,18 @@ const Header = () => {
                 <Button size="sm" variant="secondary" onClick={handleLogout}>
                   Logout
                 </Button>
-                <Link
-                  to={`/profile/${profile?.name}`}
-                  className="transition-colors duration-300 rounded-r-md border-1 border-white hover:border-turquoise-500 size-8.5 overflow-hidden"
-                >
-                  <img
-                    src={profile?.avatar.url}
-                    alt={profile?.avatar.alt}
-                    className="size-full object-cover bg-black"
-                  />
-                </Link>
+                {!showMobileNav && (
+                  <Link
+                    to={`/profile/${profile?.name}`}
+                    className="transition-colors duration-300 rounded-r-md border-1 border-white hover:border-turquoise-500 size-8.5 overflow-hidden"
+                  >
+                    <img
+                      src={profile?.avatar.url}
+                      alt={profile?.avatar.alt}
+                      className="size-full object-cover bg-black"
+                    />
+                  </Link>
+                )}
               </>
             ) : (
               <>
@@ -181,14 +180,16 @@ const Header = () => {
                   >
                     Register
                   </Link>
+                )}{" "}
+                {showLoginButton && (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={handleLoginClick}
+                  >
+                    Login
+                  </Button>
                 )}
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleLoginClick}
-                >
-                  Login
-                </Button>
               </>
             )}
           </nav>
@@ -218,7 +219,7 @@ const Header = () => {
           }
         />
       )}
-      {showMobileNav && (
+      {showMobileNav && location.pathname !== "/register" && (
         <div
           className={`transition-all duration-300 z-10 w-full p-1 fixed bottom-0 left-0 bg-turquoise-500 ${mobileNavOpacity ? "opacity-100" : "opacity-30"}`}
         >
@@ -254,16 +255,17 @@ const Header = () => {
                   <p className="text-center w-full h-fit text-sm">New Venue</p>
                 </button>
                 <Link
-                  className="w-fit h-full flex flex-col items-center justify-center gap-1"
-                  to={`/profile/${username}`}
+                  className="flex flex-col items-center justify-center w-fit h-full gap-1"
+                  to={`/profile/${profile?.name}`}
                 >
-                  <div className="flex items-center justify-center size-7 text-ocean-700">
-                    <FontAwesomeIcon
-                      icon={faSuitcase}
-                      size="xl"
-                    ></FontAwesomeIcon>
+                  <div className="transition-colors duration-300 rounded-r-md border-1 border-white hover:border-turquoise-500 size-7 overflow-hidden">
+                    <img
+                      src={profile?.avatar.url}
+                      alt={profile?.avatar.alt}
+                      className="size-full object-cover bg-black"
+                    />
                   </div>
-                  <p className="text-center w-full h-fit text-sm">Bookings</p>
+                  <p className="text-center w-full h-fit text-sm">Profile</p>
                 </Link>
               </>
             ) : (

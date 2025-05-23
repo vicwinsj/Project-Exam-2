@@ -42,7 +42,7 @@ export const VenueCard = (venue: Venue) => {
             {venue.location?.country || "Unknown country"}
           </p>
           <p>
-            <span className="font-semibold">{venue.price} kr</span> per night
+            <span className="font-semibold">{venue.price} NOK</span> / night
           </p>
         </div>
       </Link>

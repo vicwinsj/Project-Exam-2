@@ -58,7 +58,7 @@ const Search = () => {
         <input
           className="w-full px-3 py-3 rounded-lg border-2 border-transparent hover:bg-air-100 outline-none focus:border-sunset-800 bg-white placeholder:font-semibold placeholder-ocean-700 placeholder:font-rubik"
           type="text"
-          placeholder="Where are your dreams taking you?"
+          placeholder="What's your dream destination?"
           value={query}
           onChange={handleChange}
           ref={inputRef}
@@ -71,7 +71,7 @@ const Search = () => {
           >
             <FontAwesomeIcon
               icon={faCircleXmark}
-              className="transition-colors duration-300 text-xl text-neutral-500 hover:text-neutral-700 font-semibold"
+              className="transition-colors duration-300 text-xl text-neutral-300 hover:text-neutral-500 font-semibold"
             ></FontAwesomeIcon>
           </button>
         )}

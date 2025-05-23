@@ -174,6 +174,8 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
                 </p>
               )
           )}
+        </div>
+        <div>
           <div className="flex justify-between">
             <div className="flex gap-1 items-center">
               <input
