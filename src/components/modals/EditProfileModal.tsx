@@ -6,6 +6,8 @@ import ModalWrapper from "./ModalWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { ButtonLoader } from "../loaders/ButtonLoader";
+import { Toast } from "../toast/toast";
+import toast from "react-hot-toast";
 
 interface EditProfileProps {
   onClose: () => void;
@@ -77,6 +79,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
 
         if (!accessToken) {
           setServerError("You must be logged in");
+          toast.custom(<Toast error={true} message={serverError} />);
           return;
         }
 
@@ -94,6 +97,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
         } catch (error) {
           if (error instanceof Error) {
             setServerError(error.message);
+            toast.custom(<Toast error={true} message={serverError} />);
           }
         }
         setLoading(false);

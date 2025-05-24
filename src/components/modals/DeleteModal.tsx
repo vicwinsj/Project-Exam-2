@@ -5,6 +5,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ButtonLoader } from "../loaders/ButtonLoader";
+import toast from "react-hot-toast";
+import { Toast } from "../toast/toast";
 
 interface DeleteModalProps {
   id: string;
@@ -40,7 +42,14 @@ export const DeleteModal = ({
         }
       } catch (error) {
         if (error instanceof Error) {
-          setServerError(error.message);
+          if (error.message) {
+            setServerError(`${error.message} . Try again later.`);
+          } else {
+            setServerError(
+              "Unknown error occurred while attempting to delete venue"
+            );
+          }
+          toast.custom(<Toast error={true} message={serverError} />);
         }
       }
     setLoading(false);
@@ -72,7 +81,6 @@ export const DeleteModal = ({
             )}
           </Button>
         </div>
-        {serverError && <p>{serverError}</p>}
       </form>
     </ModalWrapper>
   );

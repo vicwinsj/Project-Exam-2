@@ -4,7 +4,7 @@ import { Venue } from "../../types/venue";
 
 type ReserveModalProps = {
   venue: Venue;
-  venueId: string | undefined;
+  venueId: string | null;
   onVenueUpdate: (updatedVenue: Venue) => void;
   onClose: () => void;
 };

@@ -1,4 +1,3 @@
-// import { useVenues } from "../context/VenueContext";
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/form/Button";
@@ -25,6 +24,7 @@ import { VenueLoader } from "../components/loaders/SkeletonLoader.tsx";
 import { ReserveBooking } from "../components/ReserveBooking.tsx";
 import { ReserveModal } from "../components/modals/ReserveModal.tsx";
 import { Venue } from "../types/venue.ts";
+import { ErrorMessage } from "../components/ErrorMessage.tsx";
 
 const VenueView = () => {
   const { profile } = useAuth();
@@ -36,6 +36,7 @@ const VenueView = () => {
   const [error, setError] = useState<string | null>(null);
   const [showImageCarousel, setShowImageCarousel] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [venueId, setVenueId] = useState<string | null>(null);
 
   const handleOpenImageCarousel = (index: number) => {
     setShowImageCarousel(true);
@@ -46,24 +47,23 @@ const VenueView = () => {
     setShowImageCarousel(false);
   };
 
-  const updateVenue = async () => {
-    if (id) {
-      const updatedVenue = await fetchVenue(id);
-      setVenue(updatedVenue);
-    }
-  };
-
   useEffect(() => {
+    if (id) {
+      setVenueId(id);
+    } else setVenueId(null);
+
     if (venue) {
       document.title = `holidaze | ${venue.name}`;
+    } else {
+      document.title = `holidaze | No venue found!`;
     }
-  }, [venue]);
+  }, [venue, id]);
 
   useEffect(() => {
     const loadVenueDetails = async () => {
-      if (id) {
+      if (venueId) {
         try {
-          const venueDetails = await fetchVenue(id);
+          const venueDetails = await fetchVenue(venueId);
           if (venueDetails) {
             setVenue(venueDetails);
           }
@@ -77,7 +77,14 @@ const VenueView = () => {
       }
     };
     loadVenueDetails();
-  }, [id]);
+  }, [venueId]);
+
+  const updateVenue = async () => {
+    if (venueId) {
+      const updatedVenue = await fetchVenue(venueId);
+      setVenue(updatedVenue);
+    }
+  };
 
   const isOwnVenue = venue?.owner?.name === profile?.name;
 
@@ -139,13 +146,14 @@ const VenueView = () => {
     !venue?.meta?.breakfast &&
     !venue?.meta?.pets;
 
-  if (loading) return <VenueLoader />;
-  if (error) return <p>Error: {error}</p>;
-  if (!loading && !venue) return <p>No venue found.</p>;
-
   return (
     <>
-      {venue && (
+      {" "}
+      {loading ? (
+        <VenueLoader />
+      ) : error || !venue ? (
+        <ErrorMessage error={error} />
+      ) : (
         <>
           <article className="w-full h-full flex flex-col gap-3 sm:gap-10">
             <button
@@ -395,7 +403,7 @@ const VenueView = () => {
           {showReserveModal && (
             <ReserveModal
               venue={venue}
-              venueId={id}
+              venueId={venueId}
               onVenueUpdate={setVenue}
               onClose={handleCloseReserveModal}
             ></ReserveModal>

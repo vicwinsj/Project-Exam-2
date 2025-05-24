@@ -2,16 +2,14 @@ import { useVenues } from "../contexts/VenueContext";
 import { Button } from "../components/form/Button";
 import { VenueCard } from "../components/VenueCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSliders,
-  faArrowRotateRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSliders } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { FilterModal } from "../components/modals/FilterModal";
 import { FilterLabel } from "../components/filterLabel";
 import { parse } from "date-fns";
 import { HomeLoader } from "../components/loaders/SkeletonLoader";
+import { ErrorMessage } from "../components/ErrorMessage";
 
 const HomeView = () => {
   const [searchParams] = useSearchParams();
@@ -43,11 +41,6 @@ const HomeView = () => {
 
   const [showFilter, setShowFilter] = useState(false);
 
-  const handleReload = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    await reloadVenues();
-  };
-
   const handleOpenFilter = () => {
     setShowFilter(true);
   };
@@ -67,26 +60,7 @@ const HomeView = () => {
       {loading ? (
         <HomeLoader />
       ) : error ? (
-        <div className="p-3 lg:p-10 gap-10 flex flex-col justify-center items-center">
-          <h1 className="text-5xl">Well, this is embarrassing!</h1>
-          <div className="flex flex-col justify-center items-center gap-1">
-            <p>An error occurred while trying to load page content:</p>
-            <p className="font-xs font-semibold">"{error}"</p>
-          </div>
-          <div className="flex items-center justify-center gap-3">
-            <Button
-              onClick={handleReload}
-              variant="primary"
-              className="flex gap-1 items-center"
-            >
-              <FontAwesomeIcon icon={faArrowRotateRight}></FontAwesomeIcon>Try
-              Again
-            </Button>
-            <Button variant="outline">
-              <Link to={`mailto:${"manager@holidaze.com"}`}>Report Issue</Link>
-            </Button>
-          </div>
-        </div>
+        <ErrorMessage error={error} refetch={reloadVenues}></ErrorMessage>
       ) : (
         <>
           <div className="flex flex-col gap-1">

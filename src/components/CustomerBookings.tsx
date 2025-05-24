@@ -19,7 +19,6 @@ export const CustomerBookings = ({ bookings }: Venue) => {
             <tbody className="w-full">
               {bookings && (
                 <>
-                  (
                   {bookings.length > 0 ? (
                     bookings.map((booking) => (
                       <tr key={booking.id} className="w-full text-sm">
@@ -42,9 +41,10 @@ export const CustomerBookings = ({ bookings }: Venue) => {
                       </tr>
                     ))
                   ) : (
-                    <td className="w-full px-3 py-1">No bookings yet!</td>
+                    <tr className="w-full text-sm">
+                      <td className="w-full px-3 py-1">No bookings yet!</td>
+                    </tr>
                   )}
-                  )
                 </>
               )}
             </tbody>

@@ -7,6 +7,7 @@ import { Toast } from "../components/toast/toast";
 import LoginModal from "../components/modals/LoginModal";
 import { ButtonLoader } from "../components/loaders/ButtonLoader";
 import { useAuth } from "../contexts/AuthContext";
+import { ErrorState } from "../types/auth";
 
 const RegisterView = () => {
   const { login } = useAuth();
@@ -22,13 +23,6 @@ const RegisterView = () => {
 
   const handleCloseLogin = () => {
     setShowLogin(false);
-  };
-
-  type ErrorState = {
-    name?: string;
-    email?: string;
-    password?: string;
-    confirmPassword?: string;
   };
 
   const [serverError, setServerError] = useState("");
@@ -157,7 +151,9 @@ const RegisterView = () => {
                   name="name"
                   required
                 />
-                {errors.name && <p className="text-red-500">{errors.name}.</p>}
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name}.</p>
+                )}
               </div>
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="email">Email</label>
@@ -169,7 +165,7 @@ const RegisterView = () => {
                   required
                 />
                 {errors.email && (
-                  <p className="text-red-500">{errors.email}.</p>
+                  <p className="text-sm text-red-500">{errors.email}.</p>
                 )}
               </div>
               <div className="flex flex-col gap-1 ">
@@ -184,7 +180,7 @@ const RegisterView = () => {
                   required
                 />
                 {errors.password && (
-                  <p className="text-red-500">{errors.password}.</p>
+                  <p className="text-sm text-red-500">{errors.password}.</p>
                 )}
               </div>
               <div className="flex flex-col gap-1 ">
@@ -196,7 +192,9 @@ const RegisterView = () => {
                   required
                 />
                 {errors.confirmPassword && (
-                  <p className="text-red-500">{errors.confirmPassword}.</p>
+                  <p className="text-sm text-red-500">
+                    {errors.confirmPassword}.
+                  </p>
                 )}
               </div>
             </fieldset>
@@ -211,7 +209,9 @@ const RegisterView = () => {
                 "Register"
               )}
             </Button>
-            {serverError && <p className="text-red-600">{serverError}!</p>}
+            {serverError && (
+              <p className="text-sm text-red-600">{serverError}!</p>
+            )}
             <div className="text-sm flex gap-1">
               <p>Already got an account?</p>
               <button

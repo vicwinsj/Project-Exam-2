@@ -21,6 +21,7 @@ const ProfileView = () => {
   const routeProfile = location.state?.profile;
 
   const { username, profile: loggedInProfile } = useAuth();
+  // const {error} = useVenues();
   const { name: routeName } = useParams();
   const isLoggedInProfile = routeName === username;
 
@@ -67,10 +68,11 @@ const ProfileView = () => {
   if (!profile)
     return (
       <div className="p-3 lg:p-10 gap-10 flex flex-col justify-center items-center">
-        <h1 className="text-5xl">No profile to see here!</h1>
+        <h1 className="text-3xl lg:text-5xl">No profile found!</h1>
         <div className="flex flex-col justify-center items-center gap-1">
           <p>
-            It seems we can't find any profile details related to this username.
+            We can't find any profile details related to this username. Are you
+            sure this profile exists?
           </p>
         </div>
         <div className="flex items-center justify-center gap-3">

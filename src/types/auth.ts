@@ -10,3 +10,10 @@ export type AuthContextType = {
   setProfile: React.Dispatch<React.SetStateAction<Profile | null>>;
   refreshProfile: () => Promise<void>;
 };
+
+export type ErrorState = {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+};
