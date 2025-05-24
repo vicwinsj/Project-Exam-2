@@ -1,7 +1,7 @@
 import { Button } from "../components/form/Button";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/holidaze_small.svg";
+import logo from "../assets/logos/holidaze_small.svg";
 
 const NotFoundView = () => {
   const navigate = useNavigate();

@@ -12,7 +12,7 @@ import { useAuth } from "../../contexts/AuthContext.tsx";
 import LoginModal from "../modals/LoginModal.tsx";
 import toast from "react-hot-toast";
 import { Toast } from "../toast/toast.tsx";
-import logo from "../../assets/holidaze_small.svg";
+import logo from "../../assets/logos/holidaze_small.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
