@@ -94,7 +94,15 @@ const ProfileView = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-col gap-20">
+          <div className="flex flex-col gap-3 sm:gap-10">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="transition-all duration-300 hover:text-black/70 -my-1.5 sm:-my-5 flex gap-1 items-center w-fit"
+            >
+              <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+              Back
+            </button>
             <section className="relative flex flex-col">
               <div className="w-full h-50 sm:h-80 md:h-100 rounded-t-[20px] overflow-hidden">
                 <img
