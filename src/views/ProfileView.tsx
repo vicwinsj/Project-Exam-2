@@ -21,7 +21,6 @@ const ProfileView = () => {
   const routeProfile = location.state?.profile;
 
   const { username, profile: loggedInProfile } = useAuth();
-  // const {error} = useVenues();
   const { name: routeName } = useParams();
   const isLoggedInProfile = routeName === username;
 
@@ -61,37 +60,38 @@ const ProfileView = () => {
   useEffect(() => {
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
+    } else {
+      document.title = `holidaze | No profile found!`;
     }
   }, [profile]);
-
-  if (loading) return <VenueLoader />;
-  if (!profile)
-    return (
-      <div className="p-3 lg:p-10 gap-10 flex flex-col justify-center items-center">
-        <h1 className="text-3xl lg:text-5xl">No profile found!</h1>
-        <div className="flex flex-col justify-center items-center gap-1">
-          <p>
-            We can't find any profile details related to this username. Are you
-            sure this profile exists?
-          </p>
-        </div>
-        <div className="flex items-center justify-center gap-3">
-          <Button
-            onClick={() => navigate(-1)}
-            variant="primary"
-            className="flex gap-1 items-center"
-          >
-            <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
-            Go Back
-          </Button>
-        </div>
-      </div>
-    );
 
   return (
     <>
       {loading ? (
         <VenueLoader />
+      ) : !profile ? (
+        <div className="p-3 lg:p-10 gap-10 flex flex-col justify-center items-center">
+          <h1 className="text-3xl lg:text-5xl">No profile found!</h1>
+          <div className="flex flex-col justify-center items-center gap-1">
+            <p>
+              We can't find any profile details related to this username. Are
+              you sure this profile exists?
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <Button
+              onClick={() => navigate(-1)}
+              variant="primary"
+              className="flex gap-1 items-center"
+            >
+              <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+              Go Back
+            </Button>
+            <Button variant="outline">
+              <Link to={`mailto:${"manager@holidaze.com"}`}>Report Issue</Link>
+            </Button>
+          </div>
+        </div>
       ) : (
         <>
           <div className="flex flex-col gap-20">
