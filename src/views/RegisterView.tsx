@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../components/form/Button";
 import { registerUser, loginUser } from "../api/auth";
@@ -11,6 +11,10 @@ import { ErrorState } from "../types/auth";
 
 const RegisterView = () => {
   const { login } = useAuth();
+
+  useEffect(() => {
+    document.title = `holidaze | Register`;
+  });
 
   const navigate = useNavigate();
   const [accountType, setAccountType] = useState("customer");
