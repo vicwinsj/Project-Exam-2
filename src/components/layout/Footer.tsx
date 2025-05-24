@@ -1,4 +1,4 @@
-import logo from "../../assets/holidaze_small_orange.svg";
+import logo from "../../assets/logos/holidaze_small_orange.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
