@@ -26,7 +26,7 @@ import parse from "date-fns/parse";
 const Header = () => {
   const { accessToken, logout, profile } = useAuth();
   const { resetSearch } = useVenues();
-  const location = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -129,8 +129,29 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     toast.custom(<Toast message="Successfully logged out!" />);
-    if (location.pathname.startsWith("/profile")) {
+    if (pathname.startsWith("/profile")) {
       navigate("/");
+    }
+  };
+
+  const handleHomeClick = () => {
+    if (pathname.includes("/search") && window.scrollY === 0) {
+      resetSearch();
+      navigate("/");
+    } else {
+      if (!pathname.includes("/search") && pathname !== "/") {
+        navigate("/");
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (!pathname.includes(`/profile/${profile?.name}`)) {
+      navigate(`/profile/${profile?.name}`);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -142,7 +163,7 @@ const Header = () => {
         <div className="flex justify-between items-center">
           <Link
             className="flex items-center justify-start"
-            onClick={resetSearch}
+            onClick={handleHomeClick}
             to="/"
           >
             <strong className="transform-colors duration-300 font-rubik text-lg md:text-2xl text-white hover:text-turquoise-500">
@@ -224,16 +245,15 @@ const Header = () => {
           className={`transition-all duration-300 z-10 w-full p-1 fixed bottom-0 left-0 bg-turquoise-500 ${mobileNavOpacity ? "opacity-100" : "opacity-30"}`}
         >
           <nav className="font-rubik font-semibold text-ocean-700 w-full h-full flex justify-around items-center">
-            <Link
+            <button
               className="w-fit h-full flex flex-col items-center justify-center gap-1"
-              to="/"
-              onClick={resetSearch}
+              onClick={handleHomeClick}
             >
               <div className="size-7">
                 <img className="size-full" src={logo} />
               </div>
               <p className="text-center w-full h-fit text-sm">Home</p>
-            </Link>
+            </button>
             <button
               className="w-fit h-full flex flex-col items-center justify-center gap-1"
               onClick={handleOpenFilter}
@@ -254,9 +274,9 @@ const Header = () => {
                   </div>
                   <p className="text-center w-full h-fit text-sm">New Venue</p>
                 </button>
-                <Link
+                <button
                   className="flex flex-col items-center justify-center w-fit h-full gap-1"
-                  to={`/profile/${profile?.name}`}
+                  onClick={handleProfileClick}
                 >
                   <div className="transition-colors duration-300 rounded-r-md border-1 border-white hover:border-turquoise-500 size-7 overflow-hidden">
                     <img
@@ -266,7 +286,7 @@ const Header = () => {
                     />
                   </div>
                   <p className="text-center w-full h-fit text-sm">Profile</p>
-                </Link>
+                </button>
               </>
             ) : (
               <button

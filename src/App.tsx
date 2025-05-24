@@ -7,7 +7,7 @@ import VenueView from "./views/VenueView";
 import ProfileView from "./views/ProfileView";
 import NotFoundView from "./views/NotFoundView";
 import { Toaster } from "react-hot-toast";
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTop from "./components/utilities/ScrollToTop";
 
 const App = () => {
   return (

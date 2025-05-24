@@ -50,16 +50,15 @@ const ProfileView = () => {
   useEffect(() => {
     if (isLoggedInProfile && loggedInProfile) {
       setProfile(loggedInProfile);
-      setLoading(false);
     } else {
       setProfile(routeProfile);
-      setLoading(false);
     }
   }, [isLoggedInProfile, routeProfile, loggedInProfile]);
 
   useEffect(() => {
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
+      setLoading(false);
     } else {
       document.title = `holidaze | No profile found!`;
     }
@@ -69,7 +68,7 @@ const ProfileView = () => {
     <>
       {loading ? (
         <VenueLoader />
-      ) : !profile ? (
+      ) : !loading && !profile ? (
         <div className="p-3 lg:p-10 gap-10 flex flex-col justify-center items-center">
           <h1 className="text-3xl lg:text-5xl">No profile found!</h1>
           <div className="flex flex-col justify-center items-center gap-1">
@@ -103,7 +102,7 @@ const ProfileView = () => {
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               Back
             </button>
-            <section className="relative flex flex-col">
+            <section className="relative flex flex-col gap-1">
               <div className="w-full h-50 sm:h-80 md:h-100 rounded-t-[20px] overflow-hidden">
                 <img
                   className="size-full object-cover"
@@ -119,8 +118,12 @@ const ProfileView = () => {
                 />
               </div>
               <div className="pt-3 flex justify-end gap-3 w-full">
-                <div className="flex flex-col-reverse lg:flex-row gap-10 sm:gap-1 lg:gap-0 justify-between w-full sm:w-1/2 lg:w-[63%] xl:w-2/3">
-                  <div className="mx-1 w-fit min-h-30 flex flex-col gap-3">
+                <div
+                  className={`${!isLoggedInProfile && "gap-10 sm:gap-1"} flex flex-col-reverse lg:flex-row lg:gap-0 justify-between w-full sm:w-1/2 lg:w-[63%] xl:w-2/3`}
+                >
+                  <div
+                    className={`${!isLoggedInProfile && "self-center sm:self-auto"} mx-1 mt-10 sm:mt-0 w-fit min-h-30 flex flex-col gap-3`}
+                  >
                     <div className="">
                       <h1 className="flex gap-3 text-black text-2xl">
                         {profile?.name}

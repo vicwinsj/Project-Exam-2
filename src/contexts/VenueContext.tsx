@@ -165,9 +165,10 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetSearch = async () => {
-    setSearchQuery("");
-    setFilters({});
-    await loadVenues();
+    if (searchQuery || Object.keys(filters).length > 0) {
+      setSearchQuery("");
+      setFilters({});
+    } else return;
   };
 
   return (
