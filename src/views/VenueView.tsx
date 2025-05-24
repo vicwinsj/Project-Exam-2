@@ -112,10 +112,6 @@ const VenueView = () => {
       window.removeEventListener("resize", updateScreenSizeVisibility);
   }, []);
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   const handleOpenReserveModal = () => {
     setShowReserveModal(true);
   };
@@ -158,7 +154,7 @@ const VenueView = () => {
           <article className="w-full h-full flex flex-col gap-3 sm:gap-10">
             <button
               type="button"
-              onClick={handleGoBack}
+              onClick={() => navigate(-1)}
               className="transition-all duration-300 hover:text-black/70 -my-1.5 sm:-my-5 flex gap-1 items-center w-fit"
             >
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
