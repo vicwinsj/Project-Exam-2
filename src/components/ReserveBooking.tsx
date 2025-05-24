@@ -54,6 +54,7 @@ export const ReserveBooking = ({
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
+
   const totalGuests = adults + children;
 
   const handleOpenLogin = () => {
@@ -140,7 +141,7 @@ export const ReserveBooking = ({
         }
       } catch (error) {
         if (error instanceof Error) {
-          // setServerError(error.message);
+          toast.custom(<Toast error={true} message={error.message} />);
         }
       }
     setReserveLoading(false);
@@ -171,10 +172,14 @@ export const ReserveBooking = ({
           </div>
         )}
         <h3 className="text-xl text-black">
-          {venue.price * nights || venue.price} NOK{" "}
-          <span className="font-normal">
-            for {nights || 1} {nights > 1 ? "nights" : "night"}
-          </span>
+          {venue.price && (
+            <>
+              {venue.price * nights || venue.price} NOK{" "}
+              <span className="font-normal">
+                for {nights || 1} {nights > 1 ? "nights" : "night"}
+              </span>
+            </>
+          )}
         </h3>
         <div className="flex flex-col gap-1">
           <div className="relative">

@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { Toast } from "../toast/toast.tsx";
 import { ButtonLoader } from "../loaders/ButtonLoader.tsx";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ErrorState } from "../../types/auth.ts";
 
 type LoginProps = {
   onClose: () => void;
@@ -29,6 +30,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
   };
 
   const [serverError, setServerError] = useState("");
+  const [errors, setErrors] = useState<ErrorState>({});
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -41,24 +43,44 @@ const LoginModal = ({ onClose }: LoginProps) => {
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
 
-    const userData = {
-      email,
-      password,
+    const validateForm = () => {
+      console.log("is validating");
+      const newErrors: ErrorState = {};
+
+      if (!/^[\w.-]+@stud\.noroff\.no$/.test(email)) {
+        newErrors.email = "Has to be a @stud.noroff.no email";
+      }
+
+      if (password.trim().length < 8) {
+        newErrors.password = "Password got to contain at least 8 characters";
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
     };
 
-    try {
-      const result = await loginUser(userData);
-      if (result && result.data && result.data.accessToken) {
-        toast.custom(<Toast message="Successfully logged in!" />);
-        login(result.data.accessToken, result.data.name);
-        onClose();
-        if (location.pathname === "/register") {
-          navigate("/");
+    if (validateForm()) {
+      setServerError("");
+
+      const userData = {
+        email,
+        password,
+      };
+
+      try {
+        const result = await loginUser(userData);
+        if (result && result.data && result.data.accessToken) {
+          toast.custom(<Toast message="Successfully logged in!" />);
+          login(result.data.accessToken, result.data.name);
+          onClose();
+          if (location.pathname === "/register") {
+            navigate("/");
+          }
         }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        setServerError(error.message);
+      } catch (error) {
+        if (error instanceof Error) {
+          setServerError(error.message);
+        }
       }
     }
     setLoading(false);
@@ -85,21 +107,28 @@ const LoginModal = ({ onClose }: LoginProps) => {
           <div className="flex flex-col gap-1">
             <label htmlFor="email">Email</label>
             <input
-              className={serverError && "border-red-500"}
+              className={(errors.email || serverError) && "border-red-500"}
               type="text"
               name="email"
               required
             />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
+            )}
           </div>
           <div className="flex flex-col gap-1 ">
             <label htmlFor="password">Password</label>
             <input
-              className={serverError && "border-red-500"}
+              className={(errors.password || serverError) && "border-red-500"}
               type="password"
               name="password"
               required
+              placeholder="youremail@stud.noroff.no"
             />
           </div>
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password}</p>
+          )}
         </fieldset>
         <div className="flex justify-between items-center">
           <div className="flex gap-1 h-fit">
@@ -123,7 +152,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
         >
           {loading ? <ButtonLoader buttonText="Logging in ..." /> : "Login"}
         </Button>
-        {serverError && <p className="text-red-600">{serverError}!</p>}
+        {serverError && <p className="text-sm text-red-600">{serverError}!</p>}
         <div className="text-sm flex gap-1">
           <p>Don't got an account?</p>{" "}
           <button

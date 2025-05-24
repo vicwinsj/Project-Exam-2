@@ -5,17 +5,19 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ButtonLoader } from "../loaders/ButtonLoader";
+import toast from "react-hot-toast";
+import { Toast } from "../toast/toast";
 
 interface DeleteModalProps {
-  venueId: string;
-  venueName: string;
+  id: string;
+  name: string;
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export const DeleteModal = ({
-  venueId,
-  venueName,
+  id,
+  name,
   onClose,
   onSuccess,
 }: DeleteModalProps) => {
@@ -31,7 +33,7 @@ export const DeleteModal = ({
 
     if (accessToken)
       try {
-        const deleteSuccess = await deleteVenue(venueId, accessToken);
+        const deleteSuccess = await deleteVenue(id, accessToken);
         if (deleteSuccess) {
           await refreshProfile();
           onSuccess?.();
@@ -40,7 +42,14 @@ export const DeleteModal = ({
         }
       } catch (error) {
         if (error instanceof Error) {
-          setServerError(error.message);
+          if (error.message) {
+            setServerError(`${error.message} . Try again later.`);
+          } else {
+            setServerError(
+              "Unknown error occurred while attempting to delete venue"
+            );
+          }
+          toast.custom(<Toast error={true} message={serverError} />);
         }
       }
     setLoading(false);
@@ -54,8 +63,7 @@ export const DeleteModal = ({
       >
         <h3 className="text-xl text-black text-center">Confirm</h3>
         <p className="text-center">
-          Are you sure you want to delete your venue{" "}
-          <strong>"{venueName}"</strong>?
+          Are you sure you want to delete your venue <strong>"{name}"</strong>?
         </p>
         <div className="flex justify-center items-center gap-3">
           <Button onClick={onClose} variant="outline">
@@ -73,7 +81,6 @@ export const DeleteModal = ({
             )}
           </Button>
         </div>
-        {serverError && <p>{serverError}</p>}
       </form>
     </ModalWrapper>
   );

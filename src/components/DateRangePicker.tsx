@@ -41,7 +41,7 @@ export function DateRangePicker({
       disabled={[{ before: today }, ...disabledRanges]}
       className="daypicker"
       classNames={{
-        disabled: `text-neutral-300`,
+        disabled: `text-neutral-300!`,
         root: `w-full flex items-center justify-center`,
         nav: "z-10 order-[-1] col-span-2 -mb-7 flex justify-between items-center",
         chevron: `transition-all duration-300 ${defaultClassNames.chevron} fill-ocean-700 size-8 p-2 hover:bg-neutral-100 rounded-lg`,

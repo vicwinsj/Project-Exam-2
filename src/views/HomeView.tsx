@@ -9,11 +9,18 @@ import { FilterModal } from "../components/modals/FilterModal";
 import { FilterLabel } from "../components/filterLabel";
 import { parse } from "date-fns";
 import { HomeLoader } from "../components/loaders/SkeletonLoader";
+import { ErrorMessage } from "../components/ErrorMessage";
 
 const HomeView = () => {
   const [searchParams] = useSearchParams();
-  const { searchQuery, setSearchQuery, searchResults, error, loading } =
-    useVenues();
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    error,
+    loading,
+    reloadVenues,
+  } = useVenues();
 
   const searchText = searchParams.get("q") || "";
   const rating = searchParams.get("minrating");
@@ -48,12 +55,12 @@ const HomeView = () => {
     }
   }, [setSearchQuery, searchQuery, loading, searchText]);
 
-  if (error) return <p>Error: {error}</p>;
-
   return (
     <section className="flex flex-col gap-10">
       {loading ? (
         <HomeLoader />
+      ) : error ? (
+        <ErrorMessage error={error} refetch={reloadVenues}></ErrorMessage>
       ) : (
         <>
           <div className="flex flex-col gap-1">

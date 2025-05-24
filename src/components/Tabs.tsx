@@ -21,7 +21,7 @@ export const Tabs = ({ tabs, onTabChange }: TabsProps) => {
           variant="outline"
           key={tab}
           onClick={() => handleClick(tab)}
-          className={`w-full ${activeTab === tab && "font-semibold! border-2! text-ocean-700 border-ocean-700 hover:border-ocean-700 hover:bg-white"}`}
+          className={`w-full ${activeTab === tab && "font-semibold! text-sunset-800 border-sunset-800 hover:border-sunset-900"}`}
         >
           {tab}
         </Button>

@@ -1,22 +1,5 @@
 import { API_HOLIDAZE_VENUES, API_KEY } from "../constants/api";
-
-// type Venue = {
-//   id: string;
-//   name: string;
-//   description: string;
-//   price: number;
-//   location: {
-//     country: string;
-//     city: string;
-//   };
-//   media: {
-//     url: string;
-//     alt: string;
-//   }[];
-//   _count?: {
-//     bookings: number;
-//   };
-// };
+import { Venue } from "../types/venue";
 
 export const fetchVenues = async () => {
   try {
@@ -57,10 +40,10 @@ export const fetchSearch = async (query: string) => {
   }
 };
 
-export const fetchVenue = async (venueId: string | undefined) => {
+export const fetchVenue = async (id: string) => {
   try {
     const response = await fetch(
-      `${API_HOLIDAZE_VENUES}/${venueId}?_owner=true&_bookings=true`
+      `${API_HOLIDAZE_VENUES}/${id}?_owner=true&_bookings=true`
     );
     if (!response.ok) {
       const errorData = await response.json();
@@ -73,36 +56,7 @@ export const fetchVenue = async (venueId: string | undefined) => {
   }
 };
 
-interface Media {
-  url: string;
-  alt: string;
-}
-
-interface Meta {
-  wifi: boolean;
-  parking: boolean;
-  breakfast: boolean;
-  pets: boolean;
-}
-
-interface Location {
-  address: string;
-  city: string;
-  zip: string;
-  country: string;
-}
-
-export const createVenue = async (
-  name: string,
-  description: string,
-  media: Media[],
-  price: number,
-  maxGuests: number,
-  rating: number,
-  meta: Meta,
-  location: Location,
-  accessToken: string
-) => {
+export const createVenue = async (accessToken: string, venue: Venue) => {
   try {
     const response = await fetch(`${API_HOLIDAZE_VENUES}`, {
       method: "POST",
@@ -111,16 +65,7 @@ export const createVenue = async (
         "Content-Type": "application/json",
         "X-Noroff-API-Key": API_KEY,
       },
-      body: JSON.stringify({
-        name,
-        description,
-        media,
-        price,
-        maxGuests,
-        rating,
-        meta,
-        location,
-      }),
+      body: JSON.stringify(venue),
     });
 
     if (!response.ok) {
@@ -135,35 +80,19 @@ export const createVenue = async (
 };
 
 export const updateVenue = async (
-  venueId: string,
-  name: string,
-  description: string,
-  media: Media[],
-  price: number,
-  maxGuests: number,
-  rating: number,
-  meta: Meta,
-  location: Location,
+  id: string,
+  venue: Venue,
   accessToken: string
 ) => {
   try {
-    const response = await fetch(`${API_HOLIDAZE_VENUES}/${venueId}`, {
+    const response = await fetch(`${API_HOLIDAZE_VENUES}/${id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
         "X-Noroff-API-Key": API_KEY,
       },
-      body: JSON.stringify({
-        name,
-        description,
-        media,
-        price,
-        maxGuests,
-        rating,
-        meta,
-        location,
-      }),
+      body: JSON.stringify(venue),
     });
 
     if (!response.ok) {
@@ -177,9 +106,9 @@ export const updateVenue = async (
   }
 };
 
-export const deleteVenue = async (venueId: string, accessToken: string) => {
+export const deleteVenue = async (id: string, accessToken: string) => {
   try {
-    const response = await fetch(`${API_HOLIDAZE_VENUES}/${venueId}`, {
+    const response = await fetch(`${API_HOLIDAZE_VENUES}/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${accessToken}`,

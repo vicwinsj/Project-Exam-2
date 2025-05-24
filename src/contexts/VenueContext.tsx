@@ -4,36 +4,11 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from "react";
 import { fetchVenues, fetchSearch } from "../api/venues";
 import { DateRange } from "react-day-picker";
-
-type Venue = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  maxGuests: number;
-  rating: number;
-  meta: {
-    wifi: boolean;
-    breakfast: boolean;
-    pets: boolean;
-    parking: boolean;
-  };
-  location: {
-    country: string;
-    city: string;
-  };
-  media: {
-    url: string;
-    alt: string;
-  }[];
-  bookings: {
-    dateFrom: Date;
-    dateTo: Date;
-  }[];
-};
+import { Venue } from "../types/venue";
 
 type Filters = {
   searchText?: string;
@@ -54,6 +29,7 @@ type VenueContextType = {
   setFilters: (filters: Filters) => void;
   filters: Filters;
   searchQuery: string;
+  reloadVenues: () => void;
   setSearchQuery: (searchQuery: string) => void;
   error: string | null;
   loading: boolean;
@@ -68,10 +44,6 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filters, setFilters] = useState<Filters>({});
-
-  useEffect(() => {
-    loadVenues();
-  }, []);
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -90,10 +62,10 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
         filtered = filtered.filter(
           (venue) =>
             venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            venue.location.city
+            venue.location?.city
               ?.toLowerCase()
               .includes(searchQuery.toLowerCase()) ||
-            venue.location.country
+            venue.location?.country
               ?.toLowerCase()
               .includes(searchQuery.toLowerCase()) ||
             venue.description?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,7 +74,7 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
 
       if (filters.guests) {
         filtered = filtered.filter(
-          (venue) => venue.maxGuests >= filters.guests!
+          (venue) => venue.maxGuests && venue.maxGuests >= filters.guests!
         );
       }
 
@@ -124,7 +96,8 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
       if (filters.priceRange) {
         const [minPrice, maxPrice] = filters.priceRange;
         filtered = filtered.filter(
-          (venue) => venue.price >= minPrice && venue.price <= maxPrice
+          (venue) =>
+            venue.price && venue.price >= minPrice && venue.price <= maxPrice
         );
       }
 
@@ -142,7 +115,9 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (filters.rating) {
-        filtered = filtered.filter((venue) => venue.rating >= filters.rating!);
+        filtered = filtered.filter(
+          (venue) => venue.rating && venue.rating >= filters.rating!
+        );
       }
 
       setSearchResults(filtered);
@@ -151,7 +126,7 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
     applyFilters();
   }, [searchQuery, venues, filters]);
 
-  const loadVenues = async () => {
+  const loadVenues = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchVenues();
@@ -164,7 +139,18 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
+  }, [setLoading, setVenues, searchQuery, setSearchResults, setError]);
+
+  const reloadVenues = async () => {
+    setError(null);
+    setSearchQuery("");
+    setFilters({});
+    await loadVenues();
   };
+
+  useEffect(() => {
+    loadVenues();
+  }, [loadVenues]);
 
   const searchVenues = async (query: string) => {
     setLoading(true);
@@ -196,6 +182,7 @@ export const VenueProvider = ({ children }: { children: ReactNode }) => {
         error,
         loading,
         setFilters,
+        reloadVenues,
       }}
     >
       {children}
