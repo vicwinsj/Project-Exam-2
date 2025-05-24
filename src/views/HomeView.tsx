@@ -6,7 +6,7 @@ import { faSliders } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FilterModal } from "../components/modals/FilterModal";
-import { FilterLabel } from "../components/filterLabel";
+import { FilterLabel } from "../components/FilterLabel";
 import { parse } from "date-fns";
 import { HomeLoader } from "../components/loaders/SkeletonLoader";
 import { ErrorMessage } from "../components/ErrorMessage";
