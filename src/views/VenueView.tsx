@@ -171,10 +171,15 @@ const VenueView = () => {
               >
                 <img
                   className="w-full h-full object-cover"
-                  src={(venue.media && venue.media[0].url) || placeholderImage}
+                  src={
+                    venue.media && venue.media.length > 0 && venue.media[0].url
+                      ? venue.media[0].url
+                      : placeholderImage
+                  }
                   alt={
-                    (venue.media && venue.media[0].alt) ||
-                    "Picture of the venue"
+                    venue.media && venue.media.length > 0 && venue.media[0].alt
+                      ? venue.media[0].alt
+                      : "Picture of the venue"
                   }
                 />
                 <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>

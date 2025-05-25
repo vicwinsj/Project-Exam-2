@@ -41,6 +41,7 @@ export default function VenueModal({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+    setServerError("");
 
     const form = event.currentTarget;
 
