@@ -58,11 +58,11 @@ const ModalWrapper = ({
 
   return (
     <div
-      className={`z-100 fixed inset-0 h-full flex justify-center items-center ${imageCarousel ? "px-1 py-10 sm:p-10 bg-black" : "py-1 bg-black/50"}`}
+      className={`z-100 fixed inset-0 h-full ${imageCarousel ? "px-1 py-10 sm:p-10 bg-black" : "py-1 bg-black/50"}`}
       onClick={(event) => handleBackgroundClick({ onClose }, event)}
     >
       <div
-        className={`w-full max-h-full touch-pan-y ${!imageCarousel && "overflow-auto"}`}
+        className={`w-full h-full flex justify-center items-center max-h-full touch-pan-y ${!imageCarousel && "overflow-auto"}`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

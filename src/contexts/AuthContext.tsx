@@ -14,6 +14,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [savedUsername, setSavedUsername] = useState<string | null>(null);
+  const [savedPassword, setSavedPassword] = useState<string | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
 
@@ -34,8 +36,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const token = localStorage.getItem("accessToken");
     const name = localStorage.getItem("username");
 
+    const email = localStorage.getItem("savedUsername");
+    const password = localStorage.getItem("savedPassword");
+
     if (token) setAccessToken(token);
     if (name) setUsername(name);
+    if (email) setSavedUsername(email);
+    if (password) setSavedPassword(password);
   }, []);
 
   useEffect(() => {
@@ -50,11 +57,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [accessToken, username]);
 
-  const login = (token: string, name: string) => {
+  const login = (
+    token: string,
+    name: string,
+    email: string,
+    password: string,
+    remember: boolean
+  ) => {
     setAccessToken(token);
-    localStorage.setItem("accessToken", token);
     setUsername(name);
+
+    localStorage.setItem("accessToken", token);
     localStorage.setItem("username", name);
+
+    if (remember) {
+      localStorage.setItem("savedPassword", password);
+      localStorage.setItem("savedUsername", email);
+    }
   };
 
   const logout = () => {
@@ -73,6 +92,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         logout,
         authLoading,
         profile,
+        savedUsername,
+        savedPassword,
         setProfile,
         refreshProfile,
       }}
