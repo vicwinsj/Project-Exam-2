@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/form/Button";
-import placeholderImage from "../assets/placeholder_venue.png";
+import placeholderImage from "../assets/placeholder_img.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import placeholderImage from "../assets/placeholder_venue.png";
+import placeholderImage from "../assets/placeholder_img.svg";
 import { Venue } from "../types/venue";
 
 export const VenueCard = (venue: Venue) => {
