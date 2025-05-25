@@ -58,11 +58,21 @@ const ProfileView = () => {
   useEffect(() => {
     if (profile) {
       document.title = `holidaze | ${profile.name}`;
-      setLoading(false);
     } else {
       document.title = `holidaze | No profile found!`;
     }
+    setLoading(false);
   }, [profile]);
+
+  useEffect(() => {
+    const metaDescription = document.querySelector("meta[name='description']");
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "View and manage your bookings, update your profile information, and track your hosting activity on Holidaze."
+      );
+    }
+  });
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/form/Button";
-import placeholderImage from "../assets/placeholder_venue.png";
+import placeholderImage from "../assets/placeholder_img.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,
@@ -56,6 +56,14 @@ const VenueView = () => {
       document.title = `holidaze | ${venue.name}`;
     } else {
       document.title = `holidaze | No venue found!`;
+    }
+
+    const metaDescription = document.querySelector("meta[name='description']");
+
+    if (venue?.description) {
+      if (metaDescription) {
+        metaDescription.setAttribute("content", `${venue.description}`);
+      }
     }
   }, [venue, id]);
 
@@ -163,11 +171,11 @@ const VenueView = () => {
             <div className="flex h-50 sm:h-80 md:h-100 gap-1 sm:gap-3 rounded-t-[20px] overflow-hidden w-full">
               <div
                 onClick={() => {
-                  if (venue.media) {
+                  if (venue.media && venue.media.length > 0) {
                     handleOpenImageCarousel(0);
                   }
                 }}
-                className="relative cursor-pointer flex-2 h-full"
+                className={`${venue.media && venue.media.length > 0 && "cursor-pointer"} relative flex-2 h-full`}
               >
                 <img
                   className="w-full h-full object-cover"
@@ -182,7 +190,9 @@ const VenueView = () => {
                       : "Picture of the venue"
                   }
                 />
-                <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
+                {venue.media && venue.media.length > 0 && (
+                  <div className="absolute inset-0 w-full-h-full hover:bg-white/10"></div>
+                )}
               </div>
               {venue.media && venue.media.length > 1 && (
                 <div className="flex-1 flex flex-col gap-1 sm:gap-3 h-full">

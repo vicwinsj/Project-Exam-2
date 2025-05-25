@@ -122,7 +122,7 @@ const Footer = () => {
       <div className="w-full flex flex-col sm:flex-row justify-center items-center gap-1 text-sm">
         <div className="flex flex-col md:flex-row w-fit justify-center items-center gap-1">
           <div className="md:self-start">
-            <img className="size-4" src={logo} />
+            <img className="size-4" src={logo} alt="Logo of Holiday Group" />
           </div>
           <p className="text-xs flex flex-col items-center text-center w-full gap-1">
             <span className="w-full">
