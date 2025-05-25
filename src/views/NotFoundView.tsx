@@ -7,7 +7,7 @@ const NotFoundView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `holidaze | Not Found}`;
+    document.title = "holidaze | Not Found";
     const metaDescription = document.querySelector("meta[name='description']");
     if (metaDescription) {
       metaDescription.setAttribute(
