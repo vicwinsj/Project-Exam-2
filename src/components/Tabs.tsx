@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Button } from "./form/Button";
-
-interface TabsProps {
-  tabs: string[];
-  onTabChange?: (tab: string) => void;
-}
+import { TabsProps } from "../types/tabs";
 
 export const Tabs = ({ tabs, onTabChange }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);

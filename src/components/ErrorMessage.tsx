@@ -2,11 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "./form/Button";
 import { Link } from "react-router-dom";
-
-type ErrorMessageProps = {
-  error: string | null;
-  refetch?: () => void;
-};
+import { ErrorMessageProps } from "../types/error";
 
 export const ErrorMessage = ({ error, refetch }: ErrorMessageProps) => {
   const handleRetry = async (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -7,13 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ButtonLoader } from "../loaders/ButtonLoader";
 import toast from "react-hot-toast";
 import { Toast } from "../toast/toast";
-
-interface DeleteModalProps {
-  id: string;
-  name: string;
-  onClose: () => void;
-  onSuccess: () => void;
-}
+import { DeleteModalProps } from "../../types/modals";
 
 export const DeleteModal = ({
   id,

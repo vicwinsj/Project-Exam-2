@@ -7,33 +7,9 @@ import {
   useCallback,
 } from "react";
 import { fetchVenues, fetchSearch } from "../api/venues";
-import { DateRange } from "react-day-picker";
 import { Venue } from "../types/venue";
-
-type Filters = {
-  searchText?: string;
-  dateRange?: DateRange | null;
-  priceRange?: [number, number] | null;
-  guests?: number;
-  wifi?: boolean;
-  parking?: boolean;
-  breakfast?: boolean;
-  pets?: boolean;
-  rating?: number;
-};
-
-type VenueContextType = {
-  venues: Venue[];
-  resetSearch: () => void;
-  searchResults: Venue[];
-  setFilters: (filters: Filters) => void;
-  filters: Filters;
-  searchQuery: string;
-  reloadVenues: () => void;
-  setSearchQuery: (searchQuery: string) => void;
-  error: string | null;
-  loading: boolean;
-};
+import { Filters } from "../types/search";
+import { VenueContextType } from "../types/venue";
 
 const VenueContext = createContext<VenueContextType | undefined>(undefined);
 

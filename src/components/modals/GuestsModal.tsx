@@ -1,15 +1,7 @@
 import { Button } from "../form/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-
-interface GuestsModalProps {
-  guestLimit: number | undefined;
-  adults: number;
-  children: number;
-  setAdults: (value: number) => void;
-  setChildren: (value: number) => void;
-  onClose: () => void;
-}
+import { GuestsModalProps } from "../../types/modals";
 
 export default function GuestsModal({
   guestLimit = 1,

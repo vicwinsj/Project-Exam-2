@@ -1,10 +1,6 @@
-import { ReactNode } from "react";
+import { childrenProp } from "../types/children";
 
-type FilterLabelProps = {
-  children: ReactNode;
-};
-
-export const FilterLabel = ({ children }: FilterLabelProps) => {
+export const FilterLabel = ({ children }: childrenProp) => {
   return (
     <strong className="text-sm cursor-text  bg-turquoise-500 text-ocean-700 rounded-lg py-1 px-3">
       {children}

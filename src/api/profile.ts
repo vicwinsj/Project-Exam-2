@@ -1,4 +1,5 @@
 import { API_HOLIDAZE_PROFILES, API_KEY } from "../constants/api";
+import { Profile } from "../types/profile";
 
 export const fetchProfile = async (name: string, accessToken: string) => {
   try {
@@ -25,24 +26,9 @@ export const fetchProfile = async (name: string, accessToken: string) => {
   }
 };
 
-type Avatar = {
-  url: string;
-  alt: string;
-};
-
-type Banner = {
-  url: string;
-  alt: string;
-};
-
 export const editProfile = async (
   name: string,
-  userData: {
-    banner: Banner;
-    avatar: Avatar;
-    bio: string;
-    venueManager: boolean;
-  },
+  userData: Profile,
   accessToken: string
 ) => {
   try {

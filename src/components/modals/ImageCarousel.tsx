@@ -6,15 +6,7 @@ import {
   faChevronRight,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-
-interface ImageCarouselProps {
-  onClose: () => void;
-  images: {
-    url: string;
-    alt: string;
-  }[];
-  activeImageIndex: number;
-}
+import { ImageCarouselProps } from "../../types/modals";
 
 export const ImageCarousel = ({
   onClose,

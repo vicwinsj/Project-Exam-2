@@ -15,19 +15,7 @@ import { useVenues } from "../../contexts/VenueContext";
 import PriceRangeSlider from "../PriceRangeSlider";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-
-type FilterModalProps = {
-  onClose: () => void;
-  urlText?: string;
-  urlRating?: string | null;
-  urlGuests?: number | null;
-  urlWifi?: boolean;
-  urlBreakfast?: boolean;
-  urlParking?: boolean;
-  urlPets?: boolean;
-  urlDateRange?: DateRange;
-  urlPriceRange?: [number, number] | null;
-};
+import { FilterModalProps } from "../../types/modals";
 
 export const FilterModal = ({
   onClose,
