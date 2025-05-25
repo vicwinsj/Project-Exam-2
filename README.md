@@ -1,54 +1,75 @@
-# React + TypeScript + Vite
+# Project Exam 2: Holidaze
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to Project Exam 2 – Holidaze, my final exam project in the second year of the Front-end Development program at Noroff. This project is a front-end booking website called Holidaze where users can search through venues made by oneself and others, book venues and create/update/delete venues. The application is built using **React**, **Vite**, **TailwindCSS**, and TypeScript.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- 🔐 User authentication (register, login, logout)
+- 🏨 Create, update, delete, and view venues
+- 📅 Make bookings at venues
+- 🔍 Search and filter venues by availability, price, rating, and amenities
+- 📱 Responsive design using React and TailwindCSS
+- 🔗 API integration with Noroff's backend
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+## Technologies
+
+- **Vite:** Build tool for lightning-fast development.
+- **TailwindCSS:** Utility-first CSS framework.
+- **TypeScript:** Strongly typed superset of JavaScript for scalable and safer code.
+- **React:** Component-based TypeScript library for building interactive UIs.
+- **ESLint:** Linting utility to enforce consistent code style and catch errors early.
+
+---
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- **Node.js** (v16+)
+- **npm** (v7+)
+
+You can check your versions by running:
+
+```bash
+node -v
+npm -v
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Setup Instructions
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+### 1. Clone the Repository
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+```bash
+git clone https://github.com/vicwinsj/project-exam-2.git
+cd project-exam-2
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Run Development Server
+
+```bash
+npm run dev
+```
+
+## Testing Instructions
+
+To test the functionality:
+
+1. Register a new user with a `@stud.noroff.no` email.
+2. Log in using the new account.
+3. Use the search bar and filters to browse venues.
+4. Select a venue and make a booking.
+5. Go to your profile to verify your bookings.
+6. Create a new venue.
+7. Update the venue and verify the changes.
+8. Delete the venue.
+9. Log out.
