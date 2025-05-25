@@ -24,7 +24,7 @@ const ModalWrapper = ({
 
   return (
     <div
-      className={`z-20 fixed inset-0 h-full flex justify-center items-center ${imageCarousel ? "px-1 py-10 sm:p-10 bg-black" : "py-1 bg-black/50"}`}
+      className={`z-100 fixed inset-0 h-full flex justify-center items-center ${imageCarousel ? "px-1 py-10 sm:p-10 bg-black" : "py-1 bg-black/50"}`}
       onClick={(event) => handleBackgroundClick({ onClose }, event)}
     >
       {children}
