@@ -22,6 +22,17 @@ const HomeView = () => {
     reloadVenues,
   } = useVenues();
 
+  useEffect(() => {
+    document.title = "holidaze | Your dream destination is awaiting";
+    const metaDescription = document.querySelector("meta[name='description']");
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "Book your perfect stay with Holidaze. Find unique venues, check availability, and explore unforgettable destinations."
+      );
+    }
+  });
+
   const searchText = searchParams.get("q") || "";
   const rating = searchParams.get("minrating");
   const guests = searchParams.get("guests");
