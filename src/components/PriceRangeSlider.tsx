@@ -1,24 +1,10 @@
 import { useState } from "react";
 import ReactSlider from "react-slider";
-
-type PriceRangeSliderProps = {
-  urlRange: [number, number];
-  onChange: (range: [number, number]) => void;
-};
-
-type TrackProps = {
-  key: string;
-  style?: React.CSSProperties;
-  className?: string;
-  ref?: React.Ref<HTMLDivElement>;
-  onMouseDown?: React.MouseEventHandler;
-  onTouchStart?: React.TouchEventHandler;
-  children?: React.ReactNode;
-};
-
-type TrackState = {
-  index: number;
-};
+import {
+  PriceRangeSliderProps,
+  TrackProps,
+  TrackState,
+} from "../types/priceRange";
 
 const PriceRangeSlider = ({ urlRange, onChange }: PriceRangeSliderProps) => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);

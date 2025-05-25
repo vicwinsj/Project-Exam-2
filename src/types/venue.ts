@@ -1,3 +1,18 @@
+import { Filters } from "./search";
+
+export type VenueContextType = {
+  venues: Venue[];
+  resetSearch: () => void;
+  searchResults: Venue[];
+  setFilters: (filters: Filters) => void;
+  filters: Filters;
+  searchQuery: string;
+  reloadVenues: () => void;
+  setSearchQuery: (searchQuery: string) => void;
+  error: string | null;
+  loading: boolean;
+};
+
 export type Venue = {
   id?: string;
   name?: string;

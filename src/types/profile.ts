@@ -28,8 +28,8 @@ type Venues = {
 };
 
 export type Profile = {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   bio: string;
   avatar: {
     url: string;
@@ -46,4 +46,10 @@ export type Profile = {
     venues: number;
     bookings: number;
   };
+};
+
+export type ErrorState = {
+  bannerUrl?: string;
+  avatarUrl?: string;
+  bioText?: string;
 };

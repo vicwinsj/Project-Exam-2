@@ -1,7 +1,5 @@
 import { API_HOLIDAZE_BOOKINGS, API_KEY } from "../constants/api";
 
-// Edit booking
-
 export const createBooking = async (
   dateFrom: Date,
   dateTo: Date,

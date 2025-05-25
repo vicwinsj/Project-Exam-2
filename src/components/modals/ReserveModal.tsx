@@ -1,13 +1,6 @@
 import { ReserveBooking } from "../ReserveBooking";
 import ModalWrapper from "./ModalWrapper";
-import { Venue } from "../../types/venue";
-
-type ReserveModalProps = {
-  venue: Venue;
-  venueId: string | null;
-  onVenueUpdate: (updatedVenue: Venue) => void;
-  onClose: () => void;
-};
+import { ReserveModalProps } from "../../types/modals";
 
 export const ReserveModal = ({
   venue,

@@ -10,12 +10,9 @@ import { Toast } from "../toast/toast.tsx";
 import { ButtonLoader } from "../loaders/ButtonLoader.tsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorState } from "../../types/auth.ts";
+import { CloseProp } from "../../types/close.ts";
 
-type LoginProps = {
-  onClose: () => void;
-};
-
-const LoginModal = ({ onClose }: LoginProps) => {
+const LoginModal = ({ onClose }: CloseProp) => {
   const location = useLocation();
   const navigate = useNavigate();
 

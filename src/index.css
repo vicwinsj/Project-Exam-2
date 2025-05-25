@@ -82,24 +82,6 @@
 }
 
 @layer utilities {
-  /* Spacing */
-
-  /* .lgm {
-    @apply m-1 md:m-5 lg:m-10;
-  }
-
-  .mdm {
-    @apply;
-  }
-
-  .lgp {
-    @apply;
-  }
-
-  .mdp {
-    @apply;
-  } */
-
   /* Calendar */
 
   .rdp-day_button:disabled {

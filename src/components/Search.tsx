@@ -5,10 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useVenues } from "../contexts/VenueContext";
 import { useSearchParams } from "react-router-dom";
 
-// type SearchProps = {
-//   onSearch: (query: string) => void;
-// };
-
 const Search = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -46,7 +42,6 @@ const Search = () => {
     if (searchQuery) {
       setSearchQuery("");
     }
-    // onSearch(query);
     const newParams = new URLSearchParams();
     if (query) newParams.set("q", query.trim());
     navigate({ pathname: "/search", search: newParams.toString() });

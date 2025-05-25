@@ -1,8 +1,4 @@
-type ButtonProps = {
-  variant?: "primary" | "secondary" | "outline" | "delete";
-  size?: "sm" | "md" | "lg";
-  children: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+import { ButtonProps } from "../../types/form";
 
 const variantClasses = {
   primary: "bg-sunset-800 text-white hover:bg-sunset-900",

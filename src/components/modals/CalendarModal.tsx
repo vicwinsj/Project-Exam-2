@@ -2,14 +2,7 @@ import { differenceInCalendarDays } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { Button } from "../form/Button";
 import { DateRangePicker } from "../DateRangePicker";
-
-interface CalendarModalProps {
-  disabledDates?: { from: Date; to: Date }[];
-  onClose?: () => void;
-  onRangeSelect: (range: DateRange | undefined, nights: number) => void;
-  selectedRange: DateRange | undefined;
-  nights: number;
-}
+import { CalendarModalProps } from "../../types/modals";
 
 export default function CalendarModal({
   disabledDates,

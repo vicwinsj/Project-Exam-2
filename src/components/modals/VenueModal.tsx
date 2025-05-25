@@ -6,15 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { createVenue, updateVenue } from "../../api/venues";
 import { useState, useEffect } from "react";
 import { ButtonLoader } from "../loaders/ButtonLoader";
-import { Venue } from "../../types/venue";
-
-interface VenueModalProps {
-  title: string;
-  onClose: () => void;
-  onSuccess: () => void;
-  venue?: Venue;
-  onVenueUpdated?: () => Promise<void>;
-}
+import { VenueModalProps } from "../../types/modals";
 
 export default function VenueModal({
   title,

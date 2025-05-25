@@ -15,16 +15,9 @@ import LoginModal from "./modals/LoginModal.tsx";
 import { DateRange } from "react-day-picker";
 import { createBooking } from "../api/bookings.ts";
 import { useAuth } from "../contexts/AuthContext.tsx";
-import { Venue } from "../types/venue.ts";
 import { Toast } from "./toast/toast.tsx";
 import { fetchVenue } from "../api/venues.ts";
-
-type ReserveBookingProps = {
-  venue: Venue;
-  onVenueUpdate: (updatedVenue: Venue) => void;
-  isInModal?: boolean;
-  onClose?: () => void;
-};
+import { ReserveBookingProps } from "../types/booking.ts";
 
 export const ReserveBooking = ({
   venue,

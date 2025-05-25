@@ -1,11 +1,6 @@
 import { handleBackgroundClick } from "../utilities/handleBackgroundClick";
 import { useState, useEffect } from "react";
-
-type ModalWrapperProps = {
-  onClose: () => void;
-  children: React.ReactNode;
-  isImageCarousel?: boolean;
-};
+import { ModalWrapperProps } from "../../types/modals";
 
 const ModalWrapper = ({
   onClose,

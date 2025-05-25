@@ -8,11 +8,8 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { ButtonLoader } from "../loaders/ButtonLoader";
 import { Toast } from "../toast/toast";
 import toast from "react-hot-toast";
-
-interface EditProfileProps {
-  onClose: () => void;
-  onSuccess?: () => void;
-}
+import { EditProfileProps } from "../../types/modals";
+import { ErrorState } from "../../types/profile";
 
 const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
   const { accessToken, profile, refreshProfile } = useAuth();
@@ -22,12 +19,6 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
   const [bioText, setBioText] = useState(profile?.bio);
   const [venueManager, setVenueManager] = useState(profile?.venueManager);
   const [loading, setLoading] = useState(false);
-
-  type ErrorState = {
-    bannerUrl?: string;
-    avatarUrl?: string;
-    bioText?: string;
-  };
 
   const [serverError, setServerError] = useState("");
   const [errors, setErrors] = useState<ErrorState>({});
@@ -83,21 +74,23 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
           return;
         }
 
-        try {
-          const result = await editProfile(
-            profile!.name,
-            userData,
-            accessToken
-          );
-          if (result) {
-            await refreshProfile();
-            onSuccess?.();
-            onClose();
-          }
-        } catch (error) {
-          if (error instanceof Error) {
-            setServerError(error.message);
-            toast.custom(<Toast error={true} message={serverError} />);
+        if (profile?.name) {
+          try {
+            const result = await editProfile(
+              profile!.name,
+              userData,
+              accessToken
+            );
+            if (result) {
+              await refreshProfile();
+              onSuccess?.();
+              onClose();
+            }
+          } catch (error) {
+            if (error instanceof Error) {
+              setServerError(error.message);
+              toast.custom(<Toast error={true} message={serverError} />);
+            }
           }
         }
         setLoading(false);
