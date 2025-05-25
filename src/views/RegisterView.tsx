@@ -14,6 +14,14 @@ const RegisterView = () => {
 
   useEffect(() => {
     document.title = `holidaze | Register`;
+
+    const metaDescription = document.querySelector("meta[name='description']");
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "Create an account to book unique venues around the world with Holidaze."
+      );
+    }
   });
 
   const navigate = useNavigate();

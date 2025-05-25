@@ -8,6 +8,13 @@ const NotFoundView = () => {
 
   useEffect(() => {
     document.title = `holidaze | Not Found}`;
+    const metaDescription = document.querySelector("meta[name='description']");
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "The page you're looking for was not found. Explore other destinations by browsing through our venues here at Holidaze."
+      );
+    }
   });
 
   return (

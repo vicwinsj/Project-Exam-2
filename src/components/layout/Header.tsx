@@ -128,7 +128,6 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    toast.custom(<Toast message="Successfully logged out!" />);
     if (pathname.startsWith("/profile")) {
       navigate("/");
     }
