@@ -92,7 +92,7 @@ export default function VenueModal({
       description,
       media,
       price: Number(price),
-      capacity: Number(capacity),
+      maxGuests: Number(capacity),
       rating: Number(rating),
       meta,
       location,
