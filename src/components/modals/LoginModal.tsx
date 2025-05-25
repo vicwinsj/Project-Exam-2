@@ -19,7 +19,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const { login, savedUsername, savedPassword } = useAuth();
 
   const handleRegisterClick = () => {
     if (location.pathname === "/register") {
@@ -39,12 +39,14 @@ const LoginModal = ({ onClose }: LoginProps) => {
 
     const form = event.currentTarget;
 
+    const remember = (form.elements.namedItem("remember") as HTMLInputElement)
+      .checked;
+
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
 
     const validateForm = () => {
-      console.log("is validating");
       const newErrors: ErrorState = {};
 
       if (!/^[\w.-]+@stud\.noroff\.no$/.test(email)) {
@@ -61,6 +63,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
 
     if (validateForm()) {
       setServerError("");
+      setErrors({});
 
       const userData = {
         email,
@@ -71,7 +74,13 @@ const LoginModal = ({ onClose }: LoginProps) => {
         const result = await loginUser(userData);
         if (result && result.data && result.data.accessToken) {
           toast.custom(<Toast message="Successfully logged in!" />);
-          login(result.data.accessToken, result.data.name);
+          login(
+            result.data.accessToken,
+            result.data.name,
+            email,
+            password,
+            remember
+          );
           onClose();
           if (location.pathname === "/register") {
             navigate("/");
@@ -111,6 +120,8 @@ const LoginModal = ({ onClose }: LoginProps) => {
               type="text"
               name="email"
               required
+              placeholder="mail@stud.noroff.no"
+              defaultValue={savedUsername ?? ""}
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email}</p>
@@ -123,7 +134,7 @@ const LoginModal = ({ onClose }: LoginProps) => {
               type="password"
               name="password"
               required
-              placeholder="youremail@stud.noroff.no"
+              defaultValue={savedPassword ?? ""}
             />
           </div>
           {errors.password && (

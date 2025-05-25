@@ -86,7 +86,7 @@ const RegisterView = () => {
           toast.custom(<Toast message="Profile successfully registered!" />);
           const loginSuccess = await loginUser({ email, password });
           if (loginSuccess) {
-            login(loginSuccess.data.accessToken, loginSuccess.data.name);
+            login(loginSuccess.data.accessToken, name, email, password, true);
           }
           navigate("/");
         }
@@ -165,7 +165,7 @@ const RegisterView = () => {
                   className={errors.email && "border-red-500"}
                   type="email"
                   name="email"
-                  placeholder="youremail@stud.noroff.no"
+                  placeholder="mail@stud.noroff.no"
                   required
                 />
                 {errors.email && (
