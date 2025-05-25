@@ -44,6 +44,7 @@ const EditProfileModal = ({ onClose, onSuccess }: EditProfileProps) => {
 
     if (validateForm()) {
       setServerError("");
+      setErrors({});
 
       if (
         avatarUrl &&

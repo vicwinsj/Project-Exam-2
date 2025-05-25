@@ -129,8 +129,6 @@ export const ReserveBooking = ({
             <Toast message="Venue has been booked. Enjoy your stay!" />
           );
           onVenueUpdate(updatedVenue);
-
-          return;
         }
       } catch (error) {
         if (error instanceof Error) {

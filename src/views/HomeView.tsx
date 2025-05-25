@@ -115,7 +115,7 @@ const HomeView = () => {
               pets ||
               parking ||
               breakfast) && (
-              <div className="flex gap-3">
+              <div className="w-full flex flex-wrap gap-3">
                 {dateFrom && dateTo && (
                   <FilterLabel>
                     {dateFrom}–{dateTo}
