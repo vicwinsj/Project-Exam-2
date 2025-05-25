@@ -27,7 +27,7 @@ const ProfileView = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showVenueModal, setShowVenueModal] = useState(false);
-  const [currentTab, setCurrentTab] = useState("Saved Venues");
+  const [currentTab, setCurrentTab] = useState("Your Bookings");
 
   const handleOpenEditProfile = () => {
     setShowEditProfile(true);
@@ -162,12 +162,12 @@ const ProfileView = () => {
                 <aside className="bg-air-100 flex justify-between items-start sm:items-center gap-3 w-full h-full border-b-[.1px] p-3 border-neutral-300">
                   {profile?.venueManager ? (
                     <Tabs
-                      tabs={["Saved Venues", "Your Bookings", "Your Venues"]}
+                      tabs={["Your Bookings", "Your Venues"]}
                       onTabChange={(tab) => setCurrentTab(tab)}
                     />
                   ) : (
                     <Tabs
-                      tabs={["Saved Venues", "Your Bookings"]}
+                      tabs={["Your Bookings"]}
                       onTabChange={(tab) => setCurrentTab(tab)}
                     />
                   )}
@@ -181,13 +181,6 @@ const ProfileView = () => {
                   )}
                 </aside>
                 <>
-                  {/* Saved Venues */}
-                  {currentTab === "Saved Venues" && (
-                    <div className="flex justify-center h-full w-full p-6 sm:p-10">
-                      <p>You don't have any favorites yet!</p>
-                    </div>
-                  )}
-
                   {/* Your Bookings */}
                   {currentTab === "Your Bookings" &&
                   profile?.bookings &&

@@ -1,7 +1,7 @@
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
 import { startOfDay } from "date-fns";
 import { useEffect, useState } from "react";
-import { DateRangePickerProps } from "../types/dateRangePicker";
+import { DateRangePickerProps } from "../types/dateRange";
 
 export function DateRangePicker({
   selectedRange,
