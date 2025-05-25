@@ -41,6 +41,7 @@ export default function VenueModal({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+    setServerError("");
 
     const form = event.currentTarget;
 
@@ -92,7 +93,7 @@ export default function VenueModal({
       description,
       media,
       price: Number(price),
-      capacity: Number(capacity),
+      maxGuests: Number(capacity),
       rating: Number(rating),
       meta,
       location,

@@ -71,6 +71,7 @@ const RegisterView = () => {
 
     if (validateForm()) {
       setServerError("");
+      setErrors({});
 
       const userData = {
         name,
