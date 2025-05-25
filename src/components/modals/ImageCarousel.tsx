@@ -22,6 +22,31 @@ export const ImageCarousel = ({
   activeImageIndex,
 }: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(activeImageIndex);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX !== null && touchEndX !== null) {
+      const distance = touchStartX - touchEndX;
+
+      if (distance > 50) {
+        nextImage();
+      } else if (distance < -50) {
+        prevImage();
+      }
+    }
+
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
 
   const prevImage = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -33,7 +58,12 @@ export const ImageCarousel = ({
 
   return (
     <ModalWrapper onClose={onClose} isImageCarousel={true}>
-      <div className="flex flex-col items-center w-full h-1/2 md:h-full relative">
+      <div
+        className="flex flex-col items-center w-full h-1/2 md:h-full relative"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Image */}
         <img
           src={images[currentIndex].url}
